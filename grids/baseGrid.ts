@@ -28,6 +28,8 @@ export default function callbackGrid(
     // store.commit('motor/setSpinner', false)
   }
 
+  const replaceRecord = (record: any) => {}
+
   refreshRecords({})
 
   const handleCellEvent = async (params: {
@@ -42,6 +44,16 @@ export default function callbackGrid(
         toast.success(t(languagePrefix + '.deleted'))
 
         await refreshRecords(params.filterValues)
+        break
+      case 'UpdateRecord':
+        const payload: any = {}
+        payload[params.componentParams.property] = params.componentParams.value
+        const newRecord = await repository.update(
+          payload,
+          params.componentParams.record
+        )
+        rows.value[params.componentParams.index] = newRecord.data.data
+        toast.success(t(languagePrefix + '.updated'))
         break
       default:
         console.log('UNHANDLED EVENT', params.componentParams)

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+  <div class="motor-nx-grid col-lg-12 col-md-12 mb-md-0 mb-4">
     <div class="card">
       <div class="card-header pb-0">
         <div class="row">
@@ -153,6 +153,7 @@
                       :record="row"
                       :prop="column.prop"
                       :resource="resource"
+                      :index="index"
                       @submit="submitCell"
                     />
                     <template v-if="column.renderer">

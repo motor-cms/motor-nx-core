@@ -1,5 +1,5 @@
 <template>
-  <div class="motor-nx-grid col-lg-12 col-md-12 mb-md-0 mb-4">
+  <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
     <div class="card">
       <div class="card-header pb-0">
         <div class="row">
@@ -84,7 +84,7 @@
       </div>
       <div class="card-body px-0 pb-2">
         <div class="table-responsive">
-          <table class="table align-items-center mb-0">
+          <table class="motor-nx-grid table align-items-center mb-0">
             <thead>
               <tr>
                 <th

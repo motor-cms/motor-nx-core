@@ -303,6 +303,8 @@ export default defineComponent({
           return value.map((object: any) => {
             return ' ' + object[renderer.property]
           })
+        case 'currency':
+          return value.toFixed(2) + ' ' +renderer.format
         default:
           return value
       }

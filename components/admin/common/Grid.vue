@@ -10,6 +10,11 @@
               </div>
 
               <div class="col-md-6 text-end">
+                <component
+                  v-for="component in headerActions"
+                  :key="component.name"
+                  :is="component.name"
+                />
                 <router-link :to="{ name: createRoute }">
                   <button class="btn btn-sm btn-success">
                     {{ createLabel }}
@@ -186,7 +191,6 @@ import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
 import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
-import { array } from 'yup'
 
 export default defineComponent({
   data() {
@@ -237,6 +241,10 @@ export default defineComponent({
     createRoute: {
       type: String,
       default: '',
+    },
+    headerActions: {
+      type: Array,
+      default: () => [],
     },
   },
   mounted() {

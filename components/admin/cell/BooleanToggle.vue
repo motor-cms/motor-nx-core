@@ -24,7 +24,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'DeleteButton',
+  name: 'BooleanToggle',
   props: {
     options: <any>Object,
     record: <any>Object,

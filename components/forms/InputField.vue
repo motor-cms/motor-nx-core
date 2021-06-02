@@ -11,7 +11,7 @@
       :value="inputValue"
       :class="{ 'is-invalid': errorMessage }"
       @input="changed"
-      @blur="handleBlur"
+      @blur="blur"
     />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
@@ -63,6 +63,11 @@ export default defineComponent({
       emit('change', (<HTMLInputElement>e.target).value)
     }
 
+    const blur = (e: Event) => {
+      handleBlur(e)
+      emit('blur', (<HTMLInputElement>e.target).value)
+    }
+
     return {
       handleChange,
       handleBlur,
@@ -70,6 +75,7 @@ export default defineComponent({
       inputValue,
       meta,
       changed,
+      blur,
     }
   },
 })

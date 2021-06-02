@@ -15,7 +15,7 @@
                   :key="component.name"
                   :is="component.name"
                 />
-                <router-link :to="{ name: createRoute }">
+                <router-link v-if="createRoute" :to="{ name: createRoute }">
                   <button class="btn btn-sm btn-success">
                     {{ createLabel }}
                   </button>
@@ -304,7 +304,7 @@ export default defineComponent({
             return ' ' + object[renderer.property]
           })
         case 'currency':
-          return value.toFixed(2) + ' ' +renderer.format
+          return value.toFixed(2) + ' ' + renderer.format
         default:
           return value
       }

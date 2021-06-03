@@ -31,7 +31,6 @@ export default defineComponent({
       default: 'text',
     },
     value: {
-      type: String,
       default: '',
     },
     name: {

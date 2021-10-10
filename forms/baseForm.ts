@@ -42,7 +42,7 @@ export default function baseForm(
   }
 
   // Initialize form with default values and the validation schema
-  const { handleSubmit } = useForm({
+  const { handleSubmit, setFieldValue } = useForm({
     initialValues: model,
     validationSchema: schema,
   })
@@ -104,6 +104,7 @@ export default function baseForm(
   return {
     getData,
     handleSubmit,
+    setFieldValue,
     onSubmit,
   }
 }

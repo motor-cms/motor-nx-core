@@ -114,7 +114,7 @@
                   </h3>
                 </td>
               </tr>
-              <template v-if="rows.length === 0">
+              <template v-if="rows.length === 0 && isLoading">
                 <tr
                   v-for="index in 5"
                   :key="index"
@@ -185,7 +185,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, defineComponent, ref } from 'vue'
+import { Component, computed, defineComponent, ref } from 'vue'
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
@@ -257,6 +257,11 @@ export default defineComponent({
         this.$options.components[component.name] = component.object
       })
     }
+  },
+  computed: {
+    isLoading: function () {
+      return this.$store.state.motor.loading
+    },
   },
   methods: {
     submitFilter(data: { parameter: string; value: string }) {

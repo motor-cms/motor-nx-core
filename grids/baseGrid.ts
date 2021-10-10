@@ -19,12 +19,14 @@ export default function callbackGrid(
 
   const refreshRecords = async (params: {}) => {
     // Show spinner
+    store.commit('motor/isLoading', true)
     // store.commit('motor/setSpinner', true)
     await repository.index(params).then((result) => {
       rows.value = result.data.data
       meta.value = result.data.meta
     })
     // Show spinner
+    store.commit('motor/isLoading', false)
     // store.commit('motor/setSpinner', false)
   }
 

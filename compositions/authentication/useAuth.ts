@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+import AxiosResponse from '../../types/axios-response'
 // import jwtDecode from 'jwt-decode';
 
 export default function useAuth() {
@@ -21,14 +22,14 @@ export default function useAuth() {
         email: email,
         password: password,
       })
-      .then(async (response) => {
+      .then(async (response: AxiosResponse) => {
         axios.defaults.headers.common['Authorization'] =
           'Bearer ' + response.data.data.token
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
         axios.defaults.headers.put['Content-Type'] = 'multipart/form-data'
 
         localStorage.setItem('token', response.data.data.token)
-        await axios.get('/api/me').then((response) => {
+        await axios.get('/api/me').then((response: AxiosResponse) => {
           localStorage.setItem('user', JSON.stringify(response.data.data))
           store.commit('motor/setAuthenticationStatus', true)
         })
@@ -44,7 +45,7 @@ export default function useAuth() {
   }
 
   const refreshUser = async () => {
-    await axios.get('/api/me').then((response) => {
+    await axios.get('/api/me').then((response: AxiosResponse) => {
       localStorage.setItem('user', JSON.stringify(response.data.data))
       store.commit('motor/setUser', response.data.data)
     })

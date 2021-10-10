@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, watch } from 'vue'
 import { useField } from 'vee-validate'
 
 export default defineComponent({
@@ -57,14 +57,23 @@ export default defineComponent({
       initialValue: <string>props.value,
     })
 
+    watch(inputValue, (newValue) => {
+      console.log('prop value changed for field ' + props.name, newValue)
+    })
+
     const changed = (e: Event) => {
       handleChange(e)
-      emit('change', (<HTMLInputElement>e.target).value)
+      setTimeout(() => {
+        emit('change', (<HTMLInputElement>e.target).value)
+      }, 100)
     }
 
     const blur = (e: Event) => {
       handleBlur(e)
-      emit('blur', (<HTMLInputElement>e.target).value)
+      console.log(e)
+      setTimeout(() => {
+        emit('blur', (<HTMLInputElement>e.target).value)
+      }, 100)
     }
 
     return {

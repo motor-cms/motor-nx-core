@@ -8,6 +8,7 @@ export default {
     authenticated: <boolean>false,
     user: {},
     spinner: false,
+    loading: false,
   },
   mutations: {
     setAuthenticationStatus(state: any, value: boolean) {
@@ -18,6 +19,9 @@ export default {
     },
     setSpinner(state: any, value: boolean) {
       state.spinner = value
+    },
+    isLoading(state: any, value: boolean) {
+      state.loading = value
     },
   },
   // getters,

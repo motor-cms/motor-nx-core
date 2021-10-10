@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ref } from 'vue'
+import AxiosResponse from '../../types/axios-response'
 
 export default function useNavigation() {
   const token = localStorage.getItem('token')
@@ -32,7 +33,7 @@ export default function useNavigation() {
   const getNavigationItems = async (): Promise<void> => {
     await axios
       .get('/api/admin_navigations')
-      .then((response) => {
+      .then((response: AxiosResponse) => {
         navigationItems.value = response.data.data
         localStorage.setItem('navigation', JSON.stringify(response.data.data))
       })

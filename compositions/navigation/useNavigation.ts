@@ -6,6 +6,7 @@ export default function useNavigation() {
   const token = localStorage.getItem('token')
   const itemsFromStorage = JSON.parse(localStorage.getItem('navigation'))
 
+  // @ts-ignore
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 
   const navigationItems = ref(itemsFromStorage)

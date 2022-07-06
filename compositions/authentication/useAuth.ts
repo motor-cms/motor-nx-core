@@ -23,9 +23,12 @@ export default function useAuth() {
         password: password,
       })
       .then(async (response: AxiosResponse) => {
+        // @ts-ignore
         axios.defaults.headers.common['Authorization'] =
           'Bearer ' + response.data.data.token
+        // @ts-ignore
         axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+        // @ts-ignore
         axios.defaults.headers.put['Content-Type'] = 'multipart/form-data'
 
         localStorage.setItem('token', response.data.data.token)

@@ -162,7 +162,9 @@ export default defineComponent({
       // reset file count and clear files
       fileCount.value = 0
       if (props.multiple) {
+        // FIXME: this is buggy and results in a Maximum call stack size exceeded error in veevalidate
         files.value = [fileTemplate]
+        files.value = []
       } else {
         files.value = []
       }

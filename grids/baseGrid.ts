@@ -4,7 +4,7 @@ import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
-export default function useBaseGrid(
+export default function callbackGrid(
   repository: Repository,
   languagePrefix: string
 ) {

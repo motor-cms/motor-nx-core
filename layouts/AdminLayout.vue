@@ -15,7 +15,7 @@ import AdminContainer from '../components/admin/Container.vue'
 import '../assets/js/soft-ui-dashboard.js'
 import { useStore } from 'vuex'
 import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
+import 'vue-loading-overlay/dist/css/index.css'
 
 export default defineComponent({
   name: 'admin-layout',

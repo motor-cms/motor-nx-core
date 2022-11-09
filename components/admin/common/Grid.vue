@@ -315,10 +315,7 @@ export default defineComponent({
       }
     },
     submitCell(params: any) {
-      this.$emit('submitCell', {
-        componentParams: params,
-        filterValues: this.filterValues,
-      })
+
     },
     getPropertyValue(object: any, property: string): string {
       property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot

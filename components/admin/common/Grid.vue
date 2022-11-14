@@ -185,7 +185,17 @@
   </div>
 </template>
 <script lang="ts">
-import {Component, computed, defineComponent, nextTick, onMounted, reactive, ref} from 'vue'
+import {
+  Component,
+  ComponentInternalInstance,
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  reactive,
+  ref
+} from 'vue'
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
@@ -325,6 +335,21 @@ export default defineComponent({
       }
       return object
     }
+
+    const instance = getCurrentInstance();
+
+    onMounted(() => {
+      const components = props.loadComponents as Array<{
+        name: string
+        object: Component
+      }>
+
+      if (components.length) {
+        components.forEach((component) => {
+          instance.components[component.name] = component.object
+        })
+      }
+    })
 
         return {
           filterValues,

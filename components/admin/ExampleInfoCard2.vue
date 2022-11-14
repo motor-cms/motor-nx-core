@@ -354,7 +354,7 @@
             <canvas
               id="chart-line"
               class="chart-canvas"
-              height="300px"
+              height="145px"
             ></canvas>
           </div>
         </div>

@@ -3,10 +3,6 @@
     <AdminExampleInfoChart />
     <AdminExampleInfoCard1 />
     <AdminExampleInfoCard2 />
-    <div class="row my-4">
-      <AdminExampleTable />
-      <AdminExampleOverview />
-    </div>
   </div>
 </template>
 <script lang="ts">

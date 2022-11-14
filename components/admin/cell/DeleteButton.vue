@@ -18,7 +18,7 @@
 </template>
 <script lang="ts">
 import AdminModalDeleteConfirmation from '../modal/DeleteConfirmation.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'DeleteButton',
@@ -29,26 +29,28 @@ export default defineComponent({
   },
   components: { AdminModalDeleteConfirmation },
   emits: ['submit'],
-  data() {
-    return {
-      active: false,
+  setup(props, ctx) {
+    const active = ref(false)
+    const askForConfirmation = () => {
+      active.value = true;
     }
-  },
-  methods: {
-    askForConfirmation() {
-      this.active = true
-    },
-    cancel() {
-      this.active = false
-    },
-    confirm() {
-      this.active = false
-      this.$emit('submit', {
+    const cancel = () => {
+      active.value = false;
+    }
+    const confirm = () => {
+      active.value = false;
+      ctx.emit('submit', {
         component: 'DeleteButton',
-        record: this.record.id,
-        resource: this.resource,
+        record: props.record.id,
+        resource: props.resource,
       })
-    },
+    }
+    return {
+      active,
+      askForConfirmation,
+      cancel,
+      confirm,
+    }
   },
 })
 </script>

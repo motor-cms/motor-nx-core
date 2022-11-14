@@ -45,11 +45,14 @@ export default defineComponent({
       default: '',
     },
   },
-  methods: {
-    submit(e: Event) {
+  setup(props,ctx) {
+    const submit = (e: Event) => {
       e.preventDefault()
-      this.$emit('submit')
-    },
+      ctx.emit('submit');
+    }
+    return {
+      submit,
+    }
   },
 })
 </script>

@@ -9,7 +9,7 @@
         {{ options.emptyOption }}
       </option>
       <option
-        v-for="option in selectOptions"
+        v-for="option in options"
         :key="option.value"
         :value="option.value"
       >
@@ -19,22 +19,21 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   name: 'SelectFilter',
   props: {
     options: Object,
   },
-  data() {
-    return {
-      value: '',
-      selectOptions: [],
-    }
-  },
   emits: ['submit'],
-  created() {
-    this.selectOptions = this.options.options
+  setup() {
+    const data = reactive({
+      value: '',
+    })
+    return {
+      ...data,
+    }
   },
 })
 </script>

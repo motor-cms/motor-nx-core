@@ -95,11 +95,7 @@
                 <th
                   v-for="column in columns"
                   :key="column.name"
-                  class="
-                    text-uppercase text-secondary text-xxs
-                    font-weight-bolder
-                    opacity-7
-                  "
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                   :style="column.columnStyle"
                 >
                   {{ column.name }}
@@ -185,19 +181,26 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, computed, defineComponent, ref } from 'vue'
+import {
+  Component,
+  ComponentInternalInstance,
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+} from 'vue'
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
 import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
+import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  data() {
-    return {
-      filterValues: <any>{ per_page: 25, page: 1 },
-    }
-  },
   components: {
     SearchFilter,
     SelectFilter,
@@ -247,40 +250,34 @@ export default defineComponent({
       default: () => [],
     },
   },
-  mounted() {
-    const components = this.loadComponents as Array<{
-      name: string
-      object: Component
-    }>
-    if (components.length) {
-      components.forEach((component) => {
-        this.$options.components[component.name] = component.object
-      })
-    }
-  },
-  computed: {
-    isLoading: function () {
-      return this.$store.state.motor.loading
-    },
-  },
-  methods: {
-    submitFilter(data: { parameter: string; value: string }) {
+  setup(props, ctx) {
+    const store = useStore()
+    const { t } = useI18n()
+    const filterValues = reactive({ per_page: 25, page: 1 })
+    const isLoading = computed(() => {
+      return store.state.motor.loading
+    })
+
+    const submitFilter = (data: { parameter: string; value: string }) => {
       // Reset page when filtering or searching
-      this.filterValues.page = 1
+      filterValues.page = 1
       if (data.parameter) {
-        this.filterValues[data.parameter] = data.value
+        filterValues[data.parameter] = data.value
       }
-      this.$emit('submit', this.filterValues)
-    },
-    previousPage() {
-      this.filterValues.page--
-      this.$emit('submit', this.filterValues)
-    },
-    nextPage() {
-      this.filterValues.page++
-      this.$emit('submit', this.filterValues)
-    },
-    renderer(
+      ctx.emit('submit', filterValues)
+    }
+
+    const previousPage = () => {
+      filterValues.page--
+      ctx.emit('submit', filterValues)
+    }
+
+    const nextPage = () => {
+      filterValues.page++
+      ctx.emit('submit', filterValues)
+    }
+
+    const renderer = (
       renderer: {
         type: string
         path: string
@@ -288,12 +285,12 @@ export default defineComponent({
         property: string
       },
       value: any
-    ): string {
+    ): string => {
       switch (renderer.type) {
         case 'translation':
-          return this.$t(renderer.path + '.' + value)
+          return t(renderer.path + '.' + value)
         case 'boolean':
-          return value ? this.$t('global.yes') : this.$t('global.no')
+          return value ? t('global.yes') : t('global.no')
         case 'date':
           if (!value) {
             return
@@ -313,14 +310,15 @@ export default defineComponent({
         default:
           return value
       }
-    },
-    submitCell(params: any) {
-      this.$emit('submitCell', {
+    }
+    const submitCell = (params: any) => {
+      ctx.emit('submitCell', {
         componentParams: params,
-        filterValues: this.filterValues,
+        filterValues,
       })
-    },
-    getPropertyValue(object: any, property: string): string {
+    }
+
+    const getPropertyValue = (object: any, property: string): string => {
       property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
       let a = property.split('.')
       for (let i = 0, n = a.length; i < n; ++i) {
@@ -332,7 +330,33 @@ export default defineComponent({
         }
       }
       return object
-    },
+    }
+
+    const instance = getCurrentInstance()
+
+    onMounted(() => {
+      const components = props.loadComponents as Array<{
+        name: string
+        object: Component
+      }>
+
+      if (components.length) {
+        components.forEach((component) => {
+          instance.components[component.name] = component.object
+        })
+      }
+    })
+
+    return {
+      filterValues,
+      isLoading,
+      nextPage,
+      previousPage,
+      submitFilter,
+      renderer,
+      submitCell,
+      getPropertyValue,
+    }
   },
 })
 </script>

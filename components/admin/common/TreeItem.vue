@@ -20,9 +20,10 @@
 </template>
 <script lang="ts">
 // demo data
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
+  name: 'TreeItem',
   props: {
     item: <any>Object,
     record: {
@@ -30,30 +31,33 @@ export default defineComponent({
       default: 0,
     },
   },
-  data: function () {
-    return {
-      isOpen: true,
-    }
-  },
-  computed: {
-    isFolder(): any {
-      return this.item.children && this.item.children.length
-    },
-  },
-  methods: {
-    toggle(): void {
-      if (this.isFolder) {
-        this.isOpen = !this.isOpen
+  setup(props) {
+    const isOpen = ref(true)
+    const toggle = () => {
+      if (isFolder.value) {
+        isOpen.value = !isOpen.value
       }
-    },
+    }
+
     // We don't need this currently
-    makeFolder(): void {
+    const makeFolder = () => {
       return
       // if (!this.isFolder) {
       //   this.$emit('make-folder', this.item)
       //   this.isOpen = true
       // }
-    },
+    }
+
+    const isFolder = computed(() => {
+      return props.item.children && props.item.children.length
+    })
+
+    return {
+      isOpen,
+      toggle,
+      makeFolder,
+      isFolder,
+    }
   },
 })
 </script>

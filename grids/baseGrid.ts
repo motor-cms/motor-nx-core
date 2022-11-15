@@ -2,7 +2,7 @@ import Repository from '../types/repository'
 import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
+import { useAppStore } from '../store/app'
 
 export default function callbackGrid(
   repository: Repository,
@@ -10,7 +10,7 @@ export default function callbackGrid(
 ) {
   const toast = useToast()
 
-  const store = useStore()
+  const appStore = useAppStore()
 
   const { t } = useI18n()
 
@@ -19,15 +19,13 @@ export default function callbackGrid(
 
   const refreshRecords = async (params: {}) => {
     // Show spinner
-    store.commit('motor/isLoading', true)
-    // store.commit('motor/setSpinner', true)
+    appStore.isLoading(true, true)
     await repository.index(params).then((result) => {
       rows.value = result.data.data
       meta.value = result.data.meta
     })
     // Show spinner
-    store.commit('motor/isLoading', false)
-    // store.commit('motor/setSpinner', false)
+    appStore.isLoading(false, false)
   }
 
   const replaceRecord = (record: any) => {}

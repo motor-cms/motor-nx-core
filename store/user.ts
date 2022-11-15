@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { reactive, ref, toRefs } from 'vue'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import AxiosResponse from '../types/axios-response'
 import { useAppStore } from './app'
 
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('users', () => {
       localStorage.setItem('user', JSON.stringify(meResponse.data.data))
       setAuthenticationStatus(true)
       setUser(meResponse.data.data)
-    } catch (error) {
+    } catch (error: any) {
       if (error.response && error.response.status) {
         signInError.value = error.response.status
       }

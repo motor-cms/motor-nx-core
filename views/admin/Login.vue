@@ -1,4 +1,10 @@
 <template>
+  <loading
+    :opacity="0.5"
+    blur="none"
+    v-model:active="spinnerActive"
+    :is-full-page="true"
+  />
   <div>
     <section>
       <div class="page-header section-height-75">
@@ -78,14 +84,21 @@
 import { computed, defineComponent, watch } from 'vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../../store/user';
-import { storeToRefs } from 'pinia';
+import { useUserStore } from '../../store/user'
+import { storeToRefs } from 'pinia'
+import Loading from 'vue-loading-overlay'
+import { useAppStore } from '../../store/app'
 
 export default defineComponent({
   name: 'admin.login',
+  components: {
+    Loading,
+  },
   setup() {
     const router = useRouter()
     const userStore = useUserStore()
+    const appStore = useAppStore()
+    const { spinnerActive } = storeToRefs(appStore)
     const { authenticated, signInError } = storeToRefs(userStore)
 
     let login = ref({
@@ -93,7 +106,6 @@ export default defineComponent({
       password: '',
       remember: false,
     })
-
 
     if (authenticated.value) {
       router.push({ name: 'admin.dashboard' })
@@ -107,10 +119,10 @@ export default defineComponent({
     })
 
     watch(signInError, (newValue) => {
-      console.log("hier", newValue)
+      console.log('hier', newValue)
     })
 
-    return { ...userStore, signInError, login }
+    return { ...userStore, signInError, login, spinnerActive }
   },
 })
 </script>

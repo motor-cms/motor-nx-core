@@ -1,22 +1,22 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 export const useAppStore = defineStore('app', () => {
-  const state = reactive({
-    spinner: false,
-    loading: false,
-  })
+  const spinnerActive = ref(false)
+  const loading = ref(false)
 
-  const setSpinner = (state: any, value: boolean) => {
-    state.spinner = value
+  const setSpinner = (value: boolean) => {
+    spinnerActive.value = value
   }
 
-  const isLoading = (state: any, value: boolean) => {
-    state.loading = value
+  const isLoading = (value: boolean, showSpinner: boolean) => {
+    loading.value = value
+    setSpinner(showSpinner)
   }
 
   return {
-    state,
+    spinnerActive,
+    loading,
     setSpinner,
     isLoading,
   }

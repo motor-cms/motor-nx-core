@@ -2,8 +2,10 @@ import { defineStore, storeToRefs } from 'pinia'
 import { reactive, ref, toRefs } from 'vue'
 import axios from 'axios'
 import AxiosResponse from '../types/axios-response'
+import { useAppStore } from './app'
 
 export const useUserStore = defineStore('users', () => {
+  const appStore = useAppStore()
   const authenticated = ref(!!localStorage.getItem('token'))
   const user = ref(JSON.parse(localStorage.getItem('user')))
   const token = ref(localStorage.getItem('token'))
@@ -23,6 +25,7 @@ export const useUserStore = defineStore('users', () => {
 
   const login = async (email: string, password: string) => {
     try {
+      appStore.isLoading(true, true)
       await axios.get('/sanctum/csrf-cookie')
       const loginResponse: AxiosResponse = await axios.post('/api/auth/login', {
         email: email,
@@ -47,6 +50,7 @@ export const useUserStore = defineStore('users', () => {
       }
       console.error('HANDLE THIS', error)
     }
+    appStore.isLoading(false, false)
   }
 
   const refreshUser = async () => {

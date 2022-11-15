@@ -94,7 +94,7 @@ export default defineComponent({
   name: 'AdminHeader',
   components: { AdminModalLogout },
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
 
     const active = ref(false)
 
@@ -107,6 +107,7 @@ export default defineComponent({
     const confirm = () => {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
+      userStore.setToken(null)
       router.replace({ name: 'admin.login' })
     }
 

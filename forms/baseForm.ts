@@ -5,7 +5,7 @@ import { useToast } from 'vue-toastification'
 // import Repository from '@/types/repository'
 import Ref from '../types/model'
 import ObjectSchema from 'yup/lib/object'
-import { useStore } from 'vuex'
+import { useAppStore } from '../store/app'
 
 export default function baseForm(
   languageFilePrefix: string,
@@ -23,13 +23,13 @@ export default function baseForm(
   // Load router
   const router = useRouter()
 
-  const store = useStore()
+  const appStore = useAppStore()
 
   const toast = useToast()
 
   // Get record from id and set values. Redirect back and show error if record was not found
   const getData = async (id: number | string) => {
-    store.commit('motor/setSpinner', true)
+    appStore.setSpinner(true)
 
     const response = await (<any>(
       repository.get(<number>id, repositoryParams).catch((e: Error) => {
@@ -38,7 +38,7 @@ export default function baseForm(
       })
     ))
     model.value = response.data.data
-    store.commit('motor/setSpinner', false)
+    appStore.setSpinner(false)
   }
 
   // Initialize form with default values and the validation schema
@@ -82,7 +82,7 @@ export default function baseForm(
     }
 
     // Disable spinner
-    store.commit('motor/setSpinner', false)
+    appStore.setSpinner(false)
 
     switch (response.status) {
       case 200:

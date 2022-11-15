@@ -110,7 +110,7 @@
                   </h3>
                 </td>
               </tr>
-              <template v-if="rows.length === 0 && isLoading">
+              <template v-if="rows.length === 0 && loading">
                 <tr
                   v-for="index in 5"
                   :key="index"
@@ -199,6 +199,8 @@ import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import { useAppStore } from '../../../store/app';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   components: {
@@ -251,12 +253,11 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = useStore()
+    const appStore = useAppStore()
+    const { loading } = storeToRefs(appStore)
+
     const { t } = useI18n()
     const filterValues = reactive({ per_page: 25, page: 1 })
-    const isLoading = computed(() => {
-      return store.state.motor.loading
-    })
 
     const submitFilter = (data: { parameter: string; value: string }) => {
       // Reset page when filtering or searching
@@ -349,7 +350,7 @@ export default defineComponent({
 
     return {
       filterValues,
-      isLoading,
+      loading,
       nextPage,
       previousPage,
       submitFilter,

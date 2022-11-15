@@ -82,11 +82,9 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
-import useAuth from 'motor-core/compositions/authentication/useAuth'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
-import { storeToRefs } from 'pinia';
 import { useUserStore } from '../../store/user';
 
 
@@ -95,6 +93,7 @@ export default defineComponent({
   components: { AdminModalLogout },
   setup() {
     const userStore = useUserStore()
+    const { removeUser } = userStore
 
     const active = ref(false)
 
@@ -107,7 +106,7 @@ export default defineComponent({
     const confirm = () => {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
-      userStore.setToken(null)
+      userStore.removeUser()
       router.replace({ name: 'admin.login' })
     }
 

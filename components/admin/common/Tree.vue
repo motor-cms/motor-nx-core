@@ -35,16 +35,22 @@ export default defineComponent({
     },
   },
   components: { TreeItem },
-  methods: {
-    makeFolder: function (item: any) {
+  setup() {
+    const makeFolder = (item: any) => {
       item.children = []
-      this.addItem(item)
-    },
-    addItem: function (item: any) {
+      addItem(item)
+    }
+
+    const addItem = (item: any) => {
       item.children.push({
         name: 'new stuff',
       })
-    },
+    }
+
+    return {
+      makeFolder,
+      addItem,
+    }
   },
 })
 </script>

@@ -32,13 +32,13 @@ export default defineComponent({
   setup(props, ctx) {
     const active = ref(false)
     const askForConfirmation = () => {
-      active.value = true;
+      active.value = true
     }
     const cancel = () => {
-      active.value = false;
+      active.value = false
     }
     const confirm = () => {
-      active.value = false;
+      active.value = false
       ctx.emit('submit', {
         component: 'DeleteButton',
         record: props.record.id,

@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import { Modal } from 'bootstrap'
-import { defineComponent } from 'vue'
+import { computed, defineComponent, reactive, watch } from 'vue'
 
 export default defineComponent({
   name: 'DeleteConfirmation',
@@ -60,40 +60,45 @@ export default defineComponent({
     record: Object,
     active: Boolean,
   },
-  watch: {
-    active(newValue) {
-      const modal = new Modal(
-        document.getElementById('admin-modal-' + this.record.id),
-        { keyboard: false, backdrop: 'static' }
-      )
-
-      if (newValue) {
-        modal.show()
-      } else {
-        modal.hide()
-      }
-    },
-  },
-  computed: {
-    body(): string {
-      return this.record.name
-    },
-  },
   emits: ['cancel', 'confirm'],
-  data() {
-    return {
+  setup(props, ctx) {
+    const data = reactive({
       showModal: false,
+    })
+    const cancel = () => {
+      data.showModal = false
+      ctx.emit('cancel')
     }
-  },
-  methods: {
-    cancel() {
-      this.showModal = false
-      this.$emit('cancel')
-    },
-    confirm() {
-      this.showModal = false
-      this.$emit('confirm')
-    },
+    const confirm = () => {
+      data.showModal = false
+      ctx.emit('confirm')
+    }
+    const body = computed(() => {
+      return props.record.name
+    })
+
+    watch(
+      () => props.active,
+      (newValue, oldValue) => {
+        const modal = new Modal(
+          document.getElementById('admin-modal-' + props.record.id),
+          { keyboard: false, backdrop: 'static' }
+        )
+
+        if (newValue) {
+          modal.show()
+        } else {
+          modal.hide()
+        }
+      }
+    )
+
+    return {
+      ...data,
+      cancel,
+      confirm,
+      body,
+    }
   },
 })
 </script>

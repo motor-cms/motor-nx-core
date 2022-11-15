@@ -86,12 +86,16 @@ import useAuth from 'motor-core/compositions/authentication/useAuth'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '../../store/user';
+
 
 export default defineComponent({
   name: 'AdminHeader',
   components: { AdminModalLogout },
   setup() {
+    const userStore = useUserStore();
+
     const active = ref(false)
 
     const router = useRouter()
@@ -99,6 +103,7 @@ export default defineComponent({
     const logout = () => {
       active.value = true
     }
+
     const confirm = () => {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
@@ -127,21 +132,14 @@ export default defineComponent({
       return []
     })
 
-    useAuth()
-
-    const store = useStore()
-
-    const user = computed(() => store.state.motor.user)
-
     return {
-      user,
       title,
       breadcrumbs,
       confirm,
       cancel,
       logout,
       active,
-      store,
+      ...userStore,
     }
   },
 })

@@ -197,7 +197,6 @@ import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
 import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '../../../store/app';
 import { storeToRefs } from 'pinia';

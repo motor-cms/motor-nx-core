@@ -23,6 +23,12 @@ export const useUserStore = defineStore('users', () => {
     token.value = value
   }
 
+  const removeUser = () => {
+    authenticated.value = false
+    user.value = null
+    token.value = null
+  }
+
   const login = async (email: string, password: string) => {
     try {
       appStore.isLoading(true, true)
@@ -73,5 +79,6 @@ export const useUserStore = defineStore('users', () => {
     setUser,
     signIn,
     refreshUser,
+    removeUser,
   }
 })

@@ -10,12 +10,13 @@
   </AdminContainer>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import AdminContainer from '../components/admin/Container.vue'
 import '../assets/js/soft-ui-dashboard.js'
-import { useStore } from 'vuex'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/css/index.css'
+import { useAppStore } from '../store/app'
+import { storeToRefs } from 'pinia'
 
 export default defineComponent({
   name: 'admin-layout',
@@ -24,6 +25,8 @@ export default defineComponent({
     Loading,
   },
   setup() {
+    const appStore = useAppStore()
+    const { spinnerActive } = storeToRefs(appStore)
     document.body.classList.add('g-sidenav-show', 'bg-gray-100')
 
     document.addEventListener('keydown', (event) => {
@@ -36,10 +39,6 @@ export default defineComponent({
         element.select()
       }
     })
-
-    const store = useStore()
-
-    const spinnerActive = computed(() => store.state.motor.spinner)
 
     return { spinnerActive }
   },

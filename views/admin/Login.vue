@@ -50,7 +50,7 @@
                     </div>
                     <div class="text-center">
                       <button
-                        @click="signIn(this.login)"
+                        @click="signIn(login)"
                         type="button"
                         class="btn bg-gradient-info w-100 mt-4 mb-0"
                       >
@@ -77,14 +77,16 @@
 <script lang="ts">
 import { computed, defineComponent, watch } from 'vue'
 import { ref } from 'vue'
-import useAuth from 'motor-core/compositions/authentication/useAuth'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { useUserStore } from '../../store/user';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'admin.login',
   setup() {
     const router = useRouter()
+    const userStore = useUserStore()
+    const { authenticated, signInError } = storeToRefs(userStore)
 
     let login = ref({
       email: '',
@@ -92,13 +94,6 @@ export default defineComponent({
       remember: false,
     })
 
-    const { signIn, signInError } = useAuth()
-
-    const store = useStore()
-
-    const authenticated = computed(() => {
-      return store.state.motor.authenticated
-    })
 
     if (authenticated.value) {
       router.push({ name: 'admin.dashboard' })
@@ -111,7 +106,11 @@ export default defineComponent({
       console.log(newValue)
     })
 
-    return { signIn, signInError, login }
+    watch(signInError, (newValue) => {
+      console.log("hier", newValue)
+    })
+
+    return { ...userStore, signInError, login }
   },
 })
 </script>

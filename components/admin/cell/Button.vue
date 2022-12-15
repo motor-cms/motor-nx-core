@@ -1,7 +1,7 @@
 <template>
   <router-link
     v-if="router.hasRoute(options.route)"
-    :to="{ name: options.route, params: { category_tree: record.id } }"
+    :to="to"
   >
     <button
       class="btn btn-info btn-sm me-2"
@@ -22,9 +22,15 @@ export default defineComponent({
     options: Object,
     record: Object,
   },
-  setup() {
+  setup(props) {
+    const to = { name: props.options.route, params: {}};
+    // eslint-disable-next-line vue/no-setup-props-destructure
+    to.params[props.options.property] = props.record.id;
+
+    console.log(to);
+
     const router = useRouter()
-    return { router }
+    return { router, to }
   },
 })
 </script>

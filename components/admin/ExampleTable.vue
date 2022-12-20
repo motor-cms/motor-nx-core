@@ -93,10 +93,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-xd.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Soft UI XD Version</h6>
@@ -112,8 +108,6 @@
                       data-bs-placement="bottom"
                       title="Ryan Tompson"
                     >
-                      <img alt="Image placeholder" src="/img/team-1.jpg" />
-                    </a>
                     <a
                       href="javascript:;"
                       class="avatar avatar-xs rounded-circle"
@@ -121,7 +115,6 @@
                       data-bs-placement="bottom"
                       title="Romina Hadid"
                     >
-                      <img alt="Image placeholder" src="/img/team-2.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -130,7 +123,6 @@
                       data-bs-placement="bottom"
                       title="Alexander Smith"
                     >
-                      <img alt="Image placeholder" src="/img/team-3.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -139,7 +131,6 @@
                       data-bs-placement="bottom"
                       title="Jessica Doe"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                   </div>
                 </td>
@@ -169,10 +160,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-atlassian.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Add Progress Track</h6>
@@ -188,7 +175,6 @@
                       data-bs-placement="bottom"
                       title="Romina Hadid"
                     >
-                      <img alt="Image placeholder" src="/img/team-2.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -197,7 +183,6 @@
                       data-bs-placement="bottom"
                       title="Jessica Doe"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                   </div>
                 </td>
@@ -227,10 +212,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-slack.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
@@ -246,7 +227,6 @@
                       data-bs-placement="bottom"
                       title="Romina Hadid"
                     >
-                      <img alt="Image placeholder" src="/img/team-3.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -255,7 +235,6 @@
                       data-bs-placement="bottom"
                       title="Jessica Doe"
                     >
-                      <img alt="Image placeholder" src="/img/team-1.jpg" />
                     </a>
                   </div>
                 </td>
@@ -285,10 +264,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-spotify.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
@@ -304,7 +279,6 @@
                       data-bs-placement="bottom"
                       title="Ryan Tompson"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -313,7 +287,6 @@
                       data-bs-placement="bottom"
                       title="Romina Hadid"
                     >
-                      <img alt="Image placeholder" src="/img/team-3.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -322,7 +295,6 @@
                       data-bs-placement="bottom"
                       title="Alexander Smith"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -331,7 +303,6 @@
                       data-bs-placement="bottom"
                       title="Jessica Doe"
                     >
-                      <img alt="Image placeholder" src="/img/team-1.jpg" />
                     </a>
                   </div>
                 </td>
@@ -361,10 +332,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-jira.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
@@ -380,7 +347,6 @@
                       data-bs-placement="bottom"
                       title="Ryan Tompson"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                   </div>
                 </td>
@@ -410,10 +376,6 @@
                 <td>
                   <div class="d-flex px-2 py-1">
                     <div>
-                      <img
-                        src="/img/small-logos/logo-invision.svg"
-                        class="avatar avatar-sm me-3"
-                      />
                     </div>
                     <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
@@ -429,7 +391,6 @@
                       data-bs-placement="bottom"
                       title="Ryan Tompson"
                     >
-                      <img alt="Image placeholder" src="/img/team-1.jpg" />
                     </a>
                     <a
                       href="javascript:;"
@@ -438,7 +399,6 @@
                       data-bs-placement="bottom"
                       title="Jessica Doe"
                     >
-                      <img alt="Image placeholder" src="/img/team-4.jpg" />
                     </a>
                   </div>
                 </td>

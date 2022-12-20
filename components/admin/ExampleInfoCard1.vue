@@ -58,7 +58,6 @@
             bg-cover
             h-100
           "
-          style="background-image: url('/img/ivancik.jpg')"
         >
           <span class="mask bg-gradient-dark"></span>
           <div

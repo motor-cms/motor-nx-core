@@ -108,6 +108,7 @@
                       data-bs-placement="bottom"
                       title="Ryan Tompson"
                     >
+                    </a>
                     <a
                       href="javascript:;"
                       class="avatar avatar-xs rounded-circle"

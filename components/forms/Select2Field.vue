@@ -3,7 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect v-model="inputValue" :options="options" :searchable="true" />
+    <Multiselect :object="true" v-model="inputValue" :options="options" :searchable="true" />
 
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
@@ -44,6 +44,9 @@ export default defineComponent({
     } = useField(<string>props.name, undefined, {
       initialValue: <string>props.value,
     })
+
+    console.log("field ready");
+
     return {
       handleChange,
       handleBlur,

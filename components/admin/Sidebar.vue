@@ -91,7 +91,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, watch } from 'vue'
-import useNavigation from 'motor-core/compositions/navigation/useNavigation'
+import useNavigation from 'motor-nx-core/compositions/navigation/useNavigation'
 import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({

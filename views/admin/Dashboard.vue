@@ -7,11 +7,11 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import AdminExampleInfoChart from 'motor-core/components/admin/ExampleInfoChart.vue'
-import AdminExampleInfoCard1 from 'motor-core/components/admin/ExampleInfoCard1.vue'
-import AdminExampleInfoCard2 from 'motor-core/components/admin/ExampleInfoCard2.vue'
-import AdminExampleTable from 'motor-core/components/admin/ExampleTable.vue'
-import AdminExampleOverview from 'motor-core/components/admin/ExampleOverview.vue'
+import AdminExampleInfoChart from 'motor-nx-core/components/admin/ExampleInfoChart.vue'
+import AdminExampleInfoCard1 from 'motor-nx-core/components/admin/ExampleInfoCard1.vue'
+import AdminExampleInfoCard2 from 'motor-nx-core/components/admin/ExampleInfoCard2.vue'
+import AdminExampleTable from 'motor-nx-core/components/admin/ExampleTable.vue'
+import AdminExampleOverview from 'motor-nx-core/components/admin/ExampleOverview.vue'
 
 export default defineComponent({
   name: 'admin-dashboard',

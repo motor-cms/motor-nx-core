@@ -22,7 +22,7 @@
   </draggable>
 </template>
 <script lang="ts">
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
 export default defineComponent({
   props: {

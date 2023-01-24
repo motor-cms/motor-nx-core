@@ -1,16 +1,5 @@
 <template>
-  <nav
-    class="
-      navbar navbar-main navbar-expand-lg
-      motor-navbar-top
-      px-0
-      mx-4
-      border-radius-xl
-      shadow-none
-    "
-    id="navbarBlur"
-    navbar-scroll="true"
-  >
+  <nav class="navbar motor-navbar-top navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="true">
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -43,6 +32,7 @@
       </nav>
       <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto" id="navbar">
         <ul class="ms-md-auto pe-md-3 d-flex navbar-nav justify-content-end">
+          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot" />
           <li class="nav-item d-flex align-items-center" v-if="user">
             <span class="nav-link text-body font-weight-bold px-0">
               <fa v-if="!user.avatar" icon="user" class="me-sm-1"></fa>
@@ -86,6 +76,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
 import { useUserStore } from '../../store/user';
+import {useTeleport} from "../../compositions/ui/teleport";
 
 
 export default defineComponent({
@@ -94,7 +85,7 @@ export default defineComponent({
   setup() {
     const userStore = useUserStore()
     const { removeUser } = userStore
-
+    const { navbarSlot } = useTeleport();
     const active = ref(false)
 
     const router = useRouter()
@@ -140,6 +131,7 @@ export default defineComponent({
       logout,
       active,
       ...userStore,
+      navbarSlot
     }
   },
 })

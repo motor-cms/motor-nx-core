@@ -31,7 +31,7 @@ import {
     faGrip,
     faMobile,
     faTablet,
-    faDisplay, faColumns, faTableCells, faTableColumns, faCubes, faCube
+    faDisplay, faColumns, faTableCells, faTableColumns, faCubes, faCube, faPaintbrush, faUndo, faRedo
 } from '@fortawesome/free-solid-svg-icons'
 import {faInstagram, faTwitter} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
@@ -76,7 +76,10 @@ library.add(
     faTableCells,
     faTableColumns,
     faCubes,
-    faCube
+    faCube,
+    faPaintbrush,
+    faUndo,
+    faRedo
 )
 
 export {FontAwesomeIcon}

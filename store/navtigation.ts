@@ -1,6 +1,6 @@
 import {defineStore, storeToRefs} from 'pinia'
 import {reactive, ref, toRefs} from 'vue'
-import useApi from "~/packages/motor-nx-core/composables/http/api";
+import useApi from "@zrm/motor-nx-core/composables/http/api";
 
 export const useNavigationStore = defineStore('navigations', () => {
   const navigationItems = ref([])

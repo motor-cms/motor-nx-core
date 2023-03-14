@@ -35,8 +35,8 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
-import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
+import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 
 export default defineComponent({

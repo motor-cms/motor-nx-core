@@ -14,7 +14,7 @@
 <script lang="ts">
 import { useRouter } from 'vue-router'
 import { defineComponent } from 'vue'
-import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 
 export default defineComponent({
   name: 'Button',

@@ -70,28 +70,28 @@ const languageModules = []
  * Motor-Media
  */
 languageModules.push(
-  import.meta.glob('../../motor-nx-media/locales/**/*.json', { eager: true })
+  import.meta.glob('../../@zrm/motor-nx-media/locales/**/*.json', { eager: true })
 )
 
 /**
  * Motor-Admin
  */
 languageModules.push(
-  import.meta.glob('../../motor-nx-admin/locales/**/*.json', { eager: true })
+  import.meta.glob('../../@zrm/motor-nx-admin/locales/**/*.json', { eager: true })
 )
 
 /**
  * Motor-Core
  */
 languageModules.push(
-  import.meta.glob('../../motor-nx-core/locales/**/*.json', { eager: true })
+  import.meta.glob('../../@zrm/motor-nx-core/locales/**/*.json', { eager: true })
 )
 
 /**
  * Motor-Builder
  */
 languageModules.push(
-  import.meta.glob('../../motor-nx-builder/locales/**/*.json', { eager: true })
+  import.meta.glob('../../@zrm/motor-nx-builder/locales/**/*.json', { eager: true })
 )
 
 languageModules.forEach(async (module) => {

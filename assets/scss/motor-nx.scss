@@ -608,3 +608,108 @@
     transform: rotate(360deg);
   }
 }
+
+
+//Global Spinner
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: $primary transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+//Header Spinner
+.spinner-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.spinner-header div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  animation: spinner-header 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: $primary transparent transparent transparent;
+}
+.spinner-header div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.spinner-header div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.spinner-header div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes spinner-header {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+//// Individual Modal Styles
+//.modal {
+//  opacity: 0;
+//  background-color:rgba(0, 0, 0, 0.5);
+//  transform: translateX(-200%);
+//  display: block !important;
+//  &.show {
+//    display: block;
+//    transform: translateX(0);
+//    opacity: 1;
+//  }
+//}
+
+.custommodal {
+  max-width: 400px;
+  position: fixed;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  opacity: 0;
+  &.fade {
+    transition: opacity 3500ms ease;
+  }
+  &.show {
+    opacity: 1;
+  }
+}

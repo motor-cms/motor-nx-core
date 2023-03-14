@@ -1,6 +1,5 @@
 <template>
-  <router-link
-    v-if="router.hasRoute(options.route)"
+  <NuxtLink
     :to="to"
   >
     <button
@@ -10,11 +9,12 @@
     >
       {{ options.name }}
     </button>
-  </router-link>
+  </NuxtLink>
 </template>
 <script lang="ts">
 import { useRouter } from 'vue-router'
 import { defineComponent } from 'vue'
+import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
 
 export default defineComponent({
   name: 'Button',
@@ -23,14 +23,9 @@ export default defineComponent({
     record: Object,
   },
   setup(props) {
-    const to = { name: props.options.route, params: {}};
-    // eslint-disable-next-line vue/no-setup-props-destructure
-    to.params[props.options.property] = props.record.id;
-
-    console.log(to);
-
-    const router = useRouter()
-    return { router, to }
-  },
+    const routeParser = useRouteParser();
+    const to = routeParser.routeDottedToSlash(props.options.route) + '/' +  props.record.id + '/' + props.options.property;
+    return { to }
+  }
 })
 </script>

@@ -7,9 +7,8 @@
       :id="id"
       class="form-control"
       :name="name"
-      :value="inputValue"
+      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
-      @input="handleChange"
       @blur="handleBlur"
     ></textarea>
     <p class="text-danger" v-if="errorMessage">
@@ -27,7 +26,7 @@ export default defineComponent({
 
   props: {
     id: String,
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
@@ -42,19 +41,19 @@ export default defineComponent({
   },
   setup(props) {
     const {
-      value: inputValue,
+      value,
       errorMessage,
       handleBlur,
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.value,
+      initialValue: <string>props.modelValue,
     })
     return {
       handleChange,
       handleBlur,
       errorMessage,
-      inputValue,
+      value,
       meta,
     }
   },

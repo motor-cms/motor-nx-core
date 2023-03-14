@@ -22,7 +22,6 @@ export default defineComponent({
     AdminHeader,
   },
   setup() {
-    document.body.classList.add('g-sidenav-show', 'bg-gray-100')
   },
 })
 </script>

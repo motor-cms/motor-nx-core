@@ -8,10 +8,11 @@
       :id="id"
       class="form-control"
       :name="name"
-      :value="inputValue"
+      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
-      @input="changed"
       @blur="blur"
+      :disabled="disableForms"
+      @input="changed"
     />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
@@ -21,6 +22,8 @@
 <script lang="ts">
 import { defineComponent, watch } from 'vue'
 import { useField } from 'vee-validate'
+import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {storeToRefs} from "pinia";
 
 export default defineComponent({
   name: 'InputField',
@@ -30,7 +33,7 @@ export default defineComponent({
       type: String,
       default: 'text',
     },
-    value: {
+    modelValue: {
       default: '',
     },
     name: {
@@ -48,42 +51,37 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const {
-      value: inputValue,
+      value,
       errorMessage,
       handleBlur,
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.value,
+      initialValue: <string>props.modelValue,
     })
 
-    watch(inputValue, (newValue) => {
-      console.log('prop value changed for field ' + props.name, newValue)
-    })
-
+    const appStore = useAppStore();
+    const { loading, updatingInBackground, disableForms} = storeToRefs(appStore);
     const changed = (e: Event) => {
-      handleChange(e)
-      setTimeout(() => {
-        emit('change', (<HTMLInputElement>e.target).value)
-      }, 100)
+      emit('change', (<HTMLInputElement>e.target).value)
     }
 
     const blur = (e: Event) => {
       handleBlur(e)
-      console.log(e)
-      setTimeout(() => {
-        emit('blur', (<HTMLInputElement>e.target).value)
-      }, 100)
+      emit('blur', (<HTMLInputElement>e.target).value)
     }
 
     return {
       handleChange,
       handleBlur,
       errorMessage,
-      inputValue,
       meta,
       changed,
       blur,
+      loading,
+      value,
+      updatingInBackground,
+      disableForms
     }
   },
 })

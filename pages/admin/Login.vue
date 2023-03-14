@@ -1,11 +1,6 @@
 <template>
-  <loading
-    :opacity="0.5"
-    blur="none"
-    v-model:active="spinnerActive"
-    :is-full-page="true"
-  />
-  <div>
+  <AdminPartialsSpinner v-if="spinnerActive" />
+  <div v-if="!spinnerActive && !attemptLoginFromStorage">
     <section>
       <div class="page-header section-height-75">
         <div class="container">
@@ -23,50 +18,50 @@
                     <label>Email</label>
                     <div class="mb-3">
                       <input
-                        v-model="login.email"
-                        type="email"
-                        class="form-control"
-                        placeholder="Email"
-                        aria-label="Email"
-                        aria-describedby="email-addon"
+                          v-model="login.email"
+                          type="email"
+                          class="form-control"
+                          placeholder="Email"
+                          aria-label="Email"
+                          aria-describedby="email-addon"
                       />
                     </div>
                     <label>Password</label>
                     <div class="mb-3">
                       <input
-                        v-model="login.password"
-                        type="password"
-                        class="form-control"
-                        placeholder="Password"
-                        aria-label="Password"
-                        aria-describedby="password-addon"
+                          v-model="login.password"
+                          type="password"
+                          class="form-control"
+                          placeholder="Password"
+                          aria-label="Password"
+                          aria-describedby="password-addon"
                       />
                     </div>
                     <div class="form-check form-switch">
                       <input
-                        v-model="login.remember"
-                        class="form-check-input"
-                        type="checkbox"
-                        id="rememberMe"
-                        checked=""
+                          v-model="login.remember"
+                          class="form-check-input"
+                          type="checkbox"
+                          id="rememberMe"
+                          checked=""
                       />
                       <label class="form-check-label" for="rememberMe"
-                        >Remember me</label
+                      >Remember me</label
                       >
                     </div>
                     <div class="text-center">
                       <button
-                        @click="signIn(login)"
-                        type="button"
-                        class="btn bg-gradient-info w-100 mt-4 mb-0"
+                          @click="signIn(login)"
+                          type="button"
+                          class="btn bg-gradient-info w-100 mt-4 mb-0"
                       >
                         Sign in
                       </button>
                     </div>
                     <div
-                      v-if="signInError"
-                      class="alert alert-danger text-white mt-1"
-                      role="alert"
+                        v-if="signInError"
+                        class="alert alert-danger text-white mt-1"
+                        role="alert"
                     >
                       <strong>Error!</strong> {{ signInError }}
                     </div>
@@ -86,43 +81,30 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
-import Loading from 'vue-loading-overlay'
 import { useAppStore } from '../../store/app'
-
 export default defineComponent({
   name: 'admin.login',
-  components: {
-    Loading,
-  },
   setup() {
     const router = useRouter()
     const userStore = useUserStore()
-    const appStore = useAppStore()
+    const appStore = useAppStore();
     const { spinnerActive } = storeToRefs(appStore)
     const { authenticated, signInError } = storeToRefs(userStore)
-
+    const attemptLoginFromStorage = ref(true);
     let login = ref({
       email: '',
       password: '',
       remember: false,
     })
 
-    if (authenticated.value) {
-      router.push({ name: 'admin.dashboard' })
-    }
-
-    watch(authenticated, (newValue) => {
-      if (newValue) {
-        router.push({ name: 'admin.dashboard' })
+    onMounted(async () => {
+      if (!authenticated.value) {
+        await userStore.loginFromStorage();
       }
-      console.log(newValue)
+      attemptLoginFromStorage.value =false;
     })
 
-    watch(signInError, (newValue) => {
-      console.log('hier', newValue)
-    })
-
-    return { ...userStore, signInError, login, spinnerActive }
+    return { ...userStore, signInError, login, spinnerActive, attemptLoginFromStorage }
   },
 })
 </script>

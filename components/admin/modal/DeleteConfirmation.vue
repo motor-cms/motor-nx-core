@@ -42,7 +42,7 @@
             class="btn bg-gradient-primary"
             data-bs-dismiss="modal"
           >
-            {{ $t('global.delete') }}
+            {{ $t('global.do_delete') }}
           </button>
         </div>
       </div>
@@ -51,8 +51,9 @@
 </template>
 
 <script lang="ts">
-import { Modal } from 'bootstrap'
+// import { Modal } from 'bootstrap'
 import { computed, defineComponent, reactive, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'DeleteConfirmation',
@@ -62,6 +63,10 @@ export default defineComponent({
   },
   emits: ['cancel', 'confirm'],
   setup(props, ctx) {
+
+    // Load i18n module
+    const { t } = useI18n()
+
     const data = reactive({
       showModal: false,
     })
@@ -77,21 +82,22 @@ export default defineComponent({
       return props.record.name
     })
 
-    watch(
-      () => props.active,
-      (newValue, oldValue) => {
-        const modal = new Modal(
-          document.getElementById('admin-modal-' + props.record.id),
-          { keyboard: false, backdrop: 'static' }
-        )
-
-        if (newValue) {
-          modal.show()
-        } else {
-          modal.hide()
-        }
-      }
-    )
+    // TODO: @Lukas Umbau zu Modal Komponente
+    // watch(
+    //   () => props.active,
+    //   (newValue, oldValue) => {
+    //     // const modal = new Modal(
+    //     //   document.getElementById('admin-modal-' + props.record.id),
+    //     //   { keyboard: false, backdrop: 'static' }
+    //     // )
+    //     //
+    //     // if (newValue) {
+    //     //   modal.show()
+    //     // } else {
+    //     //   modal.hide()
+    //     // }
+    //   }
+    // )
 
     return {
       ...data,

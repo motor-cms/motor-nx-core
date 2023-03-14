@@ -5,7 +5,7 @@
       v-model="term"
       @blur="$emit('submit', { parameter: 'search', value: term })"
       @keyup.enter="$event.target.blur()"
-      placeholder="Press CMD + K to search"
+      :placeholder="$t('global.press_enter_to_serach')"
       class="form-control form-control-alternative"
     />
   </div>
@@ -20,6 +20,6 @@ export default defineComponent({
       term: '',
     }
   },
-  emits: ['submit'],
+  emits: ['submit']
 })
 </script>

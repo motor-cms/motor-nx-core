@@ -8,7 +8,7 @@
       :id="id"
       class="form-control"
       :name="name"
-      :value="inputValue"
+      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
       @input="handleChange"
       @blur="handleBlur"
@@ -30,7 +30,7 @@ export default defineComponent({
       type: String,
       default: 'text',
     },
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
@@ -49,13 +49,13 @@ export default defineComponent({
   },
   setup(props) {
     const {
-      value: inputValue,
+      value,
       errorMessage,
       handleBlur,
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.value,
+      initialValue: <string>props.modelValue,
     })
 
     // Convert rgbstring to hex
@@ -83,9 +83,9 @@ export default defineComponent({
       return '#' + r + g + b
     }
 
-    watch(inputValue, (value: string) => {
-      if (value.indexOf('#') == -1) {
-        inputValue.value = RGBToHex(value)
+    watch(value, (v: string) => {
+      if (v.indexOf('#') == -1) {
+        value.value = RGBToHex(v)
       }
     })
 
@@ -93,8 +93,8 @@ export default defineComponent({
       handleChange,
       handleBlur,
       errorMessage,
-      inputValue,
       meta,
+      value
     }
   },
 })

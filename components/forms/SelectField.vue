@@ -6,9 +6,9 @@
     <select
       :id="id"
       :name="name"
-      :value="inputValue"
+      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
-      @input="handleChange"
+      :disabled="disableForms"
       @blur="handleBlur"
       class="form-control"
     >
@@ -28,13 +28,15 @@
 <script lang="ts">
 import { useField } from 'vee-validate'
 import { defineComponent } from 'vue'
+import {useAppStore} from "motor-nx-core/store/app";
+import {storeToRefs} from "pinia";
 
 export default defineComponent({
   name: 'SelectField',
 
   props: {
     id: String,
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
@@ -49,21 +51,27 @@ export default defineComponent({
     options: Array,
   },
   setup(props) {
+    const appStore = useAppStore();
+    const { loading, updatingInBackground, disableForms } = storeToRefs(appStore);
     const {
-      value: inputValue,
+      value,
       errorMessage,
       handleBlur,
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.value,
+      initialValue: <string>props.modelValue,
     })
+
     return {
       handleChange,
       handleBlur,
       errorMessage,
-      inputValue,
+      value,
       meta,
+      loading,
+      updatingInBackground,
+      disableForms
     }
   },
 })

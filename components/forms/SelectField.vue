@@ -28,7 +28,7 @@
 <script lang="ts">
 import { useField } from 'vee-validate'
 import { defineComponent } from 'vue'
-import {useAppStore} from "motor-nx-core/store/app";
+import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 
 export default defineComponent({

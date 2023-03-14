@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import {useToast} from 'vue-toastification'
 import {useI18n} from 'vue-i18n'
 import {useAppStore} from '../store/app'
-import {useGridData} from "~/packages/motor-nx-core/composables/grid/gridData";
+import {useGridData} from "@zrm/motor-nx-core/composables/grid/gridData";
 
 export default function callbackGrid(
   repository: Repository,

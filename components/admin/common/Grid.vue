@@ -235,12 +235,12 @@ import moment from 'moment'
 import {Skeletor} from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
 import {useI18n} from 'vue-i18n'
-import {useAppStore} from 'motor-nx-core/store/app';
+import {useAppStore} from '@zrm/motor-nx-core/store/app';
 import {storeToRefs} from 'pinia';
-import Button from "motor-nx-core/components/admin/cell/Button.vue";
-import EditButton from "motor-nx-core/components/admin/cell/EditButton.vue";
-import DeleteButton from "motor-nx-core/components/admin/cell/DeleteButton.vue";
-import useRouteParser from "motor-nx-core/composables/route/parse";
+import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
+import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
+import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import app from "vue-easy-lightbox/src/dev-entry/App.vue";
 import page from "nuxt/dist/pages/runtime/page.mjs";
 

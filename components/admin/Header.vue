@@ -75,9 +75,9 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
-import { useUserStore } from 'motor-nx-core/store/user';
-import {useTeleport} from "motor-nx-core/composables/ui/teleport";
-import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import { useUserStore } from '@zrm/motor-nx-core/store/user';
+import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
+import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 
 

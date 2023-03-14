@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useRouteParser from "motor-nx-core/composables/route/parse";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 
 export default defineComponent({
   name: 'EditButton',

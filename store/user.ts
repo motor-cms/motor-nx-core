@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { reactive, ref, toRefs } from 'vue'
 import { useAppStore } from './app'
-import useApi from "motor-nx-core/composables/http/api";
+import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {AsyncData} from "#app";
 
 export const useUserStore = defineStore('users', () => {

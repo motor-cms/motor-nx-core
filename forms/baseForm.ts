@@ -2,12 +2,12 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
-import Repository from 'motor-nx-core/types/repository'
+import Repository from '@zrm/motor-nx-core/types/repository'
 import Ref from '../types/model'
 import ObjectSchema from 'yup/lib/object'
-import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {Exception} from "sass";
-import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 
 export default function baseForm(
   languageFilePrefix: string,

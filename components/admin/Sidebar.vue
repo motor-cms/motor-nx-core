@@ -119,9 +119,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, watch } from 'vue'
-import {useNavigationStore} from "motor-nx-core/store/navtigation";
+import {useNavigationStore} from "@zrm/motor-nx-core/store/navtigation";
 import {storeToRefs} from "pinia";
-import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
+import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 

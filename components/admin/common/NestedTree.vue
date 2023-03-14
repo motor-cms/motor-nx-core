@@ -9,8 +9,8 @@
   >
     <template #item="{ element }">
       <li>
-        <font-awesome-icon v-if="element.id !== record" icon="folder" />
-        <font-awesome-icon
+        <fa v-if="element.id !== record" icon="folder" />
+        <fa
           v-if="element.id === record"
           icon="file"
           style="color: #cb0c9f"

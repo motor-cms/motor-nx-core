@@ -64,7 +64,7 @@
                 justify-content-center
               "
               >
-                <font-awesome-icon :icon="item.icon"/>
+                <fa :icon="item.icon"/>
               </div>
               <span class="nav-link-text ms-1">{{ $t(item.name) }}</span>
             </NuxtLink>
@@ -87,7 +87,7 @@
                 justify-content-center
               "
               >
-                <font-awesome-icon :icon="item.icon" />
+                <fa :icon="item.icon" />
               </div>
               <span class="nav-link-text ms-1">{{ $t(item.name) }}</span>
             </a>

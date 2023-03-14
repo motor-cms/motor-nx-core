@@ -1,36 +1,28 @@
 import Repository from '../types/repository'
-import { ref } from 'vue'
-import { useToast } from 'vue-toastification'
-import { useI18n } from 'vue-i18n'
-import { useAppStore } from '../store/app'
+import {ref} from 'vue'
+import {useToast} from 'vue-toastification'
+import {useI18n} from 'vue-i18n'
+import {useAppStore} from '../store/app'
+import {useGridData} from "~/packages/motor-nx-core/composables/grid/gridData";
 
 export default function callbackGrid(
   repository: Repository,
   languagePrefix: string
 ) {
   const toast = useToast()
-
   const appStore = useAppStore()
 
-  const { t } = useI18n()
+  const {t} = useI18n()
 
   const rows = ref([])
-  const meta = ref({ current_page: 1, from: 1, to: 1 })
+  const meta = ref({current_page: 1, from: 1, to: 1})
 
-  const refreshRecords = async (params: {}) => {
-    // Show spinner
-    appStore.isLoading(true, true)
-    await repository.index(params).then((result) => {
-      rows.value = result.data.data
-      meta.value = result.data.meta
-    })
-    // Show spinner
-    appStore.isLoading(false, false)
+  const getGridData = async (params: any, id: string = '', cached: boolean = true) => {
+      const { data: result, pending, error, refresh } = await repository.index(params, cached);
+      if (error.value) throw new Error(error)
+      rows.value = result.value.data
+      meta.value = result.value.meta
   }
-
-  const replaceRecord = (record: any) => {}
-
-  refreshRecords({})
 
   const handleCellEvent = async (params: {
     filterValues: any
@@ -39,14 +31,15 @@ export default function callbackGrid(
     switch (params.componentParams.component) {
       case 'DeleteButton':
         // Delete the record
+        appStore.isLoading(true, true)
         await repository.delete(params.componentParams.record)
-
+        await refreshGridData([getGridData], [], params.filterValues, '', false)
         toast.success(t(languagePrefix + '.deleted'))
-
-        await refreshRecords(params.filterValues)
+        appStore.isLoading(false, false)
         break
       case 'UpdateRecord':
         const payload: any = {}
+        appStore.isLoading(true, true)
         payload[params.componentParams.property] = params.componentParams.value
         const newRecord = await repository.update(
           payload,
@@ -54,10 +47,22 @@ export default function callbackGrid(
         )
         rows.value[params.componentParams.index] = newRecord.data.data
         toast.success(t(languagePrefix + '.updated'))
+        appStore.isLoading(false, false)
         break
       default:
         console.log('UNHANDLED EVENT', params.componentParams)
     }
   }
-  return { rows, meta, refreshRecords, handleCellEvent }
+
+  const { refreshGridData } = useGridData();
+
+  const refreshRecords = async (params: any = {}) => {
+    await refreshGridData([getGridData], [getGridData], params, '', true, true)
+  }
+
+  onMounted(async () => {
+    await refreshRecords();
+  })
+
+  return {rows, meta, refreshRecords, handleCellEvent}
 }

@@ -11,10 +11,10 @@
             v-for="(breadcrumb, index) in breadcrumbs"
             :key="index"
           >
-            <router-link
+            <NuxtLink
               :to="{ name: breadcrumb.route }"
               v-if="index <= breadcrumbs.length && breadcrumb.route"
-              >{{ $t(breadcrumb.name) }}</router-link
+              >{{ $t(breadcrumb.name) }}</NuxtLink
             >
             <span v-if="!breadcrumb.route">{{ $t(breadcrumb.name) }}</span>
           </li>
@@ -35,7 +35,7 @@
           <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot" />
           <li class="nav-item d-flex align-items-center" v-if="user">
             <span class="nav-link text-body font-weight-bold px-0">
-              <fa v-if="!user.avatar" icon="user" class="me-sm-1"></fa>
+              <font-awesome-icon v-if="!user.avatar" icon="user" class="me-sm-1" />
               <img
                 v-if="user.avatar?.conversions?.preview"
                 :src="user.avatar.conversions.preview"
@@ -45,11 +45,11 @@
             </span>
           </li>
           <li class="nav-item d-flex align-items-center" v-if="user">
-            <fa
+            <font-awesome-icon
               @click="logout"
               icon="sign-out-alt"
               class="fixed-plugin-button-nav cursor-pointer ms-2"
-            ></fa>
+            />
             <AdminModalLogout
               :active="active"
               @cancel="cancel"
@@ -62,7 +62,7 @@
               class="nav-link text-body p-0"
               id="iconNavbarSidenav"
             >
-              <fa icon="bars"></fa>
+              <font-awesome-icon icon="bars" />
             </a>
           </li>
         </ul>
@@ -75,8 +75,10 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
-import { useUserStore } from '../../store/user';
-import {useTeleport} from "../../compositions/ui/teleport";
+import { useUserStore } from 'motor-nx-core/store/user';
+import {useTeleport} from "motor-nx-core/composables/ui/teleport";
+import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {storeToRefs} from "pinia";
 
 
 export default defineComponent({
@@ -87,6 +89,8 @@ export default defineComponent({
     const { removeUser } = userStore
     const { navbarSlot } = useTeleport();
     const active = ref(false)
+    const appStore = useAppStore();
+    const { updatingInBackground } = storeToRefs(appStore)
 
     const router = useRouter()
 
@@ -95,10 +99,8 @@ export default defineComponent({
     }
 
     const confirm = () => {
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
       userStore.removeUser()
-      router.replace({ name: 'admin.login' })
+      router.replace({ name: '/admin/login' })
     }
 
     const cancel = () => {
@@ -131,7 +133,8 @@ export default defineComponent({
       logout,
       active,
       ...userStore,
-      navbarSlot
+      navbarSlot,
+      updatingInBackground
     }
   },
 })

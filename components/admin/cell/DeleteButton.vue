@@ -1,13 +1,6 @@
 <template>
   <div class="inline mb-0 ms-1">
-    <button
-      @click="askForConfirmation"
-      class="btn btn-danger btn-sm align-content-end"
-      type="button"
-      :title="options.name"
-    >
-      <fa icon="trash-alt" />
-    </button>
+    <a @click="askForConfirmation" class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><fa icon="trash-alt"></fa></a>
     <AdminModalDeleteConfirmation
       :active="active"
       :record="record"

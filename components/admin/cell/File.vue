@@ -33,7 +33,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import VueEasyLightbox from 'vue-easy-lightbox'
+// Todo: check if is needed?
+// import VueEasyLightbox from 'vue-easy-lightbox'
 
 export default defineComponent({
   name: 'File',
@@ -43,7 +44,7 @@ export default defineComponent({
     prop: String,
   },
   components: {
-    VueEasyLightbox,
+    // VueEasyLightbox,
   },
   setup() {
     const visible = ref(false)

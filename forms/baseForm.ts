@@ -2,10 +2,12 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
-// import Repository from '@/types/repository'
+import Repository from 'motor-nx-core/types/repository'
 import Ref from '../types/model'
 import ObjectSchema from 'yup/lib/object'
-import { useAppStore } from '../store/app'
+import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {Exception} from "sass";
+import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
 
 export default function baseForm(
   languageFilePrefix: string,
@@ -22,23 +24,23 @@ export default function baseForm(
 
   // Load router
   const router = useRouter()
-
-  const appStore = useAppStore()
+  const route = useRoute();
 
   const toast = useToast()
+  const appStore = useAppStore();
 
   // Get record from id and set values. Redirect back and show error if record was not found
-  const getData = async (id: number | string) => {
-    appStore.setSpinner(true)
-
-    const response = await (<any>(
-      repository.get(<number>id, repositoryParams).catch((e: Error) => {
-        toast.error(t('global.record_not_found'))
-        router.replace({ name: routePrefix })
-      })
-    ))
-    model.value = response.data.data
-    appStore.setSpinner(false)
+  const getData = async () => {
+    try {
+      if (!route.params.id) return;
+      const id: number = Number(route.params.id)
+      console.log(repositoryParams);
+      const {data} = await repository.get(id, repositoryParams)
+      model.value = data.value.data
+    } catch (e) {
+      toast.error(t('global.record_not_found'))
+      router.replace({ name: routePrefix })
+    }
   }
 
   // Initialize form with default values and the validation schema
@@ -48,56 +50,50 @@ export default function baseForm(
   })
 
   const onSubmit = handleSubmit(async (values) => {
-    // Show spinner
-    // store.commit('motor/setSpinner', true)
-
-    for (const [key, value] of Object.entries(values)) {
-      if (key !== 'id') {
-        model.value[key] = value
+    try {
+      appStore.isLoading(true, true);
+      for (const [key, value] of Object.entries(values)) {
+        if (key !== 'id') {
+          model.value[key] = value
+        }
       }
-    }
 
-    const formData = <any>{}
+      const formData = <any>{}
 
-    for (const [key, value] of Object.entries(values)) {
-      if (key !== 'id') {
-        formData[key] = value
+      for (const [key, value] of Object.entries(values)) {
+        if (key !== 'id') {
+          formData[key] = value
+        }
       }
-    }
 
-    if (sanitizer !== null) {
-      sanitizer(formData)
-    }
+      if (sanitizer !== null) {
+        sanitizer(formData)
+      }
 
-    let response
-    if (model.value.id) {
-      response = await repository.update(
-        formData,
-        model.value.id,
-        repositoryParams
-      )
-    } else {
-      model.value.id = null
-      response = await repository.create(formData, repositoryParams)
-    }
 
-    // Disable spinner
-    appStore.setSpinner(false)
-
-    switch (response.status) {
-      case 200:
+      if (model.value.id) {
+        const { data, pending, error, refresh } = await repository.update(
+          formData,
+          model.value.id,
+          repositoryParams
+        )
+        if (error.value) throw new Error(error)
         toast.success(t(languageFilePrefix + '.updated'))
-        await router.replace({ name: routePrefix })
         await afterSubmit()
-        break
-      case 201:
+        await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
+      } else {
+        model.value.id = null
+        const { data, pending, error, refresh } = await repository.create(formData, repositoryParams)
+        if (error.value) throw new Error(error)
         toast.success(t(languageFilePrefix + '.created'))
-        await router.replace({ name: routePrefix })
         await afterSubmit()
-        break
-      default:
-        toast.error(t('global.error_occurred'))
-        break
+        await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
+      }
+    } catch (e) {
+      toast.error(t('global.error_occurred'))
+      console.log(e)
+    } finally {
+      appStore.isLoading(false, false);
     }
   })
 

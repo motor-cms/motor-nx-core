@@ -1,96 +1,133 @@
 <template>
-  <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
-    <div class="card">
-      <div class="card-header pb-0">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="row">
-              <div class="col-md-6">
-                <h6>{{ name }}</h6>
-              </div>
+    <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="d-flex flex-row align-items-center">
+                    <h6 class="m-0">{{ name }}</h6>
+                    <div v-if="updatingInBackground" class="mx-4 spinner-header"><div></div><div></div><div></div><div></div></div>
+                  </div>
+                </div>
 
-              <div class="col-md-6 text-end">
+                <div class="col-md-6 text-end">
+                  <component
+                    v-for="component in headerActions"
+                    :key="component.name"
+                    :is="component.name"
+                  />
+                  <NuxtLink v-if="createRecordRoute" :to="createRecordRoute">
+                    <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">{{ createLabel }}</a>
+                  </NuxtLink>
+                </div>
+              </div>
+              <div class="row">
                 <component
-                  v-for="component in headerActions"
-                  :key="component.name"
-                  :is="component.name"
-                />
-                <router-link v-if="createRoute" :to="{ name: createRoute }">
-                  <button class="btn btn-sm btn-success">
-                    {{ createLabel }}
-                  </button>
-                </router-link>
-              </div>
-            </div>
-            <div class="row">
-              <component
-                v-for="f in filters"
-                :key="f.name"
-                :is="f.name"
-                :options="f.options"
-                @submit="submitFilter"
-              ></component>
-              <div class="col">
-                <ul class="pagination float-end">
-                  <li class="page-item disabled" v-if="meta.current_page === 1">
-                    <a class="page-link text-black">
-                      <fa icon="chevron-left"></fa>
-                    </a>
-                  </li>
+                  v-for="f in filters"
+                  :key="f.name"
+                  :is="f.name"
+                  :options="f.options"
+                  @submit="submitFilter"
+                ></component>
+                <div class="col" v-if="!loading">
+                  <ul class="pagination float-end">
+                    <li class="page-item disabled" v-if="meta.current_page === 1">
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-left"/>
+                      </a>
+                    </li>
 
-                  <li
-                    class="page-item"
-                    @click="previousPage"
-                    v-if="meta.current_page > 1"
+                    <li
+                      class="page-item"
+                      :class="{disabled: updatingInBackground}"
+                      @click="firstPage"
+                      v-if="meta.current_page > 1"
+                    >
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-left"/>
+                        <font-awesome-icon icon="chevron-left"/>
+                      </a>
+                    </li>
+                    <li
+                      class="page-item"
+                      :class="{disabled: updatingInBackground}"
+                      @click="previousPage"
+                      v-if="meta.current_page > 1"
+                    >
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-left"/>
+                      </a>
+                    </li>
+                    <li>
+                      <select
+                        :disabled="updatingInBackground"
+                        class="form-control"
+                        name="per-page"
+                        @change="goToPage"
+                        v-model="filterValues.page"
+                      >
+                        <option v-for="option in pageOptions" :value="option">Seite {{option}} von {{meta.last_page}}</option>
+                      </select>
+                    </li>
+                    <li
+                      class="page-item"
+                      :class="{disabled: updatingInBackground}"
+                      @click="nextPage()"
+                      v-if="meta.current_page < meta.last_page"
+                    >
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-right"/>
+                      </a>
+                    </li>
+
+                    <li
+                      class="page-item"
+                      :class="{disabled: updatingInBackground}"
+                      @click="lastPage()"
+                      v-if="meta.current_page < meta.last_page"
+                    >
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-right"/>
+                        <font-awesome-icon icon="chevron-right"/>
+                      </a>
+                    </li>
+
+                    <li
+                      class="page-item disabled"
+                      v-if="meta.current_page === meta.last_page"
+                    >
+                      <a class="page-link text-black">
+                        <font-awesome-icon icon="chevron-right"/>
+                      </a>
+                    </li>
+                  </ul>
+
+                  <select
+                    :disabled="updatingInBackground"
+                    class="form-control max-width-100 d-inline float-end me-2"
+                    name="per-page"
+                    @change="submitFilter($event)"
+                    v-model="filterValues.per_page"
                   >
-                    <a class="page-link text-black">
-                      <fa icon="chevron-left"></fa>
-                    </a>
-                  </li>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
 
-                  <li
-                    class="page-item"
-                    @click="nextPage()"
-                    v-if="meta.current_page < meta.last_page"
-                  >
-                    <a class="page-link text-black">
-                      <fa icon="chevron-right" />
-                    </a>
-                  </li>
-
-                  <li
-                    class="page-item disabled"
-                    v-if="meta.current_page === meta.last_page"
-                  >
-                    <a class="page-link text-black">
-                      <fa icon="chevron-right" />
-                    </a>
-                  </li>
-                </ul>
-
-                <select
-                  class="form-control max-width-100 d-inline float-end me-2"
-                  name="per-page"
-                  @change="submitFilter($event)"
-                  v-model="filterValues.per_page"
-                >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-
-                <div v-if="meta.total > 0" class="float-end mt-2 me-2">
-                  {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
+                  <div v-if="meta.total > 0" class="float-end mt-2 me-2">
+                    {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="card-body px-0 pb-2">
-        <div class="table-responsive">
-          <table class="motor-nx-grid table align-items-center mb-0">
-            <thead>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive">
+            <table class="motor-nx-grid table align-items-center mb-0">
+              <thead>
               <tr>
                 <th
                   v-for="column in columns"
@@ -101,8 +138,8 @@
                   {{ column.name }}
                 </th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               <tr v-if="meta.total === 0">
                 <td :colspan="columns.length">
                   <h3 class="p-8 text-lg font-bold text-center">
@@ -110,7 +147,7 @@
                   </h3>
                 </td>
               </tr>
-              <template v-if="rows.length === 0 && loading">
+              <template v-if="loading && rows.length === 0">
                 <tr
                   v-for="index in 5"
                   :key="index"
@@ -173,12 +210,12 @@
                   </div>
                 </td>
               </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script lang="ts">
 import {
@@ -195,17 +232,26 @@ import {
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
-import { Skeletor } from 'vue-skeletor'
+import {Skeletor} from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
-import { useI18n } from 'vue-i18n'
-import { useAppStore } from '../../../store/app';
-import { storeToRefs } from 'pinia';
+import {useI18n} from 'vue-i18n'
+import {useAppStore} from 'motor-nx-core/store/app';
+import {storeToRefs} from 'pinia';
+import Button from "motor-nx-core/components/admin/cell/Button.vue";
+import EditButton from "motor-nx-core/components/admin/cell/EditButton.vue";
+import DeleteButton from "motor-nx-core/components/admin/cell/DeleteButton.vue";
+import useRouteParser from "motor-nx-core/composables/route/parse";
+import app from "vue-easy-lightbox/src/dev-entry/App.vue";
+import page from "nuxt/dist/pages/runtime/page.mjs";
 
 export default defineComponent({
   components: {
     SearchFilter,
     SelectFilter,
     Skeletor,
+    Button,
+    EditButton,
+    DeleteButton
   },
   props: {
     name: {
@@ -253,10 +299,12 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const appStore = useAppStore()
-    const { loading } = storeToRefs(appStore)
+    const {loading, updatingInBackground} = storeToRefs(appStore)
 
-    const { t } = useI18n()
-    const filterValues = reactive({ per_page: 25, page: 1 })
+    const {t} = useI18n()
+    const filterValues = reactive({per_page: 25, page: 1})
+
+    const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
     const submitFilter = (data: { parameter: string; value: string }) => {
       // Reset page when filtering or searching
@@ -347,6 +395,21 @@ export default defineComponent({
       }
     })
 
+    const firstPage = () => {
+      filterValues.page = 1;
+      ctx.emit('submit', filterValues)
+    }
+    const lastPage = () => {
+      filterValues.page = props.meta.last_page;
+      ctx.emit('submit', filterValues)
+    }
+
+    const pageOptions = computed(() => Array(props.meta.last_page).fill(1).map( (_, i) => i + 1 ))
+
+    const goToPage = () => {
+      ctx.emit('submit', filterValues)
+    }
+
     return {
       filterValues,
       loading,
@@ -356,6 +419,12 @@ export default defineComponent({
       renderer,
       submitCell,
       getPropertyValue,
+      createRecordRoute,
+      updatingInBackground,
+      firstPage,
+      lastPage,
+      pageOptions,
+      goToPage
     }
   },
 })

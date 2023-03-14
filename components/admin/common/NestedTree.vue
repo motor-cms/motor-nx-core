@@ -9,12 +9,12 @@
   >
     <template #item="{ element }">
       <li>
-        <fa v-if="element.id !== record" icon="folder"></fa>
-        <fa
+        <font-awesome-icon v-if="element.id !== record" icon="folder" />
+        <font-awesome-icon
           v-if="element.id === record"
           icon="file"
           style="color: #cb0c9f"
-        ></fa>
+        />
         {{ element.name }}
         <nested-draggable :tree="element.children" :record="record" />
       </li>

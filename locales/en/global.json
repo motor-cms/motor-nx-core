@@ -5,12 +5,13 @@
   "filter": "Filter",
   "no_records_found": "No records found",
   "edit": "Edit",
-  "delete": "Delete",
+  "do_delete": "Delete",
   "really_delete": "Really delete?",
   "record_not_found": "Record not found",
   "error_occurred": "An error occurred",
   "back": "Back",
   "save": "Save",
   "logout": "Good bye",
-  "logout_question": "Do you want to log out?"
+  "logout_question": "Do you want to log out?",
+  "press_enter_to_serach": "Press Enter to serch"
 }

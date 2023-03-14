@@ -7,15 +7,18 @@
             <div class="col-lg-12">
               <div class="row">
                 <div class="col-md-6">
-                  <h6>{{ title }}</h6>
+                  <div class="d-flex flex-row align-items-center">
+                    <h6 class="m-0">{{ title }}</h6>
+                    <div v-if="updatingInBackground" class="mx-4 spinner-header"><div></div><div></div><div></div><div></div></div>
+                  </div>
                 </div>
                 <div class="col-md-6 text-end">
-                  <router-link :to="{ name: backRoute }">
-                    <button class="btn btn-danger btn-sm">
+                  <NuxtLink :to="route">
+                    <button class="btn btn-outline-primary">
                       {{ $t('global.back') }}
                     </button>
-                  </router-link>
-                  <button class="btn btn-sm btn-success ms-2" type="submit">
+                  </NuxtLink>
+                  <button class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground">
                     {{ $t('global.save') }}
                   </button>
                 </div>
@@ -32,6 +35,9 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import useRouteParser from "~/packages/motor-nx-core/composables/route/parse";
+import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {storeToRefs} from "pinia";
 
 export default defineComponent({
   emits: ['submit'],
@@ -50,8 +56,15 @@ export default defineComponent({
       e.preventDefault()
       ctx.emit('submit');
     }
+    const routeParser = useRouteParser();
+    const route = routeParser.routeDottedToSlash(props.backRoute)
+    const appStore = useAppStore();
+    const { loading, updatingInBackground} = storeToRefs(appStore);
     return {
       submit,
+      route,
+      loading,
+      updatingInBackground
     }
   },
 })

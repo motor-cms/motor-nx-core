@@ -1,5 +1,5 @@
 {
-  "name": "motor-nx-core",
+  "name": "@zrm/motor-nx-core",
   "type": "module",
   "version": "1.0.0",
   "main": "./nuxt.config.ts",

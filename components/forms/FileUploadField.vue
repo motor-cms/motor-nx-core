@@ -65,7 +65,7 @@
           class="btn btn-danger btn-sm align-content-end"
           type="button"
         >
-          <font-awesome-icon icon="trash-alt" />
+          <fa icon="trash-alt" />
         </button>
         <p><strong>File:</strong> {{ file.name }}</p>
         <p>

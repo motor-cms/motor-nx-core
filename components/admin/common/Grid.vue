@@ -35,7 +35,7 @@
                   <ul class="pagination float-end">
                     <li class="page-item disabled" v-if="meta.current_page === 1">
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-left"/>
+                        <fa icon="chevron-left"/>
                       </a>
                     </li>
 
@@ -57,7 +57,7 @@
                       v-if="meta.current_page > 1"
                     >
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-left"/>
+                        <fa icon="chevron-left"/>
                       </a>
                     </li>
                     <li>
@@ -78,7 +78,7 @@
                       v-if="meta.current_page < meta.last_page"
                     >
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-right"/>
+                        <fa icon="chevron-right"/>
                       </a>
                     </li>
 
@@ -99,7 +99,7 @@
                       v-if="meta.current_page === meta.last_page"
                     >
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-right"/>
+                        <fa icon="chevron-right"/>
                       </a>
                     </li>
                   </ul>

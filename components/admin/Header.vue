@@ -35,7 +35,7 @@
           <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot" />
           <li class="nav-item d-flex align-items-center" v-if="user">
             <span class="nav-link text-body font-weight-bold px-0">
-              <font-awesome-icon v-if="!user.avatar" icon="user" class="me-sm-1" />
+              <fa v-if="!user.avatar" icon="user" class="me-sm-1" />
               <img
                 v-if="user.avatar?.conversions?.preview"
                 :src="user.avatar.conversions.preview"
@@ -45,7 +45,7 @@
             </span>
           </li>
           <li class="nav-item d-flex align-items-center" v-if="user">
-            <font-awesome-icon
+            <fa
               @click="logout"
               icon="sign-out-alt"
               class="fixed-plugin-button-nav cursor-pointer ms-2"
@@ -62,7 +62,7 @@
               class="nav-link text-body p-0"
               id="iconNavbarSidenav"
             >
-              <font-awesome-icon icon="bars" />
+              <fa icon="bars" />
             </a>
           </li>
         </ul>

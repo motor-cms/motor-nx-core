@@ -20,7 +20,7 @@
         <CheckboxTreeField
           :tree="element.children"
           :name="name"
-          :value="value"
+          :value="modelValue"
           :level="level + 1"
         />
       </li>
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {
     // Field's own value
     id: String,
-    value: {
+    modelValue: {
       type: Array,
     },
     label: String,
@@ -63,7 +63,7 @@ export default defineComponent({
       undefined,
       {
         type: 'checkbox',
-        valueProp: <[]>props.value,
+        valueProp: <[]>props.modelValue,
       }
     )
 

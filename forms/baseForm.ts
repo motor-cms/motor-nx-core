@@ -4,17 +4,17 @@ import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
 import Repository from '@zrm/motor-nx-core/types/repository'
 import Ref from '../types/model'
-import ObjectSchema from 'yup/lib/object'
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {Exception} from "sass";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
+import {ObjectSchema} from "yup";
 
 export default function baseForm(
   languageFilePrefix: string,
   routePrefix: string,
   repository: any,
   model: Ref<{ [index: string]: any }>,
-  schema: ObjectSchema<{}>,
+  schema: ObjectSchema<Record<any, any>>,
   sanitizer: (formData: object) => void = () => {},
   afterSubmit: () => void = () => {},
   repositoryParams?: {}

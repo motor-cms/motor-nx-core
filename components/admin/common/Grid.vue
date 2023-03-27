@@ -8,7 +8,7 @@
                 <div class="col-md-6">
                   <div class="d-flex flex-row align-items-center">
                     <h6 class="m-0">{{ name }}</h6>
-                    <div v-if="updatingInBackground" class="mx-4 spinner-header"><div></div><div></div><div></div><div></div></div>
+                    <SpinnerSmall  v-if="updatingInBackground"/>
                   </div>
                 </div>
 
@@ -18,7 +18,7 @@
                     :key="component.name"
                     :is="component.name"
                   />
-                  <NuxtLink v-if="createRecordRoute" :to="createRecordRoute">
+                  <NuxtLink v-if="!withoutCreate && createRecordRoute" :to="createRecordRoute">
                     <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">{{ createLabel }}</a>
                   </NuxtLink>
                 </div>
@@ -243,9 +243,11 @@ import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import app from "vue-easy-lightbox/src/dev-entry/App.vue";
 import page from "nuxt/dist/pages/runtime/page.mjs";
+import SpinnerSmall from "~/packages/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 
 export default defineComponent({
   components: {
+    SpinnerSmall,
     SearchFilter,
     SelectFilter,
     Skeletor,
@@ -296,6 +298,10 @@ export default defineComponent({
       type: Array,
       default: () => [],
     },
+    withoutCreate: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props, ctx) {
     const appStore = useAppStore()

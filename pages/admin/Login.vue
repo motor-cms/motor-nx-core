@@ -99,7 +99,11 @@ export default defineComponent({
 
     onMounted(async () => {
       if (!authenticated.value) {
-        await userStore.loginFromStorage();
+        const loginSuccess = await userStore.loginFromStorage();
+        if (!loginSuccess) {
+          attemptLoginFromStorage.value =false;
+          await router.push('/');
+        }
       }
       attemptLoginFromStorage.value =false;
     })

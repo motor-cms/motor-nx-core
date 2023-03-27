@@ -3,7 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect :object="object" v-model="inputValue" :options="options" :searchable="true" />
+    <Multiselect label="name" :object="object" v-model="inputValue" :options="options" :searchable="true" :placeholder="placeholder"/>
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -21,6 +21,10 @@ export default defineComponent({
     id: String,
     modelValue: {
       required: true,
+    },
+    placeholder: {
+      type: String,
+      required: false
     },
     object: {
       default: false

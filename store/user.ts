@@ -1,8 +1,9 @@
-import { defineStore, storeToRefs } from 'pinia'
-import { reactive, ref, toRefs } from 'vue'
-import { useAppStore } from './app'
+import {defineStore, storeToRefs} from 'pinia'
+import {reactive, ref, toRefs} from 'vue'
+import {useAppStore} from './app'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {AsyncData} from "#app";
+import {b} from "vite-node/types-e288fc62";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
@@ -30,19 +31,20 @@ export const useUserStore = defineStore('users', () => {
     user.value = null
     token.value = ""
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
 
   const login = async (email: string, password: string) => {
     try {
       appStore.isLoading(true, true)
       await useFetch(import.meta.env.VITE_PUBLIC_API_BASE_URL + 'sanctum/csrf-cookie');
-      const { data } = await api.post(  'auth/login', {
-          email,
-          password
+      const {data} = await api.post('auth/login', {
+        email,
+        password
       })
       setToken(data.value.data.token)
       localStorage.setItem('token', data.value.data.token)
-      const { data: meResponse } = await api.get( 'me')
+      const {data: meResponse} = await api.get('me')
       setAuthenticationStatus(true)
       setUser(meResponse.value.data)
     } catch (error: any) {
@@ -55,21 +57,27 @@ export const useUserStore = defineStore('users', () => {
     }
   }
 
-  const loginFromStorage = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      return;
+  const loginFromStorage = async (): Promise<boolean> => {
+    const tkn = localStorage.getItem('token');
+    if (!tkn) {
+      return false;
     }
-      setToken(token);
-      appStore.isLoading(true, true)
-      const { data: meResponse } = await api.get( 'me')
-      setAuthenticationStatus(true)
-      setUser(meResponse.value.data)
+    setToken(tkn);
+    appStore.isLoading(true, true)
+    const {data: meResponse, error} = await api.get('me')
+    if (error.value) {
+      removeUser();
       appStore.isLoading(false, false)
+      return false;
+    }
+    setAuthenticationStatus(true)
+    setUser(meResponse.value.data)
+    appStore.isLoading(false, false)
+    return true;
   }
 
   const refreshUser = async () => {
-    const { data: meResponse } = await api.get('me')
+    const {data: meResponse} = await api.get('me')
     if (meResponse) {
       setUser(meResponse.value.data)
     }

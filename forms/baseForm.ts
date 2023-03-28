@@ -59,7 +59,7 @@ export default function baseForm(
         }
       }
 
-      const formData = reactive<any>({})
+      const formData = reactive<any>(values)
       delete formData.id;
 
       console.log("FORMDATA", formData);

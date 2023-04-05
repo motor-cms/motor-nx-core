@@ -1,0 +1,8 @@
+$primary: rgba(244, 155, 1, 1);
+
+@font-face {
+	font-family: "Satoshi";
+	src: url("@zrm/motor-nx-core/assets/fonts/satoshi/Satoshi-Variable.ttf") format("truetype");
+}
+
+$font-family-sans-serif: 'Satoshi' !default;

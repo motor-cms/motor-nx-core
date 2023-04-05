@@ -4,17 +4,17 @@ import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
 import Repository from '@zrm/motor-nx-core/types/repository'
 import Ref from '../types/model'
-import ObjectSchema from 'yup/lib/object'
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {Exception} from "sass";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
+import {ObjectSchema} from "yup";
 
 export default function baseForm(
   languageFilePrefix: string,
   routePrefix: string,
   repository: any,
   model: Ref<{ [index: string]: any }>,
-  schema: ObjectSchema<{}>,
+  schema: ObjectSchema<Record<any, any>>,
   sanitizer: (formData: object) => void = () => {},
   afterSubmit: () => void = () => {},
   repositoryParams?: {}
@@ -50,6 +50,7 @@ export default function baseForm(
   })
 
   const onSubmit = handleSubmit(async (values) => {
+    console.log("VALS", values)
     try {
       appStore.isLoading(true, true);
       for (const [key, value] of Object.entries(values)) {
@@ -58,14 +59,10 @@ export default function baseForm(
         }
       }
 
-      const formData = <any>{}
+      const formData = reactive<any>(values)
+      delete formData.id;
 
-      for (const [key, value] of Object.entries(values)) {
-        if (key !== 'id') {
-          formData[key] = value
-        }
-      }
-
+      console.log("FORMDATA", formData);
       if (sanitizer !== null) {
         sanitizer(formData)
       }

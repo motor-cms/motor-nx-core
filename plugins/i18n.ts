@@ -94,6 +94,13 @@ languageModules.push(
   import.meta.glob('../../motor-nx-builder/locales/**/*.json', { eager: true })
 )
 
+/**
+ * Motor-Scoring
+ */
+languageModules.push(
+  import.meta.glob('../../motor-nx-scoring/locales/**/*.json', { eager: true })
+)
+
 languageModules.forEach(async (module) => {
   let moduleMessages = await loadLocaleMessages(module, true)
 

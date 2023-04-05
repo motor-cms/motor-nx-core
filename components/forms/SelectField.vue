@@ -13,9 +13,10 @@
       class="form-control"
     >
       <option
-        v-for="option in options"
+        v-for="(option, index) in options"
         :key="option.value"
         :value="option.value"
+        :selected="index === 0"
       >
         {{ option.name }}
       </option>

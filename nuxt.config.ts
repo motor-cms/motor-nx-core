@@ -4,5 +4,5 @@ export default defineNuxtConfig({
   // css: ['./assets/scss/main.scss'], <-- funktioniert nicht
   css: [
     '@zrm/motor-nx-core/assets/scss/main.scss'
-  ]
+  ],
 })

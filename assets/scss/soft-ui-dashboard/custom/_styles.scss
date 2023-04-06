@@ -1,5 +1,5 @@
 #__nuxt {
-	> div {
+	> .motor-nx-core {
 		position: relative;
 		display: flex;
 		gap: 30px;
@@ -19,7 +19,7 @@
 
 @media screen and (max-width: 1200px) {
 	#__nuxt {
-		> div {
+		> .motor-nx-core {
 			> aside {
 				position: absolute !important;
 				top: 0;

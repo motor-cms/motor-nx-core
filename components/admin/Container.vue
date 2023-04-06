@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="motor-nx-core">
     <AdminSidebar />
     <main class="main-content mt-1 border-radius-lg">
       <!-- Navbar -->

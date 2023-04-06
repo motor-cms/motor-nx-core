@@ -32,6 +32,10 @@ import { defineComponent } from 'vue'
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 
+export interface SelectOption {
+  name: string,
+  value: any
+}
 export default defineComponent({
   name: 'SelectField',
 
@@ -49,7 +53,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    options: Array,
+    options: Array<any>,
   },
   setup(props) {
     const appStore = useAppStore();

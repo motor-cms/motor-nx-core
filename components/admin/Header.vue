@@ -61,6 +61,7 @@
               href="javascript:;"
               class="nav-link text-body p-0"
               id="iconNavbarSidenav"
+              @click="toggleNavbar"
             >
               <fa icon="bars" />
             </a>
@@ -84,6 +85,11 @@ import {storeToRefs} from "pinia";
 export default defineComponent({
   name: 'AdminHeader',
   components: { AdminModalLogout },
+  methods: {
+    toggleNavbar() {
+      document.querySelector('aside').classList.toggle('open');
+    }
+  },
   setup() {
     const userStore = useUserStore()
     const { removeUser } = userStore

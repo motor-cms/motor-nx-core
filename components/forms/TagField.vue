@@ -14,7 +14,11 @@ import {onMounted, reactive} from "vue";
 
 const props = defineProps({
   placeholder: String,
-  data: Array<String>
+  data: Array<String>,
+  modelValue: {
+    type: Array<String>,
+    default: []
+  }
 });
 
 const data = reactive({
@@ -22,9 +26,11 @@ const data = reactive({
   error: false
 });
 
-const taggings = ref<Array<String>>([]);
+const taggings = ref<Array<String>>(props.modelValue);
 
-console.log("was geht ab", data)
+watch(() => props.modelValue, (val) => {
+  taggings.value = val;
+});
 
 const emit = defineEmits(['update:modelValue']);
 

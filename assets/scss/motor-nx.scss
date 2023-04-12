@@ -686,53 +686,6 @@
   }
 }
 
-//// Individual Modal Styles
-//.modal {
-//  opacity: 0;
-//  background-color:rgba(0, 0, 0, 0.5);
-//  transform: translateX(-200%);
-//  display: block !important;
-//  &.show {
-//    display: block;
-//    transform: translateX(0);
-//    opacity: 1;
-//  }
-//}
-
-.custommodal {
-  max-width: 400px;
-  position: fixed;
-  right: 50%;
-  bottom: 50%;
-  transform: translate(50%, 50%);
-  background-color: white;
-  padding: 1rem 3rem;
-  border-radius: 5px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-
-  & .btn-close {
-    color: black;
-
-    &:hover {
-      color: #3d3d3d;
-    }
-
-    & span {
-      font-size: 1.5rem;
-    }
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 //Divider
 hr {
   margin-top: 1rem;

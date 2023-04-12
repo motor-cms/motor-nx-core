@@ -1,7 +1,9 @@
 <template>
-    <Teleport to="body">
+  <Teleport to="body">
+    <Transition name="fade">
       <div
-        class="custommodal fade"
+        v-if="active"
+        class="custommodal"
         :class="{show: active}"
         id="admin-modal-logout"
         tabindex="-1"
@@ -22,6 +24,7 @@
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                v-on:click="cancel"
               >
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -48,11 +51,12 @@
           </div>
         </div>
       </div>
-    </Teleport>
+    </Transition>
+  </Teleport>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, watch } from 'vue'
+import {computed, defineComponent, reactive, watch} from 'vue'
 
 export default defineComponent({
   name: 'Logout',

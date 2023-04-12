@@ -1,8 +1,8 @@
 <template>
   <div class="input-group mb-3">
     <span id="tagError" v-if="data.error">{{ data.error }}</span>
-    <input class="form-control" placeholder="type to add taggings ..." v-model="data.addTag">
-    <button class="btn btn-outline-primary mb-0" id="button-addon2" @click.prevent="pushTag" icon="plus">Tag hinzufügen</button>
+    <input :disabled="disableForms" class="form-control" placeholder="type to add taggings ..." v-model="data.addTag">
+    <button :disabled="disableForms" class="btn btn-outline-primary mb-0" id="button-addon2" @click.prevent="pushTag" icon="plus">Tag hinzufügen</button>
   </div>
   <div id="tag" v-for="tag in taggings">
     {{ tag }} <span style="cursor:pointer;" @click="deleteTag(tag)">x</span>
@@ -11,6 +11,8 @@
 
 <script setup lang="ts">
 import {onMounted, reactive} from "vue";
+import {useAppStore} from "~/packages/motor-nx-core/store/app";
+import {storeToRefs} from "pinia";
 
 const props = defineProps({
   placeholder: String,
@@ -27,6 +29,9 @@ const data = reactive({
 });
 
 const taggings = ref<Array<String>>(props.modelValue);
+
+const appStore = useAppStore();
+const { disableForms } = storeToRefs(appStore);
 
 watch(() => props.modelValue, (val) => {
   taggings.value = val;
@@ -51,12 +56,6 @@ const pushTag = () => {
     data.error = "Die Eingabe muss 3 zeichen lang sein";
   }
 };
-
-onMounted(() => {
-  if (props.data) {
-    taggings.value = props.data;
-  }
-});
 
 </script>
 <style scoped lang="scss">

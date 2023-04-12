@@ -50,7 +50,6 @@ export default function baseForm(
   })
 
   const onSubmit = handleSubmit(async (values) => {
-    console.log("VALS", values)
     try {
       appStore.isLoading(true, true);
       for (const [key, value] of Object.entries(values)) {

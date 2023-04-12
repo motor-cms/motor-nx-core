@@ -1,65 +1,20 @@
 <template>
-  <Teleport to="body">
-    <Transition name="fade">
-      <div
-        v-if="active"
-        class="custommodal"
-        :class="{show: active}"
-        id="admin-modal-logout"
-        tabindex="-1"
-        data-bs-keyboard="false"
-        data-bs-backdrop="static"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                {{ $t('global.logout') }}
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                v-on:click="cancel"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">{{ $t('global.logout_question') }}</div>
-            <div class="modal-footer">
-              <button
-                v-on:click="cancel"
-                type="button"
-                class="btn bg-gradient-secondary"
-                data-bs-dismiss="modal"
-              >
-                {{ $t('global.no') }}
-              </button>
-              <button
-                v-on:click="confirm"
-                type="button"
-                class="btn bg-gradient-primary"
-                data-bs-dismiss="modal"
-              >
-                {{ $t('global.yes') }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+ <BaseModal @confirm="confirm" @cancel="cancel" :active="active" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')">
+   <template #header>
+     {{ $t('global.logout') }}
+   </template>
+   <template #body>
+     {{ $t('global.logout_question') }}
+   </template>
+ </BaseModal>
 </template>
-
 <script lang="ts">
 import {computed, defineComponent, reactive, watch} from 'vue'
+import BaseModal from "~/packages/motor-nx-core/components/admin/modal/BaseModal.vue";
 
 export default defineComponent({
   name: 'Logout',
+  components: {BaseModal},
   props: {
     active: Boolean,
   },

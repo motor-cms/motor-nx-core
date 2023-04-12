@@ -101,7 +101,7 @@ export default defineComponent({
     const router = useRouter()
 
     const logout = () => {
-      active.value = true
+      active.value = !active.value
     }
 
     const confirm = () => {

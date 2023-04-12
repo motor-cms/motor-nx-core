@@ -1,0 +1,9 @@
+.customfade-enter-active,
+.customfade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.customfade-enter-from,
+.customfade-leave-to {
+  opacity: 0;
+}

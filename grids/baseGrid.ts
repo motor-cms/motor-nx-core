@@ -33,9 +33,11 @@ export default function callbackGrid(
         // Delete the record
         appStore.isLoading(true, true)
         await repository.delete(params.componentParams.record)
-        await refreshGridData([getGridData], [], params.filterValues, '', false)
         toast.success(t(languagePrefix + '.deleted'))
         appStore.isLoading(false, false)
+        appStore.updateInBackground(true);
+        await getGridData({}, '', false);
+        appStore.updateInBackground(false);
         break
       case 'UpdateRecord':
         const payload: any = {}

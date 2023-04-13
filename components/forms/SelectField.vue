@@ -15,7 +15,7 @@ import { defineComponent } from 'vue'
 import Multiselect from '@vueform/multiselect'
 
 export default defineComponent({
-  name: 'Select2Field',
+  name: 'SelectField',
   components: { Multiselect },
   props: {
     id: String,

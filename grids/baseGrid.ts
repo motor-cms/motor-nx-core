@@ -60,9 +60,5 @@ export default function callbackGrid(
     await refreshGridData([getGridData], [getGridData], params, '', true, true)
   }
 
-  onMounted(async () => {
-    await refreshRecords();
-  })
-
   return {rows, meta, refreshRecords, handleCellEvent}
 }

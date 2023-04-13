@@ -3,24 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
-    <select
-      :id="id"
-      :name="name"
-      v-model="value"
-      :class="{ 'is-invalid': errorMessage }"
-      :disabled="disableForms"
-      @blur="handleBlur"
-      class="form-control"
-    >
-      <option
-        v-for="(option, index) in options"
-        :key="option.value"
-        :value="option.value"
-        :selected="index === 0"
-      >
-        {{ option.name }}
-      </option>
-    </select>
+    <Multiselect :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="true" />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -29,21 +12,18 @@
 <script lang="ts">
 import { useField } from 'vee-validate'
 import { defineComponent } from 'vue'
-import {useAppStore} from "@zrm/motor-nx-core/store/app";
-import {storeToRefs} from "pinia";
+import Multiselect from '@vueform/multiselect'
 
-export interface SelectOption {
-  name: string,
-  value: any
-}
 export default defineComponent({
-  name: 'SelectField',
-
+  name: 'Select2Field',
+  components: { Multiselect },
   props: {
     id: String,
     modelValue: {
-      type: String,
-      default: '',
+      required: true,
+    },
+    object: {
+      default: false
     },
     name: {
       type: String,
@@ -53,30 +33,39 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    options: Array<any>,
+    options: Array,
+    mode: {
+      type: String,
+      default: 'single'
+    }
   },
   setup(props) {
-    const appStore = useAppStore();
-    const { loading, updatingInBackground, disableForms } = storeToRefs(appStore);
     const {
-      value,
+      value: inputValue,
       errorMessage,
       handleBlur,
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.modelValue,
+      initialValue: props.modelValue,
     })
+
+    const parsedOptions = computed(() => {
+      return props.options?.map(option => {
+        if ('name' in option) {
+          return Object.assign( option,{label: option.name});
+        }
+        return option;
+      });
+    });
 
     return {
       handleChange,
       handleBlur,
       errorMessage,
-      value,
+      inputValue,
       meta,
-      loading,
-      updatingInBackground,
-      disableForms
+      parsedOptions
     }
   },
 })

@@ -5,7 +5,7 @@ import {useI18n} from 'vue-i18n'
 import {useAppStore} from '../store/app'
 import {useGridData} from "@zrm/motor-nx-core/composables/grid/gridData";
 
-export default function callbackGrid(
+export default function callbackGrid<T>(
   repository: Repository,
   languagePrefix: string
 ) {
@@ -14,7 +14,7 @@ export default function callbackGrid(
 
   const {t} = useI18n()
 
-  const rows = ref([])
+  const rows = ref<Array<T>>([])
   const meta = ref({current_page: 1, from: 1, to: 1})
 
   const getGridData = async (params: any, id: string = '', cached: boolean = true) => {

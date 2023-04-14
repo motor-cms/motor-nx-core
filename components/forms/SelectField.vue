@@ -1,9 +1,9 @@
 <template>
-  <div class="form-group" :class="{ 'has-danger': errorMessage }">
+  <div class="form-group" :id="id" :class="{ 'has-danger': errorMessage }">
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="true" />
+    <Multiselect :id="id" :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="true" />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -17,10 +17,12 @@ import Multiselect from '@vueform/multiselect'
 export default defineComponent({
   name: 'SelectField',
   components: { Multiselect },
+  emits: ['update:modelValue'],
   props: {
     id: String,
     modelValue: {
-      required: true,
+      type: Array,
+      required: true
     },
     object: {
       default: false
@@ -39,7 +41,7 @@ export default defineComponent({
       default: 'single'
     }
   },
-  setup(props) {
+  setup(props, ctx) {
     const {
       value: inputValue,
       errorMessage,
@@ -51,11 +53,17 @@ export default defineComponent({
     })
 
     const parsedOptions = computed(() => {
+      console.log("options ARE", props.options);
       return props.options?.map(option => {
-        if ('name' in option) {
-          return Object.assign( option,{label: option.name});
+        if (typeof option === 'string') {
+          return {label: option, value: option}
         }
-        return option;
+        if (typeof option === 'object') {
+          if ('name' in option) {
+            return Object.assign( option,{label: option.name});
+          }
+          return option;
+        }
       });
     });
 
@@ -65,7 +73,7 @@ export default defineComponent({
       errorMessage,
       inputValue,
       meta,
-      parsedOptions
+      parsedOptions,
     }
   },
 })

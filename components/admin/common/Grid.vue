@@ -194,6 +194,7 @@
                       :index="index"
                       @submit="submitCell"
                     />
+                    {{ column.renderer }}
                     <template v-if="column.renderer">
                       <div
                         v-html="
@@ -241,8 +242,6 @@ import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
 import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-import app from "vue-easy-lightbox/src/dev-entry/App.vue";
-import page from "nuxt/dist/pages/runtime/page.mjs";
 import SpinnerSmall from "~/packages/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 
 export default defineComponent({
@@ -373,6 +372,7 @@ export default defineComponent({
     }
 
     const getPropertyValue = (object: any, property: string): string => {
+      console.log(object, property)
       property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
       let a = property.split('.')
       for (let i = 0, n = a.length; i < n; ++i) {

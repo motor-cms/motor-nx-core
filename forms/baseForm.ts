@@ -74,16 +74,23 @@ export default function baseForm(
           repositoryParams
         )
         if (error.value) throw new Error(error)
+        Object.assign(model.value, data.value.data);
         toast.success(t(languageFilePrefix + '.updated'))
         await afterSubmit()
-        await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
+        if (routePrefix && routePrefix.length) {
+          await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
+        }
       } else {
         model.value.id = null
         const { data, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
+        Object.assign(model.value, data.value.data);
+        console.log("was geht hier", model.value);
         toast.success(t(languageFilePrefix + '.created'))
         await afterSubmit()
-        await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
+        if (routePrefix && routePrefix.length) {
+          await router.push({path: useRouteParser().routeDottedToSlash(routePrefix)})
+        }
       }
     } catch (e) {
       toast.error(t('global.error_occurred'))

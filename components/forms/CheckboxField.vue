@@ -13,7 +13,7 @@
       :checked="value"
       @input="handleChange(!value)"
     />
-    <p class="text-danger" v-if="errorMessage">
+    <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
   </div>
@@ -39,7 +39,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { checked, handleChange, errorMessage } = useField(
+    const { checked, handleChange, errorMessage, meta } = useField(
       <string>props.name,
       undefined,
       {
@@ -55,6 +55,7 @@ export default defineComponent({
       checked, // readonly
       handleChange,
       errorMessage,
+      meta
     }
   },
 })

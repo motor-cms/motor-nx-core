@@ -11,7 +11,7 @@
       :class="{ 'is-invalid': errorMessage }"
       @blur="handleBlur"
     ></textarea>
-    <p class="text-danger" v-if="errorMessage">
+    <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
   </div>

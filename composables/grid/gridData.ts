@@ -24,7 +24,7 @@ export function useGridData() {
       console.log("Error fetching formdata.")
       toast.error(t('global.error_occurred'))
     } finally {
-      appStore.isLoading(false, false);
+      appStore.isLoading(false);
       if (cached && withCacheRefresh) {
         try {
           if (after.length) {

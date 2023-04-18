@@ -36,7 +36,7 @@ export const useUserStore = defineStore('users', () => {
 
   const login = async (email: string, password: string) => {
     try {
-      appStore.isLoading(true, true)
+      appStore.isLoading(true)
       await useFetch(import.meta.env.VITE_PUBLIC_API_BASE_URL + 'sanctum/csrf-cookie');
       const {data} = await api.post('auth/login', {
         email,
@@ -53,7 +53,7 @@ export const useUserStore = defineStore('users', () => {
       }
       console.error('HANDLE THIS', error)
     } finally {
-      appStore.isLoading(false, false)
+      appStore.isLoading(false)
     }
   }
 
@@ -63,16 +63,16 @@ export const useUserStore = defineStore('users', () => {
       return false;
     }
     setToken(tkn);
-    appStore.isLoading(true, true)
+    appStore.isLoading(true)
     const {data: meResponse, error} = await api.get('me')
     if (error.value) {
       removeUser();
-      appStore.isLoading(false, false)
+      appStore.isLoading(false)
       return false;
     }
     setAuthenticationStatus(true)
     setUser(meResponse.value.data)
-    appStore.isLoading(false, false)
+    appStore.isLoading(false)
     return true;
   }
 

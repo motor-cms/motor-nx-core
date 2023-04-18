@@ -1,5 +1,9 @@
 <template>
   <Teleport to="body">
-    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    <div class="spinner">
+      <div class="spinner-grow" />
+    </div>
   </Teleport>
 </template>
+<script setup lang="ts">
+</script>

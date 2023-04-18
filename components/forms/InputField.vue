@@ -14,7 +14,7 @@
       :disabled="disableForms"
       @input="changed"
     />
-    <p class="text-danger" v-if="errorMessage">
+    <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
   </div>

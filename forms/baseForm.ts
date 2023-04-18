@@ -2,10 +2,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
-import Repository from '@zrm/motor-nx-core/types/repository'
 import Ref from '../types/model'
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
-import {Exception} from "sass";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {ObjectSchema} from "yup";
 
@@ -44,12 +42,12 @@ export default function baseForm(
   }
 
   // Initialize form with default values and the validation schema
-  const { handleSubmit, setFieldValue } = useForm({
+  const form = useForm({
     initialValues: model,
     validationSchema: schema,
   })
 
-  const onSubmit = handleSubmit(async (values) => {
+  const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
     try {
       appStore.isLoading(true, true);
       for (const [key, value] of Object.entries(values)) {
@@ -61,11 +59,9 @@ export default function baseForm(
       const formData = reactive<any>(values)
       delete formData.id;
 
-      console.log("FORMDATA", formData);
       if (sanitizer !== null) {
         sanitizer(formData)
       }
-
 
       if (model.value.id) {
         const { data, pending, error, refresh } = await repository.update(
@@ -85,7 +81,6 @@ export default function baseForm(
         const { data, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
         Object.assign(model.value, data.value.data);
-        console.log("was geht hier", model.value);
         toast.success(t(languageFilePrefix + '.created'))
         await afterSubmit()
         if (routePrefix && routePrefix.length) {
@@ -97,13 +92,14 @@ export default function baseForm(
       console.log(e)
     } finally {
       appStore.isLoading(false, false);
+      resetForm()
     }
   })
 
   return {
     getData,
-    handleSubmit,
-    setFieldValue,
     onSubmit,
+    form,
+    ...form,
   }
 }

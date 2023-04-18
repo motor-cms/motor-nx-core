@@ -51,7 +51,7 @@
                     </div>
                     <div class="text-center">
                       <button
-                          @click="signIn(login)"
+                          @click="userStore.signIn(login)"
                           type="button"
                           class="btn bg-gradient-info w-100 mt-4 mb-0"
                       >
@@ -75,40 +75,32 @@
     </section>
   </div>
 </template>
-<script lang="ts">
-import { computed, defineComponent, watch } from 'vue'
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../store/app'
-export default defineComponent({
-  name: 'admin.login',
-  setup() {
-    const router = useRouter()
-    const userStore = useUserStore()
-    const appStore = useAppStore();
-    const { spinnerActive } = storeToRefs(appStore)
-    const { authenticated, signInError } = storeToRefs(userStore)
-    const attemptLoginFromStorage = ref(true);
-    let login = ref({
-      email: '',
-      password: '',
-      remember: false,
-    })
+const router = useRouter()
+const userStore = useUserStore()
+const appStore = useAppStore();
+const { spinnerActive } = storeToRefs(appStore)
+const { authenticated, signInError } = storeToRefs(userStore)
+const attemptLoginFromStorage = ref(true);
+let login = ref({
+  email: '',
+  password: '',
+  remember: false,
+})
 
-    onMounted(async () => {
-      if (!authenticated.value) {
-        const loginSuccess = await userStore.loginFromStorage();
-        if (!loginSuccess) {
-          attemptLoginFromStorage.value =false;
-          await router.push('/');
-        }
-      }
+onMounted(async () => {
+  if (!authenticated.value) {
+    const loginSuccess = await userStore.loginFromStorage();
+    if (!loginSuccess) {
       attemptLoginFromStorage.value =false;
-    })
-
-    return { ...userStore, signInError, login, spinnerActive, attemptLoginFromStorage }
-  },
+      await router.push('/');
+    }
+  }
+  attemptLoginFromStorage.value =false;
 })
 </script>

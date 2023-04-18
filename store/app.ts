@@ -2,15 +2,15 @@ import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
 export const useAppStore = defineStore('app', () => {
-  const spinnerActive = ref(false)
   const loading = ref(false)
+  const loadingStackMainProcess = ref(0);
+  const loadingStackBackgroundProcess = ref(0);
   const updatingInBackground = ref(false);
-  const route = useRoute();
   const disableForms = computed(() => loading.value);
 
-  const setSpinner = (value: boolean) => {
-    spinnerActive.value = value
-  }
+
+  const canUnloadMainProcess = computed(() => loadingStackMainProcess.value <= 1)
+  const canUnloadBackgroundProcess = computed(() => loadingStackBackgroundProcess.value <= 1)
 
   /**
    * Set the global loading state of the application, if showSpinner is set to true
@@ -18,33 +18,40 @@ export const useAppStore = defineStore('app', () => {
    * @param value
    * @param showSpinner
    */
-  const isLoading = (value: boolean, showSpinner: boolean) => {
-    loading.value = value
-    setSpinner(showSpinner)
+  const isLoading = (value: boolean) => {
+    if (value) {
+      loadingStackMainProcess.value++;
+      loading.value = value
+    } else {
+      if (loadingStackMainProcess.value > 0) loadingStackMainProcess.value--;
+      if (canUnloadMainProcess.value) {
+        loading.value = value
+      }
+    }
   }
 
-  // const updateInBackground = async (backgroundFunction: (params: any) => Promise<void>) => {
-  //   try {
-  //     updatingInBackground.value = true;
-  //     await backgroundFunction()
-  //   } catch (e) {
-  //     console.log("Error updating in background: " + backgroundFunction)
-  //   } finally {
-  //     updatingInBackground.value = true;
-  //   }
-  // }
-
   const updateInBackground = (value: boolean) => {
-    updatingInBackground.value = value;
+    if (value) {
+      loadingStackBackgroundProcess.value++;
+      updatingInBackground.value = value;
+    } else {
+      if (loadingStackBackgroundProcess.value > 0) loadingStackBackgroundProcess.value--;
+      if (canUnloadBackgroundProcess.value) {
+        console.log("unloading");
+        updatingInBackground.value = value;
+      }
+    }
   }
 
   return {
-    spinnerActive,
     loading,
-    setSpinner,
     isLoading,
     updateInBackground,
     updatingInBackground,
-    disableForms
+    disableForms,
+    loadingStackMainProcess,
+    loadingStackBackgroundProcess,
+    canUnloadMainProcess,
+    canUnloadBackgroundProcess
   }
 })

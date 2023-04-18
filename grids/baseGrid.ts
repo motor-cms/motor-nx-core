@@ -31,17 +31,17 @@ export default function callbackGrid<T>(
     switch (params.componentParams.component) {
       case 'DeleteButton':
         // Delete the record
-        appStore.isLoading(true, true)
+        appStore.isLoading(true)
         await repository.delete(params.componentParams.record)
         toast.success(t(languagePrefix + '.deleted'))
-        appStore.isLoading(false, false)
+        appStore.isLoading(false)
         appStore.updateInBackground(true);
         await getGridData({}, '', false);
         appStore.updateInBackground(false);
         break
       case 'UpdateRecord':
         const payload: any = {}
-        appStore.isLoading(true, true)
+        appStore.isLoading(true)
         payload[params.componentParams.property] = params.componentParams.value
         const newRecord = await repository.update(
           payload,
@@ -49,7 +49,7 @@ export default function callbackGrid<T>(
         )
         rows.value[params.componentParams.index] = newRecord.data.data
         toast.success(t(languagePrefix + '.updated'))
-        appStore.isLoading(false, false)
+        appStore.isLoading(false)
         break
       default:
         console.log('UNHANDLED EVENT', params.componentParams)

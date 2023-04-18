@@ -1,6 +1,6 @@
 <template>
   <AdminContainer>
-    <AdminPartialsSpinner v-if="spinnerActive" />
+    <AdminPartialsSpinner v-if="loading" />
     <NuxtPage />
   </AdminContainer>
 </template>
@@ -8,7 +8,7 @@
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 const appStore = useAppStore();
-const { spinnerActive, updatingInBackground } = storeToRefs(appStore)
+const { loading } = storeToRefs(appStore)
 
 const active = true;
 </script>

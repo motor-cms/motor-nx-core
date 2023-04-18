@@ -1,6 +1,6 @@
 <template>
-  <AdminPartialsSpinner v-if="spinnerActive" />
-  <div v-if="!spinnerActive && !attemptLoginFromStorage">
+  <AdminPartialsSpinner v-if="loading" />
+  <div v-if="!loading && !attemptLoginFromStorage">
     <section>
       <div class="page-header section-height-75">
         <div class="container">
@@ -84,7 +84,7 @@ import { useAppStore } from '../../store/app'
 const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore();
-const { spinnerActive } = storeToRefs(appStore)
+const { loading } = storeToRefs(appStore)
 const { authenticated, signInError } = storeToRefs(userStore)
 const attemptLoginFromStorage = ref(true);
 let login = ref({

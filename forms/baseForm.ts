@@ -48,8 +48,9 @@ export default function baseForm(
   })
 
   const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
+    console.log("VALUES", values)
     try {
-      appStore.isLoading(true, true);
+      appStore.isLoading(true);
       for (const [key, value] of Object.entries(values)) {
         if (key !== 'id') {
           model.value[key] = value
@@ -91,7 +92,7 @@ export default function baseForm(
       toast.error(t('global.error_occurred'))
       console.log(e)
     } finally {
-      appStore.isLoading(false, false);
+      appStore.isLoading(false);
       resetForm()
     }
   })

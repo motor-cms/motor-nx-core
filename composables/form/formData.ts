@@ -10,7 +10,7 @@ export function useCoreFormData() {
 
   const getRelevantFormData = async (getData: (cached: boolean) => Promise<void>, mainProcessFunctions: Array<(cached: boolean) => Promise<void>>, backgroundFunctions: Array<(cached: boolean) => Promise<void>>, cached: boolean = true, withCacheRefresh: boolean = true) => {
     try {
-      appStore.isLoading(true, true);
+      appStore.isLoading(true);
       await getData(false);
       for (const func of mainProcessFunctions) {
         await func(cached);
@@ -20,7 +20,7 @@ export function useCoreFormData() {
       console.log("Error fetching formdata.")
       toast.error(t('global.error_occurred'))
     } finally {
-      appStore.isLoading(false, false);
+      appStore.isLoading(false);
       if (cached && withCacheRefresh) {
         try {
           if(backgroundFunctions.length) {

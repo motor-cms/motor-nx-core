@@ -5,7 +5,15 @@ import { useToast } from 'vue-toastification'
 import Ref from '../types/model'
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-import {ObjectSchema} from "yup";
+import {ObjectSchema, InferType} from "yup";
+
+import { configure } from 'vee-validate';
+import { localize } from '@vee-validate/i18n';
+import en from '@vee-validate/i18n/dist/locale/en.json';
+import de from '@vee-validate/i18n/dist/locale/de.json';
+import fr from '@vee-validate/i18n/dist/locale/fr.json';
+import { setLocale } from '@vee-validate/i18n';
+
 
 export default function baseForm(
   languageFilePrefix: string,
@@ -27,19 +35,28 @@ export default function baseForm(
   const toast = useToast()
   const appStore = useAppStore();
 
+  type ModelType = InferType<typeof schema>;
+
+  const fillModel = async (data: Partial<ModelType>) => {
+    model.value = await schema.validate(data, {stripUnknown: true});
+  }
+
   // Get record from id and set values. Redirect back and show error if record was not found
   const getData = async () => {
-    try {
-      if (!route.params.id) return;
-      const id: number = Number(route.params.id)
-      console.log(repositoryParams);
-      const {data} = await repository.get(id, repositoryParams)
-      model.value = data.value.data
-    } catch (e) {
-      toast.error(t('global.record_not_found'))
-      router.replace({ name: routePrefix })
-    }
+    if (!route.params.id) return;
+    const id: number = Number(route.params.id)
+    console.log(repositoryParams);
+    const {data: response} = await repository.get(id, repositoryParams)
+    await fillModel(response.value.data);
   }
+
+  localize({ de });
+  setLocale('de')
+
+  configure({
+    generateMessage: localize('de'),
+  });
+
 
   // Initialize form with default values and the validation schema
   const form = useForm({
@@ -47,17 +64,11 @@ export default function baseForm(
     validationSchema: schema,
   })
 
+
   const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
-    console.log("VALUES", values)
     try {
       appStore.isLoading(true);
-      for (const [key, value] of Object.entries(values)) {
-        if (key !== 'id') {
-          model.value[key] = value
-        }
-      }
-
-      const formData = reactive<any>(values)
+      const formData = reactive<any>(JSON.parse(JSON.stringify(model.value)))
       delete formData.id;
 
       if (sanitizer !== null) {
@@ -65,13 +76,13 @@ export default function baseForm(
       }
 
       if (model.value.id) {
-        const { data, pending, error, refresh } = await repository.update(
+        const { data: response, pending, error, refresh } = await repository.update(
           formData,
           model.value.id,
           repositoryParams
         )
         if (error.value) throw new Error(error)
-        Object.assign(model.value, data.value.data);
+        await fillModel(response.value.data);
         toast.success(t(languageFilePrefix + '.updated'))
         await afterSubmit()
         if (routePrefix && routePrefix.length) {
@@ -79,9 +90,9 @@ export default function baseForm(
         }
       } else {
         model.value.id = null
-        const { data, pending, error, refresh } = await repository.create(formData, repositoryParams)
+        const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
-        Object.assign(model.value, data.value.data);
+        await fillModel(response.value.data);
         toast.success(t(languageFilePrefix + '.created'))
         await afterSubmit()
         if (routePrefix && routePrefix.length) {

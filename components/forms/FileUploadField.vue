@@ -4,12 +4,13 @@
       {{ label }}
     </label>
     <div class="d-none">
-      <input :id="id" type="file" ref="fileInput" :name="name" />
+      <input :id="id" type="file" ref="fileInput" :name="name"/>
     </div>
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
-      {{validationErrorMessage}}
+      {{ validationErrorMessage }}
     </div>
     <div
+      v-if="multiple || (!multiple && !files.length)"
       class="col-md-4 drop-zone"
       v-on:dragover.prevent="handleDragOver"
       v-on:drop.prevent="handleDrop"
@@ -36,14 +37,14 @@
       <div
         class="col-md-4 drop-zone"
         :style="
-          isImage(file.type)
+          isImage(file.mime_type)
             ? 'background-image:url(' +
-              (file.dataUrl) +
+              (file.url) +
               ');'
             : ''
         "
       >
-        <span v-if="file.dataUrl === ''">
+        <span v-if="file.url === ''">
           <template v-if="multiple">
             {{ $t('motor-media.global.drop_files_here') }}
           </template>
@@ -51,26 +52,26 @@
             {{ $t('motor-media.global.drop_file_here') }}
           </template>
         </span>
-        <span v-if="!isImage(file.type)" style="overflow-wrap: anywhere">
-          {{ file.type }}
+        <span v-if="!isImage(file.mime_type)" style="overflow-wrap: anywhere">
+          {{ file.mime_type }}
         </span>
       </div>
       <div
         class="col-md-8"
-        v-if="(status.dropped) && file.name !== ''"
+        v-if="file.name !== ''"
       >
         <button
           v-if="allowDelete"
-          @click="deleteImage(file.name)"
+          @click="deleteFile(file.name)"
           class="btn btn-danger btn-sm align-content-end"
           type="button"
         >
-          <fa icon="trash-alt" />
+          <fa icon="trash-alt"/>
         </button>
         <p><strong>File:</strong> {{ file.name }}</p>
         <p>
           <strong>Type:</strong>
-          {{ file.type }}
+          {{ file.mime_type }}
         </p>
         <p>
           <strong>Size:</strong>
@@ -81,7 +82,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import {defineComponent, ref, watch} from 'vue'
 import {useField} from "vee-validate";
 
 export default defineComponent({
@@ -92,8 +93,8 @@ export default defineComponent({
       type: String,
       default: 'text',
     },
-    value: {
-      type: Array,
+    modelValue: {
+      type: Array || Object,
       default: () => [],
     },
     name: {
@@ -126,7 +127,7 @@ export default defineComponent({
       handleChange,
       meta,
     } = useField(<string>props.name, undefined, {
-      initialValue: props.value,
+      initialValue: props.modelValue,
     })
 
     const fileTemplate = {
@@ -174,24 +175,20 @@ export default defineComponent({
       validationErrorMessage.value = '';
 
       if (!props.multiple) {
-        if(event.dataTransfer.files.length > 1 || parsedFiles.value.length > 0) {
+        if (event.dataTransfer.files.length > 1 || parsedFiles.value.length > 0) {
           validationError.value = true;
           validationErrorMessage.value = 'Dateiupload nur für eine Datei erlaubt.'
           return;
         }
-        files.value.items.add(event.dataTransfer.files[0])
-      } else {
-        Array.from(event.dataTransfer.files).forEach((file: DataTransferItem) => files.value.items.add(file))
       }
-      fileInput.value.files = files.value.files;
 
       for (let i = 0; i < event.dataTransfer.items.length; i++) {
         const fileItem = event.dataTransfer.items[i].getAsFile()
         let tempFile = {
           name: fileItem.name,
           size: parseFloat((fileItem.size / 1000).toFixed(2)),
-          dataUrl: '',
-          type: fileItem.type,
+          url: '',
+          mime_type: fileItem.type,
         }
 
         console.log('DEBUG: ', fileItem);
@@ -205,9 +202,13 @@ export default defineComponent({
           fileCount.value++
           // Take the reader's result and use it for the next method
           const fileResult = event.target.result
-          tempFile.dataUrl = <string>fileResult
+          tempFile.url = <string>fileResult
           parsedFiles.value.push(tempFile)
-          handleChange(parsedFiles.value,false)
+          if (!props.multiple) {
+            handleChange(parsedFiles.value[0], false)
+          } else {
+            handleChange(parsedFiles.value, false)
+          }
         }
       }
     }
@@ -228,26 +229,42 @@ export default defineComponent({
       return mimeTypes.indexOf(type) > -1
     }
 
-    const deleteImage = (fileName: string) => {
-      parsedFiles.value = parsedFiles.value.filter(file => file.name !== fileName);
-
-      console.log("parsed", parsedFiles.value);
-      handleChange(parsedFiles.value, false);
+    const deleteFile = (fileName: string) => {
+      if (props.multiple) {
+        parsedFiles.value = parsedFiles.value.filter(file => file.name !== fileName);
+        handleChange(parsedFiles.value, false);
+      } else {
+        parsedFiles.value = [];
+        handleChange({}, false);
+      }
     }
+
+    watch(() => props.modelValue, () => {
+        if (!props.multiple) {
+          if (Object.keys(inputValue.value).length) {
+            parsedFiles.value[0] = inputValue.value
+          } else {
+            parsedFiles.value = [];
+          }
+        } else {
+          parsedFiles.value = inputValue.value;
+        }
+    })
 
 
     return {
       file,
       files: parsedFiles,
       status,
-      deleteImage,
+      deleteFile,
       handleDragOver,
       handleDragLeave,
       handleDrop,
       isImage,
       fileInput,
       validationError,
-      validationErrorMessage
+      validationErrorMessage,
+      inputValue
     }
   },
 })

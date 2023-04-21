@@ -37,8 +37,10 @@ export default function baseForm(
 
   type ModelType = InferType<typeof schema>;
 
-  const fillModel = async (data: Partial<ModelType>) => {
-    model.value = await schema.validate(data, {stripUnknown: true});
+  const fillModel = async (data: Partial<ModelType> | undefined | null) => {
+    if (data) {
+      model.value = await schema.validate(data, {stripUnknown: true});
+    }
   }
 
   // Get record from id and set values. Redirect back and show error if record was not found

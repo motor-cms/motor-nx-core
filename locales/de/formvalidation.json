@@ -1,0 +1,32 @@
+{
+  "code": "de",
+  "messages": {
+    "_default": "{field} ist ungültig",
+    "alpha": "{field} darf nur alphabetische Zeichen enthalten",
+    "alpha_dash": "{field} darf alphanumerische Zeichen sowie Striche und Unterstriche enthalten",
+    "alpha_num": "{field} darf nur alphanumerische Zeichen enthalten",
+    "alpha_spaces": "{field} darf nur alphanumerische Zeichen und Leerzeichen enthalten",
+    "between": "{field} muss zwischen {min} und {max} liegen",
+    "confirmed": "Die Bestätigung von {field} stimmt nicht überein",
+    "digits": "{field} muss numerisch sein und exakt {length} Ziffern enthalten",
+    "dimensions": "{field} muss {width} x {height} Bildpunkte groß sein",
+    "email": "{field} muss eine gültige E-Mail-Adresse sein",
+    "not_one_of": "{field} muss ein gültiger Wert sein",
+    "ext": "{field} muss eine gültige Datei sein",
+    "image": "{field} muss eine Grafik sein",
+    "one_of": "{field} muss ein gültiger Wert sein",
+    "integer": "{field} muss eine ganze Zahl sein",
+    "length": "Die Länge von {field} muss {length} sein",
+    "max": "{field} darf nicht länger als {length} Zeichen sein",
+    "max_value": "{field} darf maximal {max} sein",
+    "mimes": "{field} muss einen gültigen Dateityp haben",
+    "min": "{field} muss mindestens {length} Zeichen lang sein",
+    "min_value": "{field} muss mindestens {min} sein",
+    "numeric": "{field} darf nur numerische Zeichen enthalten",
+    "regex": "Das Format von {field} ist ungültig",
+    "required": "{field} ist ein Pflichtfeld",
+    "required_if": "{field} ist ein Pflichtfeld",
+    "size": "{field} muss kleiner als {size}KB sein",
+    "url": "{field} ist keine gültige URL"
+  }
+}

@@ -30,6 +30,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min.replace('{field}', label).replace('{length}', min)),
       max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.max.replace('{field}', label).replace('{length}', max)),
     },
+    array: {
+      min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
+      max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
+    },
     date: {
 
     },
@@ -37,9 +41,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     },
     object: {
-
-    },
-    array: {
 
     }
   });

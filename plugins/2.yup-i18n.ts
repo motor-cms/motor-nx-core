@@ -17,12 +17,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     // use constant translation keys for messages without values
     mixed: {
       default: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages._default.replace('{field}', label)),
-      required: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label))
+      required: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
+      notType: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.one_of.replace('{field}', label))
     },
     // use functions to generate an error object that includes the value from the schema
     number: {
       min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min_value.replace('{field}', label).replace('{min}', min)),
       max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.max_value.replace('{field}', label).replace('{max}', max)),
+      integer: ({ label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.integer.replace('{field}', label)),
     },
     string: {
       min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min.replace('{field}', label).replace('{length}', min)),

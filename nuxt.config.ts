@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   // css: ['@zrm/motor-nx-core/assets/fontawesome/main.fontawesome'] <-- funktioniert,
   // css: ['./assets/fontawesome/main.fontawesome'], <-- funktioniert nicht
-  css: [
-    '@zrm/motor-nx-core/assets/scss/main.scss',
-  ],
+  // css: [
+  //   '@zrm/motor-nx-core/assets/scss/main.scss',
+  // ],
 })

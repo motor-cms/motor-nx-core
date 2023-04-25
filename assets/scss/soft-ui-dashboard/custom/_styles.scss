@@ -46,7 +46,10 @@
 	}
 }
 
-
 .spinner-grow {
   color: $primary;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=checkbox]:after {
+  top: 0;
 }

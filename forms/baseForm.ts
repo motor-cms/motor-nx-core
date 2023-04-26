@@ -22,7 +22,7 @@ export default function baseForm(
   model: Ref<{ [index: string]: any }>,
   schema: ObjectSchema<Record<any, any>>,
   sanitizer: (formData: object) => void = () => {},
-  afterSubmit: () => void = () => {},
+  afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => {},
   repositoryParams?: {}
 ) {
   // Load i18n module
@@ -40,6 +40,7 @@ export default function baseForm(
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
     if (data) {
       model.value = await schema.validate(data, {stripUnknown: true});
+      console.log("heir samma", model.value)
     }
   }
 
@@ -70,6 +71,7 @@ export default function baseForm(
   const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
     try {
       appStore.isLoading(true);
+      const oldModel = ref(JSON.parse(JSON.stringify(model.value)));
       const formData = reactive<any>(JSON.parse(JSON.stringify(model.value)))
       delete formData.id;
 
@@ -85,8 +87,8 @@ export default function baseForm(
         )
         if (error.value) throw new Error(error)
         await fillModel(response.value.data);
+        await afterSubmit(oldModel, model)
         toast.success(t(languageFilePrefix + '.updated'))
-        await afterSubmit()
         if (routePrefix && routePrefix.length) {
           await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
         }
@@ -95,15 +97,15 @@ export default function baseForm(
         const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
         await fillModel(response.value.data);
+        await afterSubmit(oldModel,model)
         toast.success(t(languageFilePrefix + '.created'))
-        await afterSubmit()
         if (routePrefix && routePrefix.length) {
           await router.push({path: useRouteParser().routeDottedToSlash(routePrefix)})
         }
       }
     } catch (e) {
       toast.error(t('global.error_occurred'))
-      console.log(e)
+      console.error(e)
     } finally {
       appStore.isLoading(false);
       resetForm()

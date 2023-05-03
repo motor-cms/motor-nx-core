@@ -109,6 +109,15 @@ languageModules.push(
   import.meta.glob('../../motor-nx-assistant/locales/**/*.json', { eager: true })
 )
 
+
+/**
+ * Project specific locales
+ */
+languageModules.push(
+  import.meta.glob('../../../locales/**/*.json', { eager: true })
+)
+
+
 languageModules.forEach(async (module) => {
   let moduleMessages = await loadLocaleMessages(module, true)
 

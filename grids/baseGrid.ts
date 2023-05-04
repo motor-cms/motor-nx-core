@@ -33,9 +33,12 @@ export default function callbackGrid<T>(
         // Delete the record
         appStore.isLoading(true)
         await repository.delete(params.componentParams.record)
+        // Remove record from rows for better ux
+        removeRecordFromRows(params.componentParams.record);
         toast.success(t(languagePrefix + '.deleted'))
         appStore.isLoading(false)
         appStore.updateInBackground(true);
+        // Fetch fresh dataset of rows in background to hydrate cache and rows
         await getGridData({}, '', false);
         appStore.updateInBackground(false);
         break
@@ -60,6 +63,11 @@ export default function callbackGrid<T>(
 
   const refreshRecords = async (params: any = {}) => {
     await refreshGridData([getGridData], [getGridData], params, '', true, true)
+  }
+
+  const removeRecordFromRows = (record: number) => {
+    console.log(`Removing record #${record}`);
+    rows.value = rows.value.filter((row) => row.id !== record);
   }
 
   return {rows, meta, refreshRecords, handleCellEvent}

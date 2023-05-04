@@ -11,7 +11,7 @@ export function useGridData() {
 
   const refreshGridData = async (main: Array<(params: any, id: string, cached?: boolean) => Promise<void>>, after: Array<(params: any, id: string, cached?: boolean) => Promise<void>>, params: any, id: string = '', cached: boolean = true, withCacheRefresh: boolean = true) => {
     try {
-      appStore.isLoading(true, false);
+      appStore.isLoading(true);
       for (const func of main) {
         if (id.length) {
           await func(params, id, cached);

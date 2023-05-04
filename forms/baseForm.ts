@@ -23,7 +23,8 @@ export default function baseForm(
   schema: ObjectSchema<Record<any, any>>,
   sanitizer: (formData: object) => void = () => {},
   afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => {},
-  repositoryParams?: {}
+  repositoryParams?: {},
+  validateModelAfterCreateUpdate: boolean = false
 ) {
   // Load i18n module
   const { t } = useI18n()
@@ -40,7 +41,6 @@ export default function baseForm(
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
     if (data) {
       model.value = await schema.validate(data, {stripUnknown: true});
-      console.log("heir samma", model.value)
     }
   }
 
@@ -86,7 +86,11 @@ export default function baseForm(
           repositoryParams
         )
         if (error.value) throw new Error(error)
-        await fillModel(response.value.data);
+        if (validateModelAfterCreateUpdate) {
+          // TODO find a different solution here, model validation fails if resource from backend
+          // does not fit schema, but sometimes we need the new model (eg. the id) after creation for further processing
+          await fillModel(response.value.data);
+        }
         await afterSubmit(oldModel, model)
         toast.success(t(languageFilePrefix + '.updated'))
         if (routePrefix && routePrefix.length) {
@@ -96,7 +100,11 @@ export default function baseForm(
         model.value.id = null
         const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
-        await fillModel(response.value.data);
+        if (validateModelAfterCreateUpdate) {
+          // TODO find a different solution here, model validation fails if resource from backend
+          // does not fit schema, but sometimes we need the new model (eg. the id) after creation for further processing
+          await fillModel(response.value.data);
+        }
         await afterSubmit(oldModel,model)
         toast.success(t(languageFilePrefix + '.created'))
         if (routePrefix && routePrefix.length) {

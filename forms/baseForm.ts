@@ -24,7 +24,6 @@ export default function baseForm(
   sanitizer: (formData: object) => void = () => {},
   afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => {},
   repositoryParams?: {},
-  validateModelAfterCreateUpdate: boolean = false
 ) {
   // Load i18n module
   const { t } = useI18n()
@@ -39,8 +38,11 @@ export default function baseForm(
   type ModelType = InferType<typeof schema>;
 
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
-    if (data) {
-      model.value = await schema.validate(data, {stripUnknown: true});
+    try {
+      model.value = await schema.validate(data, {stripUnknown: true, strict: false});
+    } catch (e) {
+      console.log("Error while filling api response into model validation schema. Setting model to response data");
+      model.value = data;
     }
   }
 

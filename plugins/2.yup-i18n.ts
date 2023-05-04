@@ -29,6 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     string: {
       min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min.replace('{field}', label).replace('{length}', min)),
       max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.max.replace('{field}', label).replace('{length}', max)),
+      email: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.email.replace('{field}', label)),
     },
     array: {
       min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),

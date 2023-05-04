@@ -241,7 +241,7 @@ export default defineComponent({
 
     watch(() => props.modelValue, () => {
         if (!props.multiple) {
-          if (Object.keys(inputValue.value).length) {
+          if (inputValue.value && Object.keys(inputValue.value).length) {
             parsedFiles.value[0] = inputValue.value
           } else {
             parsedFiles.value = [];

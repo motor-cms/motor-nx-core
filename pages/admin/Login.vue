@@ -8,10 +8,16 @@
             <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
               <div class="card card-plain mt-8">
                 <div class="card-header pb-0 text-left bg-transparent">
-                  <h3 class="font-weight-bolder text-info text-gradient">
+                  <div class="d-flex justify-content-center align-items-center">
+                    <img
+                      src="~/assets/images/logo.png"
+                      class="navbar-brand-img"
+                      :alt="$t('global.logo.alt')"
+                    />
+                  </div>
+                  <h3 v-if="showProjectName" class="font-weight-bolder text-info text-gradient">
                     {{ $t('global.project') }}
                   </h3>
-                  <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
                   <form role="form text-left">
@@ -37,25 +43,25 @@
                           aria-describedby="password-addon"
                       />
                     </div>
-                    <div class="form-check form-switch">
-                      <input
-                          v-model="login.remember"
-                          class="form-check-input"
-                          type="checkbox"
-                          id="rememberMe"
-                          checked=""
-                      />
-                      <label class="form-check-label" for="rememberMe"
-                      >Remember me</label
-                      >
-                    </div>
+<!--                    <div class="form-check form-switch">-->
+<!--                      <input-->
+<!--                          v-model="login.remember"-->
+<!--                          class="form-check-input"-->
+<!--                          type="checkbox"-->
+<!--                          id="rememberMe"-->
+<!--                          checked=""-->
+<!--                      />-->
+<!--                      <label class="form-check-label" for="rememberMe"-->
+<!--                      >Remember me</label-->
+<!--                      >-->
+<!--                    </div>-->
                     <div class="text-center">
                       <button
                           @click="userStore.signIn(login)"
                           type="button"
-                          class="btn bg-gradient-info w-100 mt-4 mb-0"
+                          class="btn bg-gradient-primary text-capitalize w-100 mt-4 mb-0"
                       >
-                        Sign in
+                        {{ $t('global.sign_in') }}
                       </button>
                     </div>
                     <div
@@ -92,6 +98,9 @@ let login = ref({
   password: '',
   remember: false,
 })
+
+const runtimeConfig = useRuntimeConfig();
+const showProjectName = computed(() => runtimeConfig.public.showProjectName);
 
 onMounted(async () => {
   if (!authenticated.value) {

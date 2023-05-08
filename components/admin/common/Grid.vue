@@ -41,18 +41,16 @@
 
                     <li
                       class="page-item"
-                      :class="{disabled: updatingInBackground}"
                       @click="firstPage"
                       v-if="meta.current_page > 1"
                     >
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-left"/>
-                        <font-awesome-icon icon="chevron-left"/>
+                        <fa icon="chevron-left"/>
+                        <fa icon="chevron-left"/>
                       </a>
                     </li>
                     <li
                       class="page-item"
-                      :class="{disabled: updatingInBackground}"
                       @click="previousPage"
                       v-if="meta.current_page > 1"
                     >
@@ -62,7 +60,6 @@
                     </li>
                     <li>
                       <select
-                        :disabled="updatingInBackground"
                         class="form-control"
                         name="per-page"
                         @change="goToPage"
@@ -73,7 +70,6 @@
                     </li>
                     <li
                       class="page-item"
-                      :class="{disabled: updatingInBackground}"
                       @click="nextPage()"
                       v-if="meta.current_page < meta.last_page"
                     >
@@ -84,13 +80,12 @@
 
                     <li
                       class="page-item"
-                      :class="{disabled: updatingInBackground}"
                       @click="lastPage()"
                       v-if="meta.current_page < meta.last_page"
                     >
                       <a class="page-link text-black">
-                        <font-awesome-icon icon="chevron-right"/>
-                        <font-awesome-icon icon="chevron-right"/>
+                        <fa icon="chevron-right"/>
+                        <fa icon="chevron-right"/>
                       </a>
                     </li>
 
@@ -105,7 +100,6 @@
                   </ul>
 
                   <select
-                    :disabled="updatingInBackground"
                     class="form-control max-width-100 d-inline float-end me-2"
                     name="per-page"
                     @change="submitFilter($event)"

@@ -62,13 +62,11 @@ export default function baseForm(
     generateMessage: localize('de'),
   });
 
-
   // Initialize form with default values and the validation schema
   const form = useForm({
     initialValues: model,
     validationSchema: schema,
   })
-
 
   const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
     try {

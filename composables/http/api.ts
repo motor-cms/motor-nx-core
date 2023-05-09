@@ -5,8 +5,8 @@ import {sha256} from "ohash";
 import {Store} from "pinia";
 import {before} from "node:test";
 
-export default function useApi() {
-  const baseUrl = import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_SLUG;
+export default function useApi(useRpc: boolean = false) {
+  const baseUrl = useRpc ? import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_RPC_SLUG : import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_SLUG;
   const userStore = useUserStore();
 
 
@@ -37,6 +37,7 @@ export default function useApi() {
     const options: UseFetchOptions<Record<string, any>> = Object.assign({}, requestOptions, opts)
     options.method = 'POST';
     options.body = body;
+    console.log("boey", body)
     return useFetch(path, options)
   }
 

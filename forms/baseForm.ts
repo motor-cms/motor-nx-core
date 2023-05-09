@@ -43,11 +43,8 @@ export default function baseForm(
   })
 
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
-    let testAPIRESP = await schema.validate(data, {stripUnknown: true, strict: true});
-    console.log("HALLOO", testAPIRESP);
     try {
-      model.value = testAPIRESP;
-      console.log("newModelValueFilled", model.value)
+      model.value = await schema.validate(data, {stripUnknown: true, strict: true});
     } catch (e) {
       console.log("Error while filling api response into model validation schema. Setting model to response data");
       model.value = data;

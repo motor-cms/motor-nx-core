@@ -18,6 +18,11 @@
                     :key="component.name"
                     :is="component.name"
                   />
+                  <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
+                    <button class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1">
+                      {{ $t('global.back') }}
+                    </button>
+                  </NuxtLink>
                   <NuxtLink v-if="!withoutCreate && createRecordRoute" :to="createRecordRoute">
                     <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">{{ createLabel }}</a>
                   </NuxtLink>
@@ -294,6 +299,14 @@ export default defineComponent({
     withoutCreate: {
       type: Boolean,
       default: false
+    },
+    hasBackButton: {
+      type: Boolean,
+      default: false,
+    },
+    backRoute: {
+      type: String,
+      default: '',
     }
   },
   setup(props, ctx) {
@@ -304,6 +317,8 @@ export default defineComponent({
     const filterValues = reactive({per_page: 25, page: 1})
 
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
+
+    const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
     const submitFilter = (data: { parameter: string; value: string }) => {
       // Reset page when filtering or searching
@@ -424,7 +439,8 @@ export default defineComponent({
       firstPage,
       lastPage,
       pageOptions,
-      goToPage
+      goToPage,
+      goBackRoute
     }
   },
 })

@@ -98,7 +98,6 @@
                       </a>
                     </li>
                   </ul>
-
                   <select
                     class="form-control max-width-100 d-inline float-end me-2"
                     name="per-page"
@@ -109,7 +108,6 @@
                     <option value="50">50</option>
                     <option value="100">100</option>
                   </select>
-
                   <div v-if="meta.total > 0" class="float-end mt-2 me-2">
                     {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
                   </div>
@@ -233,6 +231,7 @@ import {useI18n} from 'vue-i18n'
 import {useAppStore} from '@zrm/motor-nx-core/store/app';
 import {storeToRefs} from 'pinia';
 import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
+import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
 import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
@@ -246,7 +245,8 @@ export default defineComponent({
     Skeletor,
     Button,
     EditButton,
-    DeleteButton
+    DeleteButton,
+    StatusIcon
   },
   props: {
     name: {

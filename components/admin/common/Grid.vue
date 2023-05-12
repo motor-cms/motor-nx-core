@@ -11,7 +11,6 @@
                   <SpinnerSmall v-if="updatingInBackground"/>
                 </div>
               </div>
-
               <div class="col-md-6 text-end">
                 <component
                   v-for="component in headerActions"
@@ -117,6 +116,20 @@
                 </div>
               </div>
             </div>
+            <div class="row" v-if="selectedItemsLength">
+              <div class="col d-flex">
+                <select
+                  class="form-control max-width-100 d-inline me-2"
+                  name="per-page"
+                  v-model="gridAction"
+                >
+                  <option v-for="action in gridActions" :value="action">{{ action.label }}</option>
+                </select>
+                <button type="button" @click="processGridAction" class="accordion-button">
+                  <fa icon="play"></fa>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,16 +138,21 @@
           <table class="motor-nx-grid table align-items-center mb-0">
             <thead>
             <tr>
-              <th>
+              <th v-if="hasGridActions">
                 <div style="position: relative">
-                  <div class="form-check d-flex align-items-center" @click.prevent="selectPopoverActive = !selectPopoverActive">
+                  <div class="form-check d-flex align-items-center"
+                       @click.prevent="selectPopoverActive = !selectPopoverActive">
                     <input
                       type="checkbox"
                       class="form-check-input"
                       :checked="allSelected || pageSelected"
                     />
-                    <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
+                    <p v-if="!allSelected"
+                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                       {{ selectedItemsLength }} selected
+                    </p>
+                    <p v-else class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
+                      {{ meta.total }} selected
                     </p>
                   </div>
                   <Popover v-if="selectPopoverActive">
@@ -158,6 +176,12 @@
                       />
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         Select all
+                      </p>
+                    </div>
+                    <div class="form-check" @click="deselect" v-if="selectedItemsLength">
+                      <fa icon="xmark"></fa>
+                      <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
+                        Deselect all
                       </p>
                     </div>
                   </Popover>
@@ -210,14 +234,15 @@
               :key="row.id"
               :class="index % 2 === 0 ? 'bg-gray-100' : ''"
             >
-              <td class="align-items-center text-sm">
+              <td class="align-items-center text-sm" v-if="hasGridActions">
                 <div class="form-check">
                   <input
                     type="checkbox"
                     class="form-check-input"
+                    :disabled="allSelected"
                     :name="name"
                     :value="name"
-                    :checked="gridStore.isSelected(row)"
+                    :checked="gridStore.isSelected(row) || allSelected"
                     @input="gridStore.selectItem(row)"
                   />
                 </div>
@@ -293,6 +318,7 @@ import SpinnerSmall from "~/packages/motor-nx-core/components/admin/partials/Spi
 import CheckboxField from "~/packages/motor-nx-core/components/forms/CheckboxField.vue";
 import {useGridStore} from "~/packages/motor-nx-core/store/grid";
 import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
+import {raf} from "vue-easy-lightbox/types/utils/raf";
 
 export default defineComponent({
   components: {
@@ -357,13 +383,19 @@ export default defineComponent({
     withSelection: {
       type: Boolean,
       default: true,
-    }
+    },
+    gridActions: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup(props, ctx) {
     const appStore = useAppStore()
     const {loading, updatingInBackground} = storeToRefs(appStore)
     const gridStore = useGridStore();
-    const {selectedItemsLength, selectedItems, pageSelected, allSelected} = storeToRefs(gridStore);
+    gridStore.init(props.meta);
+
+    const {selectedItemsLength, selectedPageMap, pageSelected, allSelected, deselectAll} = storeToRefs(gridStore);
     const {t} = useI18n()
     const filterValues = reactive({per_page: 25, page: 1})
 
@@ -446,18 +478,9 @@ export default defineComponent({
 
     const instance = getCurrentInstance()
 
-    onMounted(() => {
-      const components = props.loadComponents as Array<{
-        name: string
-        object: Component
-      }>
-
-      if (components.length) {
-        components.forEach((component) => {
-          instance.components[component.name] = component.object
-        })
-      }
-    })
+    // GridActions
+    const hasGridActions = computed(() => props.gridActions.length)
+    const gridAction = ref(null);
 
     const firstPage = () => {
       filterValues.page = 1;
@@ -477,11 +500,17 @@ export default defineComponent({
     const selectPopoverActive = ref(false);
     const setPageSelected = () => {
       if (pageSelected.value) {
-        gridStore.setSelectedItems([]);
+        props.rows.forEach(row => {
+          gridStore.removeSelectedItem(row);
+        })
       } else {
-        gridStore.setSelectedItems(JSON.parse(JSON.stringify(props.rows)))
+        props.rows.forEach(row => {
+          if (!gridStore.isSelected(row)) {
+            gridStore.addSelectedItem(row);
+          }
+        })
       }
-      pageSelected.value = !pageSelected.value;
+      selectedPageMap.value.set(props.meta.current_page, !selectedPageMap.value.get(props.meta.current_page));
       selectPopoverActive.value = !selectPopoverActive.value;
     }
 
@@ -494,6 +523,30 @@ export default defineComponent({
       allSelected.value = !allSelected.value;
       selectPopoverActive.value = !selectPopoverActive.value;
     }
+
+    const deselect = () => {
+      gridStore.deselectAll();
+      selectPopoverActive.value = !selectPopoverActive.value;
+    }
+
+    watchEffect(() => {
+      gridStore.init(props.meta);
+    })
+
+    onMounted(() => {
+      const components = props.loadComponents as Array<{
+        name: string
+        object: Component
+      }>
+
+      if (components.length) {
+        components.forEach((component) => {
+          instance.components[component.name] = component.object
+        })
+      }
+
+      gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
+    })
 
     return {
       filterValues,
@@ -516,7 +569,10 @@ export default defineComponent({
       allSelected,
       pageSelected,
       gridStore,
-      selectPopoverActive
+      selectPopoverActive,
+      hasGridActions,
+      gridAction,
+      deselect
     }
   },
 })

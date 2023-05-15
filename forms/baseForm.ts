@@ -39,9 +39,14 @@ export default function baseForm(
 
   type ModelType = InferType<typeof schema>;
 
+
+  watch(() => model.value, (newValue, oldValue)  => {
+    console.log("model changed", newValue, oldValue);
+  })
+
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
     try {
-      model.value = await schema.validate(data, {stripUnknown: true, strict: false});
+      model.value = await schema.validate(data, {stripUnknown: true, strict: true});
     } catch (e) {
       console.log("Error while filling api response into model validation schema. Setting model to response data");
       model.value = data;

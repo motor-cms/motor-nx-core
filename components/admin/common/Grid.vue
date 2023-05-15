@@ -30,18 +30,6 @@
                 </NuxtLink>
               </div>
             </div>
-            <div class="col-md-6 text-end">
-              <component
-                v-for="component in headerActions"
-                :key="component.name"
-                :is="component.name"
-              />
-              <NuxtLink v-if="!withoutCreate && createRecordRoute" :to="createRecordRoute">
-                <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">{{
-                    createLabel
-                  }}</a>
-              </NuxtLink>
-            </div>
           </div>
           <div class="row">
             <component

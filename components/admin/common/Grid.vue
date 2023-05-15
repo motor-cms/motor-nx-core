@@ -243,7 +243,7 @@
                     :name="name"
                     :value="name"
                     :checked="gridStore.isSelected(row) || allSelected"
-                    @input="gridStore.selectItem(row)"
+                    @input.prevent.stop="gridStore.selectItem(row)"
                   />
                 </div>
               </td>
@@ -319,6 +319,14 @@ import CheckboxField from "~/packages/motor-nx-core/components/forms/CheckboxFie
 import {useGridStore} from "~/packages/motor-nx-core/store/grid";
 import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
 import {raf} from "vue-easy-lightbox/types/utils/raf";
+import app from "vue-easy-lightbox/src/dev-entry/App.vue";
+import {useToast} from "vue-toastification";
+
+interface GridAction {
+  label: string,
+  action: string,
+  func: () => Promise<any>
+}
 
 export default defineComponent({
   components: {
@@ -385,7 +393,7 @@ export default defineComponent({
       default: true,
     },
     gridActions: {
-      type: Array,
+      type: Array<GridAction>,
       default: () => [],
     },
   },
@@ -395,7 +403,7 @@ export default defineComponent({
     const gridStore = useGridStore();
     gridStore.init(props.meta);
 
-    const {selectedItemsLength, selectedPageMap, pageSelected, allSelected, deselectAll} = storeToRefs(gridStore);
+    const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
     const {t} = useI18n()
     const filterValues = reactive({per_page: 25, page: 1})
 
@@ -462,7 +470,6 @@ export default defineComponent({
     }
 
     const getPropertyValue = (object: any, property: string): string => {
-      console.log(object, property)
       property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
       let a = property.split('.')
       for (let i = 0, n = a.length; i < n; ++i) {
@@ -480,7 +487,7 @@ export default defineComponent({
 
     // GridActions
     const hasGridActions = computed(() => props.gridActions.length)
-    const gridAction = ref(null);
+    const gridAction = ref<GridAction>(null);
 
     const firstPage = () => {
       filterValues.page = 1;
@@ -533,6 +540,20 @@ export default defineComponent({
       gridStore.init(props.meta);
     })
 
+    const toast = useToast();
+    const processGridAction = async () => {
+      try {
+        appStore.isLoading(true)
+        await gridAction.value.func();
+        toast.success(t('exports.started'))
+      } catch (e) {
+        console.error("Error occured while processing grid action: " + e)
+        toast.error(t('global.error_occurred'))
+      } finally {
+        appStore.isLoading(false)
+      }
+    }
+
     onMounted(() => {
       const components = props.loadComponents as Array<{
         name: string
@@ -544,7 +565,6 @@ export default defineComponent({
           instance.components[component.name] = component.object
         })
       }
-
       gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
     })
 
@@ -572,7 +592,8 @@ export default defineComponent({
       selectPopoverActive,
       hasGridActions,
       gridAction,
-      deselect
+      deselect,
+      processGridAction
     }
   },
 })

@@ -11,12 +11,18 @@
                   <SpinnerSmall v-if="updatingInBackground"/>
                 </div>
               </div>
+
               <div class="col-md-6 text-end">
                 <component
                   v-for="component in headerActions"
                   :key="component.name"
                   :is="component.name"
                 />
+                <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
+                  <button class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1">
+                    {{ $t('global.back') }}
+                  </button>
+                </NuxtLink>
                 <NuxtLink v-if="!withoutCreate && createRecordRoute" :to="createRecordRoute">
                   <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">{{
                       createLabel
@@ -243,7 +249,7 @@
                     :name="name"
                     :value="name"
                     :checked="gridStore.isSelected(row) || allSelected"
-                    @input.prevent.stop="gridStore.selectItem(row)"
+                    @input="gridStore.selectItem(row)"
                   />
                 </div>
               </td>
@@ -388,6 +394,14 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    hasBackButton: {
+      type: Boolean,
+      default: false,
+    },
+    backRoute: {
+      type: String,
+      default: '',
+    },
     withSelection: {
       type: Boolean,
       default: true,
@@ -408,6 +422,8 @@ export default defineComponent({
     const filterValues = reactive({per_page: 25, page: 1})
 
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
+
+    const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
     const submitFilter = (data: { parameter: string; value: string }) => {
       // Reset page when filtering or searching
@@ -583,6 +599,7 @@ export default defineComponent({
       lastPage,
       pageOptions,
       goToPage,
+      goBackRoute,
       selectedItemsLength,
       setAllSelected,
       setPageSelected,

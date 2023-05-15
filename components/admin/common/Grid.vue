@@ -122,7 +122,7 @@
                 </div>
               </div>
             </div>
-            <div class="row" v-if="selectedItemsLength">
+            <div class="row" v-if="selectedItemsLength && hasGridActions">
               <div class="col d-flex">
                 <select
                   class="form-control max-width-100 d-inline me-2"

@@ -183,12 +183,15 @@ export default defineComponent({
       }
 
       for (let i = 0; i < event.dataTransfer.items.length; i++) {
+        console.log("files",event.target.files)
         const fileItem = event.dataTransfer.items[i].getAsFile()
         let tempFile = {
           name: fileItem.name,
           size: parseFloat((fileItem.size / 1000).toFixed(2)),
           url: '',
+          file: '',
           mime_type: fileItem.type,
+          type: fileItem.type,
         }
 
         console.log('DEBUG: ', fileItem);
@@ -203,6 +206,7 @@ export default defineComponent({
           // Take the reader's result and use it for the next method
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
+          tempFile.file = <string>fileResult
           parsedFiles.value.push(tempFile)
           if (!props.multiple) {
             handleChange(parsedFiles.value[0], false)

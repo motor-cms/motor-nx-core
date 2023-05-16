@@ -3,7 +3,6 @@ import {reactive, ref, toRefs} from 'vue'
 import {useAppStore} from './app'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {AsyncData} from "#app";
-import {b} from "vite-node/types-e288fc62";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
@@ -12,6 +11,7 @@ export const useUserStore = defineStore('users', () => {
   const user = ref<Record<string, any> | null>(null)
   const token = ref("")
   const signInError = ref('')
+  const userHasClient = computed(() => user.value?.client_id);
 
   const setAuthenticationStatus = (value: boolean) => {
     authenticated.value = value
@@ -97,6 +97,7 @@ export const useUserStore = defineStore('users', () => {
     signIn,
     refreshUser,
     removeUser,
-    loginFromStorage
+    loginFromStorage,
+    userHasClient
   }
 })

@@ -10,8 +10,8 @@
       :class="{ 'is-invalid': errorMessage }"
       :name="name"
       :value="name"
-      :checked="value"
-      @input="handleChange(!value)"
+      :checked="modelValue"
+      @input="handleChange(!modelValue)"
     />
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
@@ -30,7 +30,7 @@ export default defineComponent({
   props: {
     // Field's own value
     id: String,
-    value: {
+    modelValue: {
       type: null,
     },
     label: String,
@@ -44,12 +44,12 @@ export default defineComponent({
       undefined,
       {
         type: 'checkbox',
-        valueProp: <string>props.value,
+        valueProp: <string>props.modelValue,
       }
     )
 
     // select/unselect the input
-    handleChange(<string>props.value)
+    handleChange(<string>props.modelValue)
 
     return {
       checked, // readonly

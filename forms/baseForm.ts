@@ -13,6 +13,8 @@ import en from '@vee-validate/i18n/dist/locale/en.json';
 import de from '@vee-validate/i18n/dist/locale/de.json';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
+import {storeToRefs} from "pinia";
+import {useUserStore} from "~/packages/motor-nx-core/store/user";
 
 
 export default function baseForm(
@@ -37,9 +39,14 @@ export default function baseForm(
 
   type ModelType = InferType<typeof schema>;
 
+
+  watch(() => model.value, (newValue, oldValue)  => {
+    console.log("model changed", newValue, oldValue);
+  })
+
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
     try {
-      model.value = await schema.validate(data, {stripUnknown: true, strict: false});
+      model.value = await schema.validate(data, {stripUnknown: true, strict: true});
     } catch (e) {
       console.log("Error while filling api response into model validation schema. Setting model to response data");
       model.value = data;
@@ -62,13 +69,11 @@ export default function baseForm(
     generateMessage: localize('de'),
   });
 
-
   // Initialize form with default values and the validation schema
   const form = useForm({
     initialValues: model,
     validationSchema: schema,
   })
-
 
   const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
     try {
@@ -112,6 +117,12 @@ export default function baseForm(
       appStore.isLoading(false);
       resetForm()
     }
+  })
+
+  const { user } = storeToRefs(useUserStore());
+
+  watchEffect(() => {
+    model.value.client_id = user.value.client_id;
   })
 
   return {

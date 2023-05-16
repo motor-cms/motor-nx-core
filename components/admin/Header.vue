@@ -33,6 +33,9 @@
       <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto" id="navbar">
         <ul class="ms-md-auto pe-md-3 d-flex navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot" />
+          <li class="nav-item d-flex align-items-center mx-6 w-20" v-if="hasRole('SuperAdmin')">
+            <ClientSwitch />
+          </li>
           <li class="nav-item d-flex align-items-center" v-if="user">
             <span class="nav-link text-body font-weight-bold px-0">
               <fa v-if="!user.avatar" icon="user" class="me-sm-1" />
@@ -76,16 +79,20 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
+import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
 import { useUserStore } from '@zrm/motor-nx-core/store/user';
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
+import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
+import {has} from "immutable";
 
 
 export default defineComponent({
   name: 'AdminHeader',
-  components: { AdminModalLogout },
+  components: { AdminModalLogout, ClientSwitch },
   methods: {
+    has,
     toggleNavbar() {
       document.querySelector('aside').classList.toggle('open');
     }
@@ -97,6 +104,7 @@ export default defineComponent({
     const active = ref(false)
     const appStore = useAppStore();
     const { updatingInBackground } = storeToRefs(appStore)
+    const { hasRole } = useRolesAndPermissions();
 
     const router = useRouter()
 
@@ -140,7 +148,8 @@ export default defineComponent({
       active,
       ...userStore,
       navbarSlot,
-      updatingInBackground
+      updatingInBackground,
+      hasRole
     }
   },
 })

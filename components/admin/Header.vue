@@ -1,5 +1,7 @@
 <template>
-  <nav class="navbar motor-navbar-top navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="true">
+  <nav
+    class="navbar motor-navbar-top navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky"
+    id="navbarBlur" navbar-scroll="true">
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -14,7 +16,8 @@
             <NuxtLink
               :to="{ name: breadcrumb.route }"
               v-if="index <= breadcrumbs.length && breadcrumb.route"
-              >{{ $t(breadcrumb.name) }}</NuxtLink
+            >{{ $t(breadcrumb.name) }}
+            </NuxtLink
             >
             <span v-if="!breadcrumb.route">{{ $t(breadcrumb.name) }}</span>
           </li>
@@ -32,13 +35,16 @@
       </nav>
       <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto" id="navbar">
         <ul class="ms-md-auto pe-md-3 d-flex navbar-nav justify-content-end">
-          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot" />
+          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot"/>
+          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot">
+            <EventNotificationHub/>
+          </li>
           <li class="nav-item d-flex align-items-center mx-6 w-20" v-if="hasRole('SuperAdmin')">
-            <ClientSwitch />
+            <ClientSwitch/>
           </li>
           <li class="nav-item d-flex align-items-center" v-if="user">
             <span class="nav-link text-body font-weight-bold px-0">
-              <fa v-if="!user.avatar" icon="user" class="me-sm-1" />
+              <fa v-if="!user.avatar" icon="user" class="me-sm-1"/>
               <img
                 v-if="user.avatar?.conversions?.preview"
                 :src="user.avatar.conversions.preview"
@@ -66,7 +72,7 @@
               id="iconNavbarSidenav"
               @click="toggleNavbar"
             >
-              <fa icon="bars" />
+              <fa icon="bars"/>
             </a>
           </li>
         </ul>
@@ -75,22 +81,24 @@
   </nav>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
+import {computed, defineComponent, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {useI18n} from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
 import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
-import { useUserStore } from '@zrm/motor-nx-core/store/user';
+import {useUserStore} from '@zrm/motor-nx-core/store/user';
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
 import {storeToRefs} from "pinia";
 import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
 import {has} from "immutable";
+import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
+import EventNotificationHub from "~/packages/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
 
 
 export default defineComponent({
   name: 'AdminHeader',
-  components: { AdminModalLogout, ClientSwitch },
+  components: {EventNotificationHub, Popover, AdminModalLogout, ClientSwitch},
   methods: {
     has,
     toggleNavbar() {
@@ -99,12 +107,12 @@ export default defineComponent({
   },
   setup() {
     const userStore = useUserStore()
-    const { removeUser } = userStore
-    const { navbarSlot } = useTeleport();
+    const {removeUser} = userStore
+    const {navbarSlot} = useTeleport();
     const active = ref(false)
     const appStore = useAppStore();
-    const { updatingInBackground } = storeToRefs(appStore)
-    const { hasRole } = useRolesAndPermissions();
+    const {updatingInBackground} = storeToRefs(appStore)
+    const {hasRole} = useRolesAndPermissions();
 
     const router = useRouter()
 
@@ -114,7 +122,7 @@ export default defineComponent({
 
     const confirm = () => {
       userStore.removeUser()
-      router.replace({ name: '/admin/login' })
+      router.replace({name: '/admin/login'})
     }
 
     const cancel = () => {
@@ -123,7 +131,7 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const { t } = useI18n()
+    const {t} = useI18n()
 
     const title = computed(() => {
       if (route.meta && route.meta.title) {
@@ -149,7 +157,7 @@ export default defineComponent({
       ...userStore,
       navbarSlot,
       updatingInBackground,
-      hasRole
+      hasRole,
     }
   },
 })

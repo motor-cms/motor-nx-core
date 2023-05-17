@@ -30,7 +30,7 @@
                 </NuxtLink>
               </div>
             </div>
-            <div class="row">
+            <div class="row align-items-center">
               <component
                 v-for="f in filters"
                 :key="f.name"
@@ -38,8 +38,22 @@
                 :options="f.options"
                 @submit="submitFilter"
               ></component>
+              <div class="col" v-if="hasGridActions && selectedItemsLength">
+                <div class="d-flex">
+                  <select
+                    class="form-control max-width-100 d-inline me-2"
+                    name="per-page"
+                    v-model="gridAction"
+                  >
+                    <option v-for="action in gridActions" :value="action">{{ action.label }}</option>
+                  </select>
+                  <button type="button" @click="processGridAction" class="accordion-button">
+                    <fa icon="play"></fa>
+                  </button>
+                </div>
+              </div>
               <div class="col" v-if="!loading">
-                <ul class="pagination float-end">
+                <ul class="pagination float-end m-0">
                   <li class="page-item disabled" v-if="meta.current_page === 1">
                     <a class="page-link text-black">
                       <fa icon="chevron-left"/>
@@ -120,20 +134,6 @@
                 <div v-if="meta.total > 0" class="float-end mt-2 me-2">
                   {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
                 </div>
-              </div>
-            </div>
-            <div class="row" v-if="selectedItemsLength && hasGridActions">
-              <div class="col d-flex">
-                <select
-                  class="form-control max-width-100 d-inline me-2"
-                  name="per-page"
-                  v-model="gridAction"
-                >
-                  <option v-for="action in gridActions" :value="action">{{ action.label }}</option>
-                </select>
-                <button type="button" @click="processGridAction" class="accordion-button">
-                  <fa icon="play"></fa>
-                </button>
               </div>
             </div>
           </div>

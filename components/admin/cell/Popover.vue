@@ -1,8 +1,6 @@
 <template>
-  <div class="popover bs-popover-auto fade show" role="tooltip" data-popper-placement="bottom"
-       style="position: absolute">
-    <div class="popover-arrow" style="position: absolute; left: 0px; transform: translate3d(130px, 0px, 0px);"></div>
-    <div class="popover-body">
+  <div class="popover bs-popover-auto fade show top-100 left-50 rounded-right position-absolute" style="min-width: fit-content" role="tooltip" data-popper-placement="bottom">
+    <div class="popover-body" style="border-top-left-radius: 0">
       <slot/>
     </div>
   </div>

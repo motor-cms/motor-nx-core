@@ -9,9 +9,9 @@
       class="form-check-input"
       :class="{ 'is-invalid': errorMessage }"
       :name="name"
-      :value="name"
+      :value="modelValue"
       :checked="modelValue"
-      @input="handleChange(!modelValue)"
+      @input="(event) => { $emit('update:modelValue', event.target.checked) }"
     />
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
@@ -21,8 +21,6 @@
 <script lang="ts">
 import { useField } from 'vee-validate'
 
-// CAVEAT: i don't really know WHY this is now working but apparently switching @input="handleChange(value)" to !value seemed to do the trick
-// Better never touch this again!
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -33,6 +31,7 @@ export default defineComponent({
     modelValue: {
       type: null,
     },
+    emits: ['update:modelValue'],
     label: String,
     name: {
       type: String,
@@ -49,11 +48,11 @@ export default defineComponent({
     )
 
     // select/unselect the input
-    handleChange(<string>props.modelValue)
+ //   handleChange(<string>props.modelValue)
 
     return {
       checked, // readonly
-      handleChange,
+  //    handleChange,
       errorMessage,
       meta
     }

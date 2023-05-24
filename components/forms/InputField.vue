@@ -12,6 +12,8 @@
       :class="{ 'is-invalid': errorMessage }"
       @blur="blur"
       :disabled="disableForms"
+      :min="min ?? ''"
+      :max="max ?? ''"
       @input="changed"
     />
     <p class="text-danger" v-if="errorMessage && meta.touched">
@@ -47,6 +49,12 @@ export default defineComponent({
     cssClass: {
       type: String,
       default: '',
+    },
+    min: {
+      type: (Number || String),
+    },
+    max: {
+      type: (Number || String),
     },
   },
   setup(props, { emit }) {

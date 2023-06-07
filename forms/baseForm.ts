@@ -121,9 +121,9 @@ export default function baseForm(
 
   const { user } = storeToRefs(useUserStore());
 
-  watchEffect(() => {
+  watch(() => user.value.client_id, () => {
     model.value.client_id = user.value.client_id;
-  })
+  });
 
   return {
     getData,

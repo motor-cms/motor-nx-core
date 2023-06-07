@@ -101,12 +101,18 @@ languageModules.push(
   import.meta.glob('../../motor-nx-scoring/locales/**/*.json', { eager: true })
 )
 
-
 /**
  * Motor-Assistant
  */
 languageModules.push(
   import.meta.glob('../../motor-nx-assistant/locales/**/*.json', { eager: true })
+)
+
+/**
+ * Motor-Assistant
+ */
+languageModules.push(
+  import.meta.glob('../../motor-nx-content-type/locales/**/*.json', { eager: true })
 )
 
 

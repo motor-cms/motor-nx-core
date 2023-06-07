@@ -19,6 +19,9 @@
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
+    <p v-if="description.length" class="text-sm">
+      {{description}}
+    </p>
   </div>
 </template>
 <script lang="ts">
@@ -56,6 +59,10 @@ export default defineComponent({
     max: {
       type: (Number || String),
     },
+    description: {
+      type: String,
+      default: '',
+    }
   },
   setup(props, { emit }) {
     const {

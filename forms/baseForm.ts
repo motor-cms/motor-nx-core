@@ -129,6 +129,7 @@ export default function baseForm(
     getData,
     onSubmit,
     form,
+    fillModel,
     ...form,
   }
 }

@@ -18,7 +18,7 @@
                       {{ $t('global.back') }}
                     </button>
                   </NuxtLink>
-                  <button class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground">
+                  <button v-if="withSaving" class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground">
                     {{ $t('global.save') }}
                   </button>
                 </div>
@@ -50,6 +50,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    withSaving: {
+      type: Boolean,
+      default: true
+    }
   },
   setup(props,ctx) {
     const submit = (e: Event) => {

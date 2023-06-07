@@ -6,8 +6,6 @@ export const useAppStore = defineStore('app', () => {
   const loadingStackMainProcess = ref(0);
   const loadingStackBackgroundProcess = ref(0);
   const updatingInBackground = ref(false);
-  const disableForms = computed(() => loading.value);
-
 
   const canUnloadMainProcess = computed(() => loadingStackMainProcess.value <= 1)
   const canUnloadBackgroundProcess = computed(() => loadingStackBackgroundProcess.value <= 1)
@@ -48,7 +46,7 @@ export const useAppStore = defineStore('app', () => {
     isLoading,
     updateInBackground,
     updatingInBackground,
-    disableForms,
+    disableForms: loading,
     loadingStackMainProcess,
     loadingStackBackgroundProcess,
     canUnloadMainProcess,

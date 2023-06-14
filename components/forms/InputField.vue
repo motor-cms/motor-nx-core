@@ -4,6 +4,7 @@
       {{ label }}
     </label>
     <input
+      :required="required"
       :type="type"
       :id="id"
       class="form-control"
@@ -62,6 +63,10 @@ export default defineComponent({
     description: {
       type: String,
       default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {

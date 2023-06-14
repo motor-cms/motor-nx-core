@@ -4,6 +4,7 @@
       {{ label }}
     </label>
     <textarea
+      :required="required"
       :id="id"
       class="form-control"
       :name="name"
@@ -38,6 +39,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    required: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props) {
     const {

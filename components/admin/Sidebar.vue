@@ -187,7 +187,7 @@ export default defineComponent({
       setActiveChild,
       routeParser,
       loading,
-      showProjectName
+      showProjectName,
     }
   },
 })

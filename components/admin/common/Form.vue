@@ -8,7 +8,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="d-flex flex-row align-items-center">
-                    <h6 class="m-0">{{ title }}</h6>
+                    <h6 class="m-0" v-if="!loading">{{ title }}</h6>
                     <div v-if="updatingInBackground" class="mx-4 spinner-header"><div></div><div></div><div></div><div></div></div>
                   </div>
                 </div>

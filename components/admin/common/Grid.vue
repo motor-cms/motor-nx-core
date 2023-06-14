@@ -7,7 +7,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex flex-row align-items-center">
-                  <h6 class="m-0">{{ name }}</h6>
+                  <h6 class="m-0" v-if="!loading">{{ name }}</h6>
                   <SpinnerSmall v-if="updatingInBackground"/>
                 </div>
               </div>

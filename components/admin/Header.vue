@@ -122,7 +122,7 @@ export default defineComponent({
 
     const confirm = () => {
       userStore.removeUser()
-      router.replace({name: '/admin/login'})
+      router.replace({path: '/admin/login'})
     }
 
     const cancel = () => {

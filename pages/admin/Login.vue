@@ -1,6 +1,6 @@
 <template>
   <AdminPartialsSpinner v-if="loading" />
-  <div v-else>
+  <div v-if="!loading && !userStore.authenticated">
     <section>
       <div class="page-header section-height-75">
         <div class="container">
@@ -99,6 +99,10 @@ let login = ref({
   password: '',
   remember: false,
 })
+
+if (userStore.authenticated) {
+  router.push({ path: '/admin/dashboard' });
+}
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);

@@ -49,6 +49,8 @@ export const useUserStore = defineStore('users', () => {
       setToken(data.value.data.token)
       const {data: meResponse} = await api.get('me')
       setUser(meResponse.value.data)
+      const router = useRouter();
+      await router.push({path: '/admin/dashboard'})
     } catch (error: any) {
       if (error.response && error.response.status) {
         signInError.value = error.response.status

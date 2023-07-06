@@ -1,9 +1,6 @@
 import {useUserStore} from "@zrm/motor-nx-core/store/user";
 import {UseFetchOptions} from "#app";
-import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {sha256} from "ohash";
-import {Store} from "pinia";
-import {before} from "node:test";
 
 export default function useApi(useRpc: boolean = false) {
   const baseUrl = useRpc ? import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_RPC_SLUG : import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_SLUG;
@@ -21,7 +18,6 @@ export default function useApi(useRpc: boolean = false) {
     if (!withoutAuth) addBearerToken();
     // Check cache if data has already been fetched
     const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-    console.log("querystring", queryString);
     const key = sha256(path);
     const { data } = useNuxtData(key)
     if(data.value && cached) {

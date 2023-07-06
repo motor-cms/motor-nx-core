@@ -59,6 +59,7 @@ export default defineComponent({
       meta,
     } = useField(<string>props.name, undefined, {
       initialValue: props.modelValue,
+      syncVModel: true,
     })
 
     const { loading } = storeToRefs(useAppStore())

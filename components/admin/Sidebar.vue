@@ -116,7 +116,7 @@
     </div>
   </aside>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent, watch } from 'vue'
 import {useNavigationStore} from "@zrm/motor-nx-core/store/navtigation";
 import {storeToRefs} from "pinia";
@@ -124,73 +124,53 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 
-export default defineComponent({
-  name: 'AdminSidebar',
-  components: {
-    Skeletor
-  },
-  setup() {
-    const runtimeConfig = useRuntimeConfig();
-    const showProjectName = computed(() => runtimeConfig.public.showProjectName);
-    const navigationStore = useNavigationStore();
-    const { activeParent, activeChild , navigationItems, loading} = storeToRefs(navigationStore);
-    const { setActiveChild, toggleMenu, getNavigationItems } = navigationStore;
-    const routeParser = useRouteParser();
-    const route = useRoute();
+const runtimeConfig = useRuntimeConfig();
+const showProjectName = computed(() => runtimeConfig.public.showProjectName);
+const navigationStore = useNavigationStore();
+const { activeParent, activeChild , navigationItems, loading} = storeToRefs(navigationStore);
+const { setActiveChild, toggleMenu, getNavigationItems } = navigationStore;
+const routeParser = useRouteParser();
+const route = useRoute();
 
-    // Route parser for different cases (01 März 2023  Martin Henrichs)
-    const { routeSlashToDotted, routeRemoveCRUD } = useRouteParser()
-    let currentRoute = routeSlashToDotted(route.fullPath);
-    currentRoute = routeRemoveCRUD(currentRoute);
+// Route parser for different cases (01 März 2023  Martin Henrichs)
+const { routeSlashToDotted, routeRemoveCRUD } = useRouteParser()
+let currentRoute = routeSlashToDotted(route.fullPath);
+currentRoute = routeRemoveCRUD(currentRoute);
 
-    // Wrapper to set navigation parent and child (01 März 2023  Martin Henrichs)
-    const setActiveParentChild = (parent: string = '', child: string = '' ) => {
-      navigationStore.setActiveParent(parent);
-      navigationStore.setActiveChild(child);
+// Wrapper to set navigation parent and child (01 März 2023  Martin Henrichs)
+const setActiveParentChild = (parent: string = '', child: string = '' ) => {
+  navigationStore.setActiveParent(parent);
+  navigationStore.setActiveChild(child);
+}
+
+// Set initial navigation active state by route (28 Feb. 2023  Martin Henrichs)
+const initialNaviActionState = () => {
+  for (const parents in navigationItems.value) {
+    const parent = navigationItems.value[parents];
+
+    // Set parent as child if exist (28 Feb. 2023  Martin Henrichs)
+    if (parent.route === currentRoute) {
+      setActiveParentChild(parent.slug)
+      break;
     }
 
-    // Set initial navigation active state by route (28 Feb. 2023  Martin Henrichs)
-    const initialNaviActionState = () => {
-      for (const parents in navigationItems.value) {
-        const parent = navigationItems.value[parents];
-
-        // Set parent as child if exist (28 Feb. 2023  Martin Henrichs)
-        if (parent.route === currentRoute) {
-          setActiveParentChild(parent.slug)
+    // Search Child
+    if (parent.route === null) {
+      for (const childs in parent.items) {
+        const child = parent.items[childs];
+        // Set parent and child if exist(28 Feb. 2023  Martin Henrichs)
+        if (child.route === currentRoute) {
+          setActiveParentChild(parent.slug, child.slug)
           break;
-        }
-
-        // Search Child
-        if (parent.route === null) {
-          for (const childs in parent.items) {
-            const child = parent.items[childs];
-            // Set parent and child if exist(28 Feb. 2023  Martin Henrichs)
-            if (child.route === currentRoute) {
-              setActiveParentChild(parent.slug, child.slug)
-              break;
-            }
-          }
         }
       }
     }
+  }
+}
 
-    onMounted(async () => {
-      await getNavigationItems();
-      initialNaviActionState()
-    })
+getNavigationItems();
+initialNaviActionState()
 
-    return {
-      navigationItems,
-      toggleMenu,
-      activeParent,
-      activeChild,
-      setActiveChild,
-      routeParser,
-      loading,
-      showProjectName,
-    }
-  },
-})
 </script>
 <style lang="scss">
 .menu-dropdown {

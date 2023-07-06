@@ -3,6 +3,7 @@ import {reactive, ref, toRefs} from 'vue'
 import {useAppStore} from './app'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {AsyncData} from "#app";
+import {sha256} from "ohash";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
@@ -19,10 +20,13 @@ export const useUserStore = defineStore('users', () => {
 
   const setUser = (value: Record<string, any>) => {
     user.value = value
+    setAuthenticationStatus(true)
   }
 
   const setToken = (value: string) => {
     token.value = value
+    const tkn = useCookie('auth_token')
+    tkn.value = value;
     console.log("set token", token)
   }
 
@@ -30,11 +34,11 @@ export const useUserStore = defineStore('users', () => {
     authenticated.value = false
     user.value = null
     token.value = ""
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    const tkn = useCookie('auth_token')
+    tkn.value = "";
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<void> => {
     try {
       appStore.isLoading(true)
       await useFetch(import.meta.env.VITE_PUBLIC_API_BASE_URL + 'sanctum/csrf-cookie');
@@ -43,9 +47,7 @@ export const useUserStore = defineStore('users', () => {
         password
       })
       setToken(data.value.data.token)
-      localStorage.setItem('token', data.value.data.token)
       const {data: meResponse} = await api.get('me')
-      setAuthenticationStatus(true)
       setUser(meResponse.value.data)
     } catch (error: any) {
       if (error.response && error.response.status) {
@@ -58,19 +60,19 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const loginFromStorage = async (): Promise<boolean> => {
-    const tkn = localStorage.getItem('token');
-    if (!tkn) {
+    const tkn = useCookie('auth_token')
+    if (!tkn.value?.length) {
       return false;
     }
-    setToken(tkn);
-    appStore.isLoading(true)
-    const {data: meResponse, error} = await api.get('me')
+    setToken(tkn.value);
+    console.log("token", tkn );
+    const {data: meResponse, pending, error, refresh } = await api.get('me')
+    console.log("data2", meResponse.value);
     if (error.value) {
       removeUser();
       appStore.isLoading(false)
       return false;
     }
-    setAuthenticationStatus(true)
     setUser(meResponse.value.data)
     appStore.isLoading(false)
     return true;

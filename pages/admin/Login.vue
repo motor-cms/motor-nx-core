@@ -1,6 +1,6 @@
 <template>
   <AdminPartialsSpinner v-if="loading" />
-  <div v-if="!loading && !attemptLoginFromStorage">
+  <div v-else>
     <section>
       <div class="page-header section-height-75">
         <div class="container">
@@ -87,12 +87,13 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../store/user'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../store/app'
+import useApi from "@zrm/motor-nx-core/composables/http/api";
+
 const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore();
 const { loading } = storeToRefs(appStore)
-const { authenticated, signInError } = storeToRefs(userStore)
-const attemptLoginFromStorage = ref(true);
+const { signInError } = storeToRefs(userStore)
 let login = ref({
   email: '',
   password: '',
@@ -102,14 +103,4 @@ let login = ref({
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
 
-onMounted(async () => {
-  if (!authenticated.value) {
-    const loginSuccess = await userStore.loginFromStorage();
-    if (!loginSuccess) {
-      attemptLoginFromStorage.value =false;
-      await router.push('/');
-    }
-  }
-  attemptLoginFromStorage.value =false;
-})
 </script>

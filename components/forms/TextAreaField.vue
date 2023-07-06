@@ -53,6 +53,7 @@ export default defineComponent({
       meta,
     } = useField(<string>props.name, undefined, {
       initialValue: <string>props.modelValue,
+      syncVModel: true,
     })
     return {
       handleChange,

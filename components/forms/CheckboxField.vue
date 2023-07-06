@@ -1,4 +1,4 @@
-<template>
+    <template>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
     <label :for="id" class="d-block">
       {{ label }}

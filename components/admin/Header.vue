@@ -42,7 +42,7 @@
           <li class="nav-item d-flex align-items-center mx-6 w-20" v-if="hasRole('SuperAdmin')">
             <ClientSwitch/>
           </li>
-          <li class="nav-item d-flex align-items-center" v-if="user">
+          <li class="nav-item d-flex align-items-center" v-if="authenticated">
             <span class="nav-link text-body font-weight-bold px-0">
               <fa v-if="!user.avatar" icon="user" class="me-sm-1"/>
               <img
@@ -53,7 +53,7 @@
               <span class="d-sm-inline d-none">{{ user.name }}</span>
             </span>
           </li>
-          <li class="nav-item d-flex align-items-center" v-if="user">
+          <li class="nav-item d-flex align-items-center" v-if="authenticated">
             <fa
               @click="logout"
               icon="sign-out-alt"
@@ -120,9 +120,9 @@ export default defineComponent({
       active.value = !active.value
     }
 
-    const confirm = () => {
+    const confirm = async () => {
       userStore.removeUser()
-      router.replace({path: '/admin/login'})
+      await navigateTo('/admin/login');
     }
 
     const cancel = () => {
@@ -154,7 +154,7 @@ export default defineComponent({
       cancel,
       logout,
       active,
-      ...userStore,
+      ...storeToRefs(userStore),
       navbarSlot,
       updatingInBackground,
       hasRole,

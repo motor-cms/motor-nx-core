@@ -39,8 +39,6 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const login = async (email: string, password: string): Promise<void> => {
-    try {
-      appStore.isLoading(true)
       await useFetch(import.meta.env.VITE_PUBLIC_API_BASE_URL + 'sanctum/csrf-cookie');
       const {data} = await api.post('auth/login', {
         email,
@@ -49,16 +47,6 @@ export const useUserStore = defineStore('users', () => {
       setToken(data.value.data.token)
       const {data: meResponse} = await api.get('me')
       setUser(meResponse.value.data)
-      const router = useRouter();
-      await router.push({path: '/admin/dashboard'})
-    } catch (error: any) {
-      if (error.response && error.response.status) {
-        signInError.value = error.response.status
-      }
-      console.error('HANDLE THIS', error)
-    } finally {
-      appStore.isLoading(false)
-    }
   }
 
   const loginFromStorage = async (): Promise<boolean> => {
@@ -88,7 +76,7 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const signIn = async (values: { email: ''; password: '' }) => {
-    return await login(values.email, values.password)
+    return login(values.email, values.password)
   }
 
   return {

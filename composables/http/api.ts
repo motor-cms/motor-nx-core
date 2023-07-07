@@ -33,7 +33,6 @@ export default function useApi(useRpc: boolean = false) {
     const options: UseFetchOptions<Record<string, any>> = Object.assign({}, requestOptions, opts)
     options.method = 'POST';
     options.body = body;
-    console.log("boey", body)
     return useFetch(path, options)
   }
 

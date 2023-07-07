@@ -1,5 +1,5 @@
 <template>
-  <AdminPartialsSpinner v-if="loading" />
+  <AdminPartialsSpinner v-if="loading"/>
   <div v-if="!loading && !userStore.authenticated">
     <section>
       <div class="page-header section-height-75">
@@ -24,50 +24,50 @@
                     <label>Email</label>
                     <div class="mb-3">
                       <input
-                          v-model="login.email"
-                          type="email"
-                          class="form-control"
-                          placeholder="Email"
-                          aria-label="Email"
-                          aria-describedby="email-addon"
+                        v-model="login.email"
+                        type="email"
+                        class="form-control"
+                        placeholder="Email"
+                        aria-label="Email"
+                        aria-describedby="email-addon"
                       />
                     </div>
                     <label>Password</label>
                     <div class="mb-3">
                       <input
-                          v-model="login.password"
-                          type="password"
-                          class="form-control"
-                          placeholder="Password"
-                          aria-label="Password"
-                          aria-describedby="password-addon"
+                        v-model="login.password"
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        aria-label="Password"
+                        aria-describedby="password-addon"
                       />
                     </div>
-<!--                    <div class="form-check form-switch">-->
-<!--                      <input-->
-<!--                          v-model="login.remember"-->
-<!--                          class="form-check-input"-->
-<!--                          type="checkbox"-->
-<!--                          id="rememberMe"-->
-<!--                          checked=""-->
-<!--                      />-->
-<!--                      <label class="form-check-label" for="rememberMe"-->
-<!--                      >Remember me</label-->
-<!--                      >-->
-<!--                    </div>-->
+                    <!--                    <div class="form-check form-switch">-->
+                    <!--                      <input-->
+                    <!--                          v-model="login.remember"-->
+                    <!--                          class="form-check-input"-->
+                    <!--                          type="checkbox"-->
+                    <!--                          id="rememberMe"-->
+                    <!--                          checked=""-->
+                    <!--                      />-->
+                    <!--                      <label class="form-check-label" for="rememberMe"-->
+                    <!--                      >Remember me</label-->
+                    <!--                      >-->
+                    <!--                    </div>-->
                     <div class="text-center">
                       <button
-                          @click="userStore.signIn(login)"
-                          type="button"
-                          class="btn bg-gradient-primary text-capitalize w-100 mt-4 mb-0"
+                        @click="loginUser"
+                        type="button"
+                        class="btn bg-gradient-primary text-capitalize w-100 mt-4 mb-0"
                       >
                         {{ $t('global.sign_in') }}
                       </button>
                     </div>
                     <div
-                        v-if="signInError"
-                        class="alert alert-danger text-white mt-1"
-                        role="alert"
+                      v-if="signInError"
+                      class="alert alert-danger text-white mt-1"
+                      role="alert"
                     >
                       <strong>Error!</strong> {{ signInError }}
                     </div>
@@ -82,28 +82,46 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../../store/user'
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '../../store/app'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useUserStore} from '../../store/user'
+import {storeToRefs} from 'pinia'
+import {useAppStore} from '../../store/app'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
+import {useToast} from "vue-toastification";
 
 const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore();
-const { loading } = storeToRefs(appStore)
-const { signInError } = storeToRefs(userStore)
+const {loading} = storeToRefs(appStore)
+const {signInError} = storeToRefs(userStore)
+const toast = useToast();
+
+definePageMeta({
+  validate: async (route) => {
+    const userStore = useUserStore()
+    return !userStore.authenticated
+  }
+})
+
 let login = ref({
   email: '',
   password: '',
   remember: false,
 })
 
-if (userStore.authenticated) {
-  router.push({ path: '/admin/dashboard' });
+const loginUser = async () => {
+  try {
+    appStore.isLoading(true)
+    await userStore.signIn(login.value)
+    await navigateTo('/admin/dashboard')
+  } catch (e) {
+    toast.error(e.message)
+    console.log(e)
+  } finally {
+    appStore.isLoading(false)
+  }
 }
-
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
 

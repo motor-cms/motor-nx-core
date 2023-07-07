@@ -2,7 +2,7 @@ import {defineStore, storeToRefs} from 'pinia'
 import {reactive, ref, toRefs} from 'vue'
 import {useAppStore} from './app'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
-import {AsyncData} from "#app";
+import {AsyncData, CookieRef} from "#app";
 import {sha256} from "ohash";
 
 export const useUserStore = defineStore('users', () => {
@@ -25,8 +25,6 @@ export const useUserStore = defineStore('users', () => {
 
   const setToken = (value: string) => {
     token.value = value
-    const tkn = useCookie('auth_token')
-    tkn.value = value;
     console.log("set token", token)
   }
 
@@ -34,8 +32,6 @@ export const useUserStore = defineStore('users', () => {
     authenticated.value = false
     user.value = null
     token.value = ""
-    const tkn = useCookie('auth_token')
-    tkn.value = "";
   }
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -49,8 +45,7 @@ export const useUserStore = defineStore('users', () => {
       setUser(meResponse.value.data)
   }
 
-  const loginFromStorage = async (): Promise<boolean> => {
-    const tkn = useCookie('auth_token')
+  const loginFromStorage = async (tkn: CookieRef<string|null|undefined>): Promise<boolean> => {
     if (!tkn.value?.length) {
       return false;
     }

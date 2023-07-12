@@ -2,7 +2,7 @@
   <NuxtLink
     :to="to"
   >
-    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;"><fa icon="pencil-alt"></fa></a>
+    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;"><fa :icon="options.icon ?? 'pencil-alt'"></fa></a>
   </NuxtLink>
 </template>
 <script lang="ts">

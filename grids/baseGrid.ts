@@ -14,11 +14,19 @@ export default function callbackGrid<T>(
 
   const {t} = useI18n()
 
-  const rowsSortedByUpdatedAt = computed(() => {
-    return rows.value.sort((a,b) => {
-      return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-    })
-  });
+
+  const rowsSortedByUpdatedAt = computed({
+    // get rows sorted by updated_at
+    get() {
+      return rows.value?.sort((a,b) => {
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      })
+    },
+    // set rows
+    set(newValue) {
+      rows.value = newValue;
+    }
+  })
 
   const rows = ref<Array<T>>([])
   const meta = ref({current_page: 1, from: 1, to: 1})

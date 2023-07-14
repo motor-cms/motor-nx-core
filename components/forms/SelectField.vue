@@ -64,7 +64,6 @@ export default defineComponent({
 
     const { loading } = storeToRefs(useAppStore())
     const parsedOptions = computed(() => {
-      console.log("options ARE", props.options);
       return props.options?.map(option => {
         if (typeof option === 'string') {
           return {label: option, value: option}

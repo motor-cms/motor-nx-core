@@ -1,5 +1,5 @@
 <script setup>
-import Login from "@zrm/motor-nx-core/pages/admin/Login.vue";
+import Login from "~/packages/motor-nx-core/pages/admin/Login.vue";
 </script>
 <template>
   <Login />

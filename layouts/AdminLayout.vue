@@ -2,7 +2,7 @@
   <AdminContainer>
     <AdminPartialsSpinner v-if="loading"/>
     <div>
-      <NuxtPage/>
+      <NuxtPage />
     </div>
   </AdminContainer>
 </template>

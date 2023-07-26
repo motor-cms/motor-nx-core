@@ -2,19 +2,17 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
-import Ref from '../types/model'
-import {useAppStore} from "@zrm/motor-nx-core/store/app";
+import { useAppStore } from "@zrm/motor-nx-core/store/app";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-import {ObjectSchema, InferType} from "yup";
-
+import { ObjectSchema, InferType } from "yup";
 import { configure } from 'vee-validate';
 import { localize } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import de from '@vee-validate/i18n/dist/locale/de.json';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
-import {storeToRefs} from "pinia";
-import {useUserStore} from "~/packages/motor-nx-core/store/user";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "~/packages/motor-nx-core/store/user";
 
 
 export default function baseForm(
@@ -23,8 +21,8 @@ export default function baseForm(
   repository: any,
   model: Ref<{ [index: string]: any }>,
   schema: ObjectSchema<Record<any, any>>,
-  sanitizer: (formData: object) => void = () => {},
-  afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => {},
+  sanitizer: (formData: object) => void = () => { },
+  afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => { },
   repositoryParams?: {},
 ) {
   // Load i18n module
@@ -40,13 +38,13 @@ export default function baseForm(
   type ModelType = InferType<typeof schema>;
 
 
-  watch(() => model.value, (newValue, oldValue)  => {
+  watch(() => model.value, (newValue, oldValue) => {
     console.log("model changed", newValue, oldValue);
   })
 
   const fillModel = async (data: Partial<ModelType> | undefined | null) => {
     try {
-      model.value = await schema.validate(data, {stripUnknown: true, strict: true});
+      model.value = await schema.validate(data, { stripUnknown: true, strict: true });
     } catch (e) {
       console.log("Error while filling api response into model validation schema. Setting model to response data");
       model.value = data;
@@ -58,7 +56,7 @@ export default function baseForm(
     if (!route.params.id) return;
     const id: number = Number(route.params.id)
     console.log(repositoryParams);
-    const {data: response} = await repository.get(id, repositoryParams)
+    const { data: response } = await repository.get(id, repositoryParams)
     await fillModel(response.value.data);
   }
 
@@ -75,7 +73,7 @@ export default function baseForm(
     validationSchema: schema,
   })
 
-  const onSubmit = form.handleSubmit(async (values, {resetForm}) => {
+  const onSubmit = form.handleSubmit(async (values, { resetForm }) => {
     try {
       appStore.isLoading(true);
       const oldModel = ref(JSON.parse(JSON.stringify(model.value)));
@@ -104,10 +102,10 @@ export default function baseForm(
         const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
         await fillModel(response.value.data);
-        await afterSubmit(oldModel,model)
+        await afterSubmit(oldModel, model)
         toast.success(t(languageFilePrefix + '.created'))
         if (routePrefix && routePrefix.length) {
-          await router.push({path: useRouteParser().routeDottedToSlash(routePrefix)})
+          await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
         }
       }
     } catch (e) {

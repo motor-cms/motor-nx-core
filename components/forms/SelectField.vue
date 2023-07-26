@@ -3,7 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect :disabled="loading" :id="id" :canClear="is_nullable" :can-deselect="is_nullable" :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="searchable" />
+    <Multiselect :disabled="loading" :id="id" :canClear="is_nullable" :can-deselect="is_nullable" :object="object" :mode="mode" v-model="inputValue" :options="options" :searchable="searchable" />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -23,7 +23,7 @@ export default defineComponent({
   props: {
     id: String,
     modelValue: {
-      type: Array,
+      type: [String, Number],
       required: true
     },
     object: {
@@ -44,7 +44,7 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    options: Array,
+    options: Array<{label: String, value: String|Number}>,
     mode: {
       type: String,
       default: 'single'
@@ -61,6 +61,8 @@ export default defineComponent({
       initialValue: props.modelValue,
       syncVModel: true,
     })
+
+    console.log("debugprint", JSON.parse(JSON.stringify(props)));
 
     const { loading } = storeToRefs(useAppStore())
     const parsedOptions = computed(() => {
@@ -83,7 +85,6 @@ export default defineComponent({
       errorMessage,
       inputValue,
       meta,
-      parsedOptions,
       loading
     }
   },

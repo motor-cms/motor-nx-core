@@ -1,11 +1,11 @@
 <template>
+  <label :for="id" class="d-block">
+    {{ label }}
+  </label>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
-    <label :for="id" class="d-block">
-      {{ label }}
-    </label>
     <div class="row" style="padding-left: 0.75rem">
       <div class="col-4" v-for="(option, index) in options" :key="index">
-        <label :for="'checkbox_' + option.value">{{ option.name }}</label>
+        <label :for="'checkbox_' + option.value">{{ option.label }}</label>
         <v-field
           :id="'checkbox_' + option.value"
           type="checkbox"

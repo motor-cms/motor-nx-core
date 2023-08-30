@@ -271,7 +271,6 @@
                     :index="index"
                     @submit="submitCell"
                   />
-                  {{ column.renderer }}
                   <template v-if="column.renderer">
                     <div
                       v-html="

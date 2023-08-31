@@ -20,7 +20,7 @@ export function useGridData() {
         }
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
       console.log("Error fetching formdata.")
       toast.error(t('global.error_occurred'))
     } finally {

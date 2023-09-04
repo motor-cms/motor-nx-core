@@ -48,7 +48,6 @@ async function loadLocaleMessages(
  * Merge function to combine different locales from external packages
  */
 const merge = (target, source) => {
-
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
   for (const key of Object.keys(source)) {
     if (source[key] instanceof Object && key in target)
@@ -60,9 +59,40 @@ const merge = (target, source) => {
   return target
 }
 
+const deepMerge = (target, source) => {
+  // Check if the source is an object
+  if (typeof source === 'object' && !Array.isArray(source)) {
+    // If target is not an object, initialize it as an empty object
+    if (typeof target !== 'object' || target === null) {
+      target = {};
+    }
+    for (const key of Object.keys(source)) {
+      // Recursively merge objects
+      if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        target[key] = deepMerge(target[key], source[key]);
+      } else {
+        // Assign non-object values directly
+        target[key] = source[key];
+      }
+    }
+  } else {
+    // If source is not an object, assign it directly to target
+    target = source;
+  }
+  return target;
+};
+
 const baseLocales = import.meta.glob('./locales/**/*.json', { eager: true })
 
 let messages = await loadLocaleMessages(baseLocales, false)
+
+/**
+ * Motor-Core
+ * !Needs to be loaded as the first element, so that the later forEach loop will overwrite the given variables.
+ */
+const coreLanguageModule = import.meta.glob('../../motor-nx-core/locales/**/*.json', { eager: true })
+const coreModuleMessages = await loadLocaleMessages(coreLanguageModule, true)
+messages = deepMerge(messages, coreModuleMessages)
 
 const languageModules = []
 
@@ -78,13 +108,6 @@ languageModules.push(
  */
 languageModules.push(
   import.meta.glob('../../motor-nx-admin/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Core
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-core/locales/**/*.json', { eager: true })
 )
 
 /**
@@ -115,7 +138,6 @@ languageModules.push(
   import.meta.glob('../../motor-nx-content-type/locales/**/*.json', { eager: true })
 )
 
-
 /**
  * Project specific locales
  */
@@ -123,8 +145,9 @@ languageModules.push(
   import.meta.glob('../../../locales/**/*.json', { eager: true })
 )
 
-
-languageModules.forEach(async (module) => {
+//!forEach does not wait for asynchronous functions to finish. So the merge order is unknown and may cause problems.
+//!To force the correct order and wait for asynchronous calls, use a simple for loop instead: for (let index = 0; index < languageModules.length; index++){...}
+languageModules.forEach(async (module, index) => {
   let moduleMessages = await loadLocaleMessages(module, true)
 
   // Remove key 'motor-X' from messages object to fit the follwing merge algorithm with messages
@@ -132,8 +155,12 @@ languageModules.forEach(async (module) => {
     moduleMessages = moduleMessages[Object.keys(moduleMessages)]
   }
 
-  messages = merge(messages, moduleMessages)
+  messages = deepMerge(messages, moduleMessages)
+
+  // console.log("Merged_Message"+index, JSON.parse(JSON.stringify(messages)));
 })
+
+// console.log("Result", messages);
 
 export default defineNuxtPlugin(({ vueApp }) => {
   const i18n = createI18n({

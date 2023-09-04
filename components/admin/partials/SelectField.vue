@@ -24,7 +24,7 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    options: Array,
+    options: Array<{label: String, value: String|Number}>,
     mode: {
       type: String,
       default: 'single'

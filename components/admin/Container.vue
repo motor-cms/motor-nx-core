@@ -11,6 +11,5 @@
   </div>
 </template>
 <script setup lang="ts">
-import AdminSidebar from './Sidebar.vue'
 import AdminHeader from './Header.vue'
 </script>

@@ -1,9 +1,10 @@
-import {defineStore, storeToRefs} from 'pinia'
-import {reactive, ref, toRefs} from 'vue'
+import { defineStore, storeToRefs } from 'pinia'
+import { reactive, ref, toRefs } from 'vue'
 import useApi from "@zrm/motor-nx-core/composables/http/api";
+import NavigationItem from '../types/navigation-item';
 
 export const useNavigationStore = defineStore('navigations', () => {
-  const navigationItems = ref([])
+  const navigationItems = ref<Record<string, NavigationItem>>({})
   const activeParent = ref<string>("");
   const activeChild = ref<string>("");
   const api = useApi();
@@ -17,7 +18,7 @@ export const useNavigationStore = defineStore('navigations', () => {
 
   const getNavigationItems = async (): Promise<void> => {
     isLoading(true);
-    const {data} = await api.get( 'admin_navigations')
+    const { data } = await api.get('admin_navigations')
     navigationItems.value = data.value.data;
     isLoading(false);
   }

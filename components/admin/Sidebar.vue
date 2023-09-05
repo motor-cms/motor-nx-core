@@ -42,13 +42,13 @@
           </li>
         </template>
         <template v-else>
-          <li class="nav-item" v-for="item in navigationItems" :key="item.name">
+          <li class="nav-item" v-for="topLayerNavItem in navigationItems" :key="topLayerNavItem.name">
             <NuxtLink
-              @click="toggleMenu(item.slug)"
-              v-if="item.route"
+              @click="toggleMenu(topLayerNavItem.slug)"
+              v-if="topLayerNavItem.route"
               class="nav-link"
-              :to="routeParser.routeDottedToSlash(item.route)"
-              :class="{active: activeParent && activeParent ===item.slug || !activeParent && item.slug === 'dashboard' }"
+              :to="routeParser.routeDottedToSlash(topLayerNavItem.route)"
+              :class="{active: activeParent && activeParent ===topLayerNavItem.slug || !activeParent && topLayerNavItem.slug === 'dashboard' }"
             >
               <div
                 class="
@@ -63,15 +63,15 @@
                 justify-content-center
               "
               >
-                <fa :icon="item.icon"/>
+                <fa :icon="topLayerNavItem.icon"/>
               </div>
-              <span class="nav-link-text ms-1">{{ $t(item.name) }}</span>
+              <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
             </NuxtLink>
             <a
-              @click="toggleMenu(routeParser.routeDottedToSlash(item.slug, false))"
+              @click="toggleMenu(routeParser.routeDottedToSlash(topLayerNavItem.slug, false))"
               v-else
               class="nav-link menu-dropdown"
-              :class="[{active: activeParent === routeParser.routeDottedToSlash(item.slug, false)}, 'menu-' + item.slug]"
+              :class="[{active: activeParent === routeParser.routeDottedToSlash(topLayerNavItem.slug, false)}, 'menu-' + topLayerNavItem.slug]"
             >
               <div
                 class="
@@ -86,27 +86,27 @@
                 justify-content-center
               "
               >
-                <fa :icon="item.icon" />
+                <fa :icon="topLayerNavItem.icon" />
               </div>
-              <span class="nav-link-text ms-1">{{ $t(item.name) }}</span>
+              <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
             </a>
             <ul
-              v-if="item.items"
-              :class="[{open: activeParent === item.slug}, 'menu-' + item.slug + '-items']"
+              v-if="topLayerNavItem.items"
+              :class="[{open: activeParent === topLayerNavItem.slug}, 'menu-' + topLayerNavItem.slug + '-items']"
               class="navbar-nav sidebar-dropdown"
             >
               <li
-                v-for="child in item.items"
-                :key="child.slug"
+                v-for="childNavItem in topLayerNavItem.items"
+                :key="childNavItem.slug"
                 class="nav-item ps-5"
-                @click="setActiveChild(child.slug)"
+                @click="setActiveChild(childNavItem.slug)"
               >
                 <NuxtLink
-                  :to="routeParser.routeDottedToSlash(child.route)"
+                  :to="routeParser.routeDottedToSlash(childNavItem.route ? childNavItem.route : '')"
                   class="nav-link"
-                  :class="[{active: activeChild === child.slug}, 'route-' + child.route.replace(/\./g, '-')]"
+                  :class="[{active: activeChild === childNavItem.slug}, 'route-' + childNavItem.route?.replace(/\./g, '-')]"
                 >
-                  {{ $t(child.name) }}
+                  {{ $t(childNavItem.name) }}
                 </NuxtLink>
               </li>
             </ul>
@@ -122,6 +122,7 @@ import {storeToRefs} from "pinia";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
+import NavigationItem from "packages/motor-nx-core/types/navigation-item";
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
@@ -144,22 +145,22 @@ const setActiveParentChild = (parent: string = '', child: string = '' ) => {
 
 // Set initial navigation active state by route (28 Feb. 2023  Martin Henrichs)
 const initialNaviActionState = () => {
-  for (const parents in navigationItems.value) {
-    const parent = navigationItems.value[parents];
+  for (const topLayerNavigationRecord in navigationItems.value) {
+    const topLayerNavigationItem: NavigationItem = navigationItems.value[topLayerNavigationRecord];
 
-    // Set parent as child if exist (28 Feb. 2023  Martin Henrichs)
-    if (parent.route === currentRoute) {
-      setActiveParentChild(parent.slug)
+    //Case: The top most navigation items do have a route => they can be selected & will be marked as selected
+    if (topLayerNavigationItem.route === currentRoute) {
+      setActiveParentChild(topLayerNavigationItem.slug)
       break;
     }
 
-    // Search Child
-    if (parent.route === null) {
-      for (const childs in parent.items) {
-        const child = parent.items[childs];
+    //Case: The top most navigation items don't have a route => can't be selected => child needs to be selected
+    if (topLayerNavigationItem.route === null) {
+      for (const childRecord in topLayerNavigationItem.items) {
+        const childNavigationItem = topLayerNavigationItem.items[childRecord];
         // Set parent and child if exist(28 Feb. 2023  Martin Henrichs)
-        if (child.route === currentRoute) {
-          setActiveParentChild(parent.slug, child.slug)
+        if (childNavigationItem.route === currentRoute) {
+          setActiveParentChild(topLayerNavigationItem.slug, childNavigationItem.slug)
           break;
         }
       }

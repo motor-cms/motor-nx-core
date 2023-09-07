@@ -87,7 +87,6 @@ import {useRouter} from 'vue-router'
 import {useUserStore} from '../../store/user'
 import {storeToRefs} from 'pinia'
 import {useAppStore} from '../../store/app'
-import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {useToast} from "vue-toastification";
 
 const router = useRouter()
@@ -100,7 +99,8 @@ const toast = useToast();
 definePageMeta({
   validate: async (route) => {
     const userStore = useUserStore()
-    return !userStore.authenticated
+    const cookie = useCookie('auth_token');
+    return !userStore.authenticated && !cookie.value?.length
   }
 })
 

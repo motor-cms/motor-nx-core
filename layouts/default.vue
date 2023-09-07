@@ -1,10 +1,15 @@
 <template>
+  <template v-if="authenticated">
   <AdminContainer>
     <AdminPartialsSpinner v-if="loading"/>
     <div>
-      <NuxtPage />
+      <slot/>
     </div>
   </AdminContainer>
+  </template>
+  <template v-else>
+    <Login/>
+  </template>
 </template>
 <script lang="ts" setup>
 import {useAppStore} from "@zrm/motor-nx-core/store/app";
@@ -15,4 +20,5 @@ const userStore = useUserStore();
 const { authenticated } = storeToRefs(userStore);
 const {loading} = storeToRefs(appStore)
 import {useUserStore} from "~/packages/motor-nx-core/store/user";
+import Login from "~/packages/motor-nx-core/pages/admin/Login.vue";
 </script>

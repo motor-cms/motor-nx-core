@@ -123,6 +123,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 import NavigationItem from "packages/motor-nx-core/types/navigation-item";
+import user from "~/packages/motor-nx-admin/api/user";
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
@@ -134,8 +135,7 @@ const route = useRoute();
 
 // Route parser for different cases (01 März 2023  Martin Henrichs)
 const { routeSlashToDotted, routeRemoveCRUD } = useRouteParser()
-let currentRoute = routeSlashToDotted(route.fullPath);
-currentRoute = routeRemoveCRUD(currentRoute);
+const currentRoute = ref(routeRemoveCRUD(routeSlashToDotted(route.fullPath)));
 
 // Wrapper to set navigation parent and child (01 März 2023  Martin Henrichs)
 const setActiveParentChild = (parent: string = '', child: string = '' ) => {
@@ -149,7 +149,7 @@ const initialNaviActionState = () => {
     const topLayerNavigationItem: NavigationItem = navigationItems.value[topLayerNavigationRecord];
 
     //Case: The top most navigation items do have a route => they can be selected & will be marked as selected
-    if (topLayerNavigationItem.route === currentRoute) {
+    if (topLayerNavigationItem.route === currentRoute.value) {
       setActiveParentChild(topLayerNavigationItem.slug)
       break;
     }
@@ -159,7 +159,7 @@ const initialNaviActionState = () => {
       for (const childRecord in topLayerNavigationItem.items) {
         const childNavigationItem = topLayerNavigationItem.items[childRecord];
         // Set parent and child if exist(28 Feb. 2023  Martin Henrichs)
-        if (childNavigationItem.route === currentRoute) {
+        if (childNavigationItem.route === currentRoute.value) {
           setActiveParentChild(topLayerNavigationItem.slug, childNavigationItem.slug)
           break;
         }
@@ -169,7 +169,11 @@ const initialNaviActionState = () => {
 }
 
 await getNavigationItems();
-initialNaviActionState()
+
+watch(() => route.fullPath, () => {
+  currentRoute.value =  routeRemoveCRUD(routeSlashToDotted(route.fullPath));
+  initialNaviActionState()
+}, {immediate: true})
 
 </script>
 <style lang="scss">

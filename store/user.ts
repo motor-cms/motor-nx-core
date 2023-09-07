@@ -1,9 +1,9 @@
 import {defineStore, storeToRefs} from 'pinia'
 import {reactive, ref, toRefs} from 'vue'
 import {useAppStore} from './app'
-import useApi from "@zrm/motor-nx-core/composables/http/api";
 import {AsyncData, CookieRef} from "#app";
 import {sha256} from "ohash";
+import useApi from "~/packages/motor-nx-core/composables/http/api";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
@@ -32,6 +32,8 @@ export const useUserStore = defineStore('users', () => {
     authenticated.value = false
     user.value = null
     token.value = ""
+    const cookie = useCookie('auth_token');
+    cookie.value = "";
   }
 
   const login = async (email: string, password: string): Promise<void> => {

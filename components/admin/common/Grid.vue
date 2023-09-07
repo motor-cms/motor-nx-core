@@ -415,10 +415,12 @@ export default defineComponent({
     const {loading, updatingInBackground} = storeToRefs(appStore)
     const gridStore = useGridStore();
     gridStore.init(props.meta);
+    const router = useRouter();
+    const route = useRoute();
 
     const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
     const {t} = useI18n()
-    const filterValues = reactive({per_page: 25, page: 1})
+    const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page? route.query.page : 1})
 
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
@@ -430,16 +432,19 @@ export default defineComponent({
       if (data.parameter) {
         filterValues[data.parameter] = data.value
       }
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 
     const previousPage = () => {
       filterValues.page--
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 
     const nextPage = () => {
       filterValues.page++
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 
@@ -506,16 +511,19 @@ export default defineComponent({
 
     const firstPage = () => {
       filterValues.page = 1;
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
     const lastPage = () => {
       filterValues.page = props.meta.last_page;
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 
     const pageOptions = computed(() => Array(props.meta.last_page).fill(1).map((_, i) => i + 1))
 
     const goToPage = () => {
+      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 

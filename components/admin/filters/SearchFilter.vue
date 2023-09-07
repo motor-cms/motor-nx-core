@@ -3,23 +3,25 @@
     <input
       id="motor-grid-search"
       v-model="term"
-      @blur="$emit('submit', { parameter: 'search', value: term })"
+      @blur="submitSearch"
       @keyup.enter="$event.target.blur()"
       :placeholder="$t('global.press_enter_to_serach')"
       class="form-control form-control-alternative"
     />
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 
-export default defineComponent({
-  name: 'SearchFilter',
-  data() {
-    return {
-      term: '',
-    }
-  },
-  emits: ['submit']
-})
+const term = ref("");
+const router = useRouter();
+const route = useRoute();
+const emits = defineEmits(['submit'])
+
+const submitSearch = () => {
+  console.log("EIJO", router.replace({query: Object.assign(route.query, {search: term.value})}))
+  router.replace({query: Object.assign(route.query, {search: term.value})});
+  route.query.search = term.value
+  console.log(route.query)
+  emits('submit', { parameter: 'search', value: term })
+}
 </script>

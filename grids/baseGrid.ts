@@ -76,7 +76,7 @@ export default function callbackGrid<T>(
   const { refreshGridData } = useGridData();
 
   const refreshRecords = async (params: any = {}) => {
-    await refreshGridData([getGridData], [getGridData], params, '', true, true)
+    await getGridData(params, '', false);
   }
 
   const removeRecordFromRows = (record: number) => {

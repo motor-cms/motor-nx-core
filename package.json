@@ -11,10 +11,42 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-brands-svg-icons": "^6.3.0",
+    "@fortawesome/free-regular-svg-icons": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@nuxt/devtools": "^0.6.7",
+    "@nuxtjs/i18n": "^8.0.0-beta.9",
+    "@nuxtjs/moment": "^1.6.1",
+    "node-sass": "^8.0.0",
+    "nuxt": "^3.7.1",
+    "sass": "^1.58.1",
+    "sass-loader": "^13.2.0",
+    "sass-resources-loader": "^2.2.5",
+    "uuid": "^8.3.2",
+    "vue-i18n": "^9.2.2",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
-    "nuxt": "^3.6.2",
     "typescript": "^4.9.3",
     "pusher-js": "^8.0.2"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "@vee-validate/i18n": "^4.8.6",
+    "@vueform/multiselect": "^2.6.2",
+    "@vueuse/core": "^9.12.0",
+    "@vueuse/nuxt": "^9.12.0",
+    "bootstrap": "5.2.3",
+    "chart.js": "^4.2.1",
+    "countries-list": "^2.6.1",
+    "hashids": "^2.2.11",
+    "pinia": "^2.1.4",
+    "tippy": "^0.0.0",
+    "vee-validate": "^4.10.5",
+    "vue-easy-lightbox": "^1.14.0",
+    "vue-skeletor": "^1.0.6",
+    "vue-toastification": "^2.0.0-rc.5",
+    "yup": "^1.1.1"
   }
 }

@@ -18,7 +18,6 @@ export default defineComponent({
   setup(props) {
     const routeParser = useRouteParser();
     const to = routeParser.routeDottedToSlash(props.options.route) + '/' +  props.record.id
-    console.log("to", to)
     return { to }
   },
 })

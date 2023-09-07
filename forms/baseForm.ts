@@ -13,6 +13,7 @@ import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
 import { useUserStore } from "~/packages/motor-nx-core/store/user";
+import { Modals } from '.nuxt/components';
 
 
 export default function baseForm(

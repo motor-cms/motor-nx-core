@@ -24,11 +24,13 @@
 <script lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
+import DraggableContent from '../../../types/draggable-content'
+
 export default defineComponent({
   props: {
     tree: {
       required: true,
-      type: Object,
+      type: Object as PropType<DraggableContent>
     },
     record: {
       type: Number,

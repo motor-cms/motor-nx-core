@@ -2,7 +2,6 @@ import Repository from '../types/repository'
 import {ref} from 'vue'
 import {useToast} from 'vue-toastification'
 import {useI18n} from 'vue-i18n'
-import {useAppStore} from '../store/app'
 import {useGridData} from "@zrm/motor-nx-core/composables/grid/gridData";
 
 export default function callbackGrid<T>(
@@ -31,8 +30,8 @@ export default function callbackGrid<T>(
   const rows = ref<Array<T>>([])
   const meta = ref({current_page: 1, from: 1, to: 1})
 
-  const getGridData = async (params: any, id: string = '', cached: boolean = true) => {
-      const { data: result, pending, error, refresh } = await repository.index(params, cached);
+  const getGridData = async (params: any, id: string = '') => {
+      const { data: result, pending, error, refresh } = await repository.index(params);
       if (error.value) throw new Error(error)
       rows.value = result.value.data
       meta.value = result.value.meta
@@ -76,7 +75,7 @@ export default function callbackGrid<T>(
   const { refreshGridData } = useGridData();
 
   const refreshRecords = async (params: any = {}) => {
-    await getGridData(params, '', false);
+    await getGridData(params, '');
   }
 
   const removeRecordFromRows = (record: number) => {

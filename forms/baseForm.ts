@@ -2,7 +2,6 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { useToast } from 'vue-toastification'
-import { useAppStore } from "@zrm/motor-nx-core/store/app";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import { ObjectSchema, InferType } from "yup";
 import { configure } from 'vee-validate';
@@ -12,7 +11,7 @@ import de from '@vee-validate/i18n/dist/locale/de.json';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
-import { useUserStore } from "~/packages/motor-nx-core/store/user";
+
 
 
 export default function baseForm(

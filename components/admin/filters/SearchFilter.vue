@@ -18,7 +18,6 @@ const route = useRoute();
 const emits = defineEmits(['submit'])
 
 const submitSearch = () => {
-  console.log("EIJO", router.replace({query: Object.assign(route.query, {search: term.value})}))
   router.replace({query: Object.assign(route.query, {search: term.value})});
   route.query.search = term.value
   console.log(route.query)

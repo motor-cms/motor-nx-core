@@ -117,7 +117,6 @@
   </aside>
 </template>
 <script setup lang="ts">
-import {useNavigationStore} from "@zrm/motor-nx-core/store/navtigation";
 import {storeToRefs} from "pinia";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";

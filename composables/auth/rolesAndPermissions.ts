@@ -1,7 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import usePermission from './permission'
 import useRole, { Role } from './role'
-import { useUserStore } from '@zrm/motor-nx-core/store/user'
 import { storeToRefs } from 'pinia'
 
 export default function useRolesAndPermissions() {

@@ -1,7 +1,7 @@
 import useSocket from "~/packages/motor-nx-core/composables/event/socket";
-import {useUserStore} from "~/packages/motor-nx-core/store/user";
+
 import {watch} from "vue";
-import {useNotificationStore} from "~/packages/motor-nx-core/store/notification";
+
 
 
 export default defineNuxtPlugin(async (nuxtApp) => {

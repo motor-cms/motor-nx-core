@@ -14,7 +14,7 @@
 </template>
 <script setup lang="ts">
 import {useToast} from "vue-toastification";
-import {useNotificationStore} from "~/packages/motor-nx-core/store/notification";
+
 import {storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
 import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";

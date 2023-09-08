@@ -1,4 +1,4 @@
-import {useUserStore} from "~/packages/motor-nx-core/store/user";
+
 import {storeToRefs} from "pinia";
 
 export default defineNuxtPlugin( {

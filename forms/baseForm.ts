@@ -12,8 +12,6 @@ import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
 
-
-
 export default function baseForm(
   languageFilePrefix: string,
   routePrefix: string,

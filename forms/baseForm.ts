@@ -52,7 +52,6 @@ export default function baseForm(
   const getData = async () => {
     if (!route.params.id) return;
     const id: number = Number(route.params.id)
-    console.log(repositoryParams);
     const { data: response } = await repository.get(id, repositoryParams)
     await fillModel(response.value.data);
   }
@@ -118,7 +117,7 @@ export default function baseForm(
 
   watch(() => user.value.client_id, () => {
     model.value.client_id = user.value.client_id;
-  });
+  }, { immediate: true });
 
   return {
     getData,

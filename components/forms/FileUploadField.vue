@@ -145,7 +145,7 @@ export default defineComponent({
     }
 
     // Create a property that holds the file information
-    const files = ref(new DataTransfer());
+    const files = ref();
     const parsedFiles = ref<Array<FileTemplate>>([]);
     const fileInput = ref(null);
     const file = ref(fileTemplate)
@@ -255,6 +255,10 @@ export default defineComponent({
         }
     })
 
+
+    onMounted(() => {
+      files.value = new DataTransfer();
+    })
 
     return {
       file,

@@ -5,7 +5,7 @@
 import { defineComponent } from 'vue'
 import Multiselect from '@vueform/multiselect'
 import {storeToRefs} from "pinia";
-import {useAppStore} from "~/packages/motor-nx-core/store/app";
+
 
 export default defineComponent({
   name: 'SelectField',

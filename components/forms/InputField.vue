@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent, watch } from 'vue'
 import { useField } from 'vee-validate'
-import {useAppStore} from "@zrm/motor-nx-core/store/app";
+
 import {storeToRefs} from "pinia";
 
 export default defineComponent({

@@ -86,9 +86,8 @@ import {useRoute, useRouter} from 'vue-router'
 import {useI18n} from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
 import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
-import {useUserStore} from '@zrm/motor-nx-core/store/user';
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
-import {useAppStore} from "@zrm/motor-nx-core/store/app";
+
 import {storeToRefs} from "pinia";
 import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
 import {has} from "immutable";

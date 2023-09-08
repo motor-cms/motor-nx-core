@@ -1,4 +1,4 @@
-import {useUserStore} from "@zrm/motor-nx-core/store/user";
+
 import {UseFetchOptions} from "#app";
 import {sha256} from "ohash";
 
@@ -14,7 +14,7 @@ export default function useApi(useRpc: boolean = false) {
     }
   })
 
-  const get = async (path: string,cached: boolean = false, params: Record<string, any> = {}, opts?: UseFetchOptions<Record<string, any>>, withoutAuth: boolean = false) => {
+  const get = async (path: string, params: Record<string, any> = {}, opts?: UseFetchOptions<Record<string, any>>, withoutAuth: boolean = false) => {
     if (!withoutAuth) addBearerToken();
     // Check cache if data has already been fetched
     const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');

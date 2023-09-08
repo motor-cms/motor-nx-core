@@ -1,6 +1,6 @@
 import Pusher from "pusher-js";
 import {ref, reactive} from "vue";
-import {useUserStore} from "~/packages/motor-nx-core/store/user";
+
 import {storeToRefs} from "pinia";
 
 export default function useSocket() {

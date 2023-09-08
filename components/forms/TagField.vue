@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import {onMounted, reactive} from "vue";
-import {useAppStore} from "~/packages/motor-nx-core/store/app";
+
 import {storeToRefs} from "pinia";
 
 const props = defineProps({

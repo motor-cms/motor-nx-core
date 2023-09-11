@@ -39,11 +39,10 @@ export function useGridData() {
           }
         } catch (e) {
           console.log(e)
-          console.log("Error fetching background data.");
+          console.error("Error fetching background data.");
           toast.error(t('global.error_occurred'))
         } finally {
           appStore.updateInBackground(false);
-          console.log("update ende", appStore.updatingInBackground)
         }
       }
     }

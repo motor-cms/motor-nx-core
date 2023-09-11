@@ -2,14 +2,14 @@
   <div class="col-md-3">
     <select
       v-model="value"
-      @change="$emit('submit', { parameter: options.parameter, value: value })"
+      @change="submitFilter"
       class="form-control"
     >
       <option value="" v-if="options.emptyOption">
         {{ options.emptyOption }}
       </option>
       <option
-        v-for="option in options"
+        v-for="option in options.options"
         :key="option.value"
         :value="option.value"
       >
@@ -27,12 +27,23 @@ export default defineComponent({
     options: Object,
   },
   emits: ['submit'],
-  setup() {
+  setup(props, ctx) {
     const data = reactive({
       value: '',
     })
+
+    const router = useRouter();
+    const route = useRoute();
+    const submitFilter = () => {
+      let routeQuery = {}
+      routeQuery[props.options.parameter] = data.value
+      console.log(routeQuery)
+      router.replace({query: Object.assign(route.query, routeQuery)});
+      ctx.emit('submit', { parameter: props.options.parameter, value: data.value })
+    }
     return {
       ...data,
+      submitFilter
     }
   },
 })

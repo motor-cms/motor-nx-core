@@ -317,6 +317,7 @@ import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
 import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
 import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
+import CellTree from "@zrm/motor-nx-core/components/admin/cell/Tree.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "~/packages/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "~/packages/motor-nx-core/components/forms/CheckboxField.vue";
@@ -342,7 +343,8 @@ export default defineComponent({
     Button,
     EditButton,
     DeleteButton,
-    StatusIcon
+    StatusIcon,
+    CellTree
   },
   props: {
     name: {

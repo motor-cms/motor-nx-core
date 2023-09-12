@@ -52,6 +52,7 @@ export default defineComponent({
         type: 'checkbox',
         valueProp: props.modelValue,
         initialValue: props.modelValue,
+        syncVModel: true,
       }
     )
 

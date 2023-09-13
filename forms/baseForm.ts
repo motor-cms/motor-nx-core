@@ -16,8 +16,6 @@ export default function baseForm(
   languageFilePrefix: string,
   routePrefix: string,
   repository: any,
-  model: Ref<{ [index: string]: any }>,
-  schema: ObjectSchema<Record<any, any>>,
   sanitizer: (formData: object) => void = () => { },
   afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => { },
   repositoryParams?: {},
@@ -29,27 +27,17 @@ export default function baseForm(
   const router = useRouter()
   const route = useRoute();
 
+  const formStore = useFormStore();
+  const {model, schema, form, formData} = storeToRefs(formStore);
   const toast = useToast()
   const appStore = useAppStore();
-
-  type ModelType = InferType<typeof schema>;
-
-
-  const fillModel = async (data: Partial<ModelType> | undefined | null) => {
-    try {
-      model.value = await schema.validate(data, { stripUnknown: true, strict: true });
-    } catch (e) {
-      console.error("Error while filling api response into model validation schema. Setting model to response data");
-      model.value = data;
-    }
-  }
 
   // Get record from id and set values. Redirect back and show error if record was not found
   const getData = async () => {
     if (!route.params.id) return;
     const id: number = Number(route.params.id)
     const { data: response } = await repository.get(id, repositoryParams)
-    await fillModel(response.value.data);
+    await formStore.fillModel(response.value.data);
   }
 
   localize({ de });
@@ -60,13 +48,19 @@ export default function baseForm(
   });
 
   // Initialize form with default values and the validation schema
-  const form = useForm({
-    initialValues: model,
+  form.value = useForm({
+    initialValues: formStore.formData,
+    validationSchema: formStore.schema,
+  })
+
+  form.value = useForm({
+    initialValues: formData,
     validationSchema: schema,
   })
 
-  const onSubmit = form.handleSubmit(async (values, { resetForm }) => {
+  const onSubmit = form.value.handleSubmit(async (values, { resetForm }) => {
     try {
+      console.log("submitting form", values)
       appStore.isLoading(true);
       const oldModel = ref(JSON.parse(JSON.stringify(model.value)));
       const formData = reactive<any>(JSON.parse(JSON.stringify(model.value)))
@@ -83,7 +77,7 @@ export default function baseForm(
           repositoryParams
         )
         if (error.value) throw new Error(error)
-        await fillModel(response.value.data);
+        await formStore.fillModel(response.value.data);
         await afterSubmit(oldModel, model)
         toast.success(t(languageFilePrefix + '.updated'))
         if (routePrefix && routePrefix.length) {
@@ -93,7 +87,7 @@ export default function baseForm(
         model.value.id = null
         const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
-        await fillModel(response.value.data);
+        await formStore.fillModel(response.value.data);
         await afterSubmit(oldModel, model)
         toast.success(t(languageFilePrefix + '.created'))
         if (routePrefix && routePrefix.length) {
@@ -119,7 +113,7 @@ export default function baseForm(
     getData,
     onSubmit,
     form,
-    fillModel,
+    fillModel: formStore.fillModel,
     ...form,
   }
 }

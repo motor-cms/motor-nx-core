@@ -1,18 +1,16 @@
     <template>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
-    <label :for="id" class="d-block">
-      {{ label }}
-    </label>
-    <input
-      :id="id"
-      type="checkbox"
-      class="form-check-input"
-      :class="{ 'is-invalid': errorMessage }"
-      :name="name"
-      :value="modelValue"
-      :checked="modelValue"
-      @input="(event) => { $emit('update:modelValue', event.target.checked) }"
-    />
+	  <div class="atom-toggle">
+		  <span class="atom-toggle__label">{{ label }}</span>
+		  <label :for="id" class="atom-toggle__switch">
+			  <input
+						type="checkbox"
+						:name="name"
+						:value="modelValue"
+						:checked="modelValue">
+			  <span class="atom-toggle__slider" @click="emitUpdate" ></span>
+		  </label>
+	  </div>
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
@@ -37,7 +35,7 @@ export default defineComponent({
       type: String,
     },
   },
-  setup(props) {
+  setup(props, ctx) {
     const { checked, handleChange, errorMessage, meta } = useField(
       <string>props.name,
       undefined,
@@ -47,6 +45,10 @@ export default defineComponent({
       }
     )
 
+	  const emitUpdate = () => {
+			console.log(props.modelValue);
+	    ctx.emit('update:modelValue', !props.modelValue);
+	  }
     // select/unselect the input
  //   handleChange(<string>props.modelValue)
 
@@ -54,7 +56,8 @@ export default defineComponent({
       checked, // readonly
   //    handleChange,
       errorMessage,
-      meta
+      meta,
+	    emitUpdate
     }
   },
 })

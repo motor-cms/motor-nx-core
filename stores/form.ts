@@ -6,8 +6,8 @@ import {InferType} from "yup";
 
 export const useFormStore = defineStore('form', () => {
 
-    const model = ref({});
-    const formData = ref({});
+    const model = ref<Record<string, any>>({});
+    const formData = ref<Record<string, any>>({});
     const formSchema = ref({});
     const form = ref({});
 

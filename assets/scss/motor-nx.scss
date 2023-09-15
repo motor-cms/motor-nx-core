@@ -458,7 +458,8 @@
   }
 
   &.is-selected {
-    background: var(--ms-group-label-bg-selected, #059669);
+    //background: var(--ms-group-label-bg-selected, #059669);
+		background: var(--c-primary-100);
     color: var(--ms-group-label-color-selected, #FFFFFF);
   }
 
@@ -469,13 +470,16 @@
   }
 
   &.is-selected.is-pointed {
-    background: var(--ms-group-label-bg-selected-pointed, #0c9e70);
+    //background: var(--ms-group-label-bg-selected-pointed, #0c9e70);
+		background: var(--c-primary-100);
     color: var(--ms-group-label-color-selected-pointed, #FFFFFF);
   }
 
   &.is-selected.is-disabled {
-    background: var(--ms-group-label-bg-selected-disabled, #75cfb1);
-    color: var(--ms-group-label-color-selected-disabled, #D1FAE5);
+		//background: var(--ms-option-bg-selected-disabled, #87dcc0);
+		background: var(--c-primary-30);
+		//color: var(--ms-option-color-selected-disabled, #D1FAE5);
+		color: var(--c-dark-80);
   }
 }
 
@@ -502,7 +506,8 @@
   }
 
   &.is-selected {
-    background: var(--ms-option-bg-selected, #10B981);
+    //background: var(--ms-option-bg-selected, #10B981);
+		background: var(--c-primary-100);
     color: var(--ms-option-color-selected, #FFFFFF);
   }
 
@@ -513,13 +518,16 @@
   }
 
   &.is-selected.is-pointed {
-    background: var(--ms-option-bg-selected-pointed, #26c08e);
+    //background: var(--ms-option-bg-selected-pointed, #26c08e);
+		background: var(--c-primary-100);
     color: var(--ms-option-color-selected-pointed, #FFFFFF);
   }
 
   &.is-selected.is-disabled {
-    background: var(--ms-option-bg-selected-disabled, #87dcc0);
-    color: var(--ms-option-color-selected-disabled, #D1FAE5);
+    //background: var(--ms-option-bg-selected-disabled, #87dcc0);
+		background: var(--c-primary-30);
+    //color: var(--ms-option-color-selected-disabled, #D1FAE5);
+		color: var(--c-dark-80);
   }
 }
 

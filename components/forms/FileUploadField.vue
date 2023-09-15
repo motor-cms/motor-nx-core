@@ -241,7 +241,7 @@ export default defineComponent({
         handleChange(parsedFiles.value, false);
       } else {
         parsedFiles.value = [];
-        handleChange({}, false);
+        handleChange(null, false);
       }
     }
 
@@ -255,7 +255,7 @@ export default defineComponent({
         } else {
           parsedFiles.value = inputValue.value;
         }
-    })
+    }, {immediate: true})
 
 
     onMounted(() => {

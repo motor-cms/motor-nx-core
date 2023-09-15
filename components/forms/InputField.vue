@@ -92,6 +92,8 @@ export default defineComponent({
       emit('blur', (<HTMLInputElement>e.target).value)
     }
 
+    emit('initialized');
+
     return {
       handleChange,
       handleBlur,

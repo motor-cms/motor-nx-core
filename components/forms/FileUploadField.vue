@@ -128,6 +128,7 @@ export default defineComponent({
       meta,
     } = useField(<string>props.name, undefined, {
       initialValue: props.modelValue,
+      syncVModel: true
     })
 
     const fileTemplate = {
@@ -207,6 +208,7 @@ export default defineComponent({
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
           tempFile.file = <string>fileResult
+          console.log('DEBUG: ', tempFile);
           parsedFiles.value.push(tempFile)
           if (!props.multiple) {
             handleChange(parsedFiles.value[0], false)

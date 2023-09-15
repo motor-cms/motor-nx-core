@@ -36,7 +36,10 @@ export default function baseForm(
   const getData = async () => {
     if (!route.params.id) return;
     const id: number = Number(route.params.id)
-    const { data: response } = await repository.get(id, repositoryParams)
+    const { data: response, error } = await repository.get(id, repositoryParams)
+    if (error.value) {
+      throw createError(error.value)
+    }
     await formStore.fillModel(response.value.data);
   }
 

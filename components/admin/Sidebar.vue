@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
+  <aside ref="sidebar" class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main" :class="{open: sidebarOpen}">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <NuxtLink to="/admin/dashboard" class="d-flex navbar-brand m-0">
@@ -122,7 +122,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 import NavigationItem from "packages/motor-nx-core/types/navigation-item";
-import user from "~/packages/motor-nx-admin/api/user";
+import { onClickOutside } from '@vueuse/core'
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
@@ -131,6 +131,15 @@ const { activeParent, activeChild , navigationItems, loading} = storeToRefs(navi
 const { setActiveChild, toggleMenu, getNavigationItems } = navigationStore;
 const routeParser = useRouteParser();
 const route = useRoute();
+const appStore = useAppStore();
+const {sidebarOpen} = storeToRefs(appStore);
+const sidebar = ref(null);
+
+onClickOutside(sidebar, (event) => {
+  if (sidebarOpen.value) {
+    appStore.toggleSidebar();
+  }
+})
 
 // Route parser for different cases (01 März 2023  Martin Henrichs)
 const { routeSlashToDotted, routeRemoveCRUD } = useRouteParser()

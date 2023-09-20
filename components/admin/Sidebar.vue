@@ -121,7 +121,7 @@ import {storeToRefs} from "pinia";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
-import NavigationItem from "packages/motor-nx-core/types/navigation-item";
+import NavigationItem from "@zrm/motor-nx-core/types/navigation-item";
 import { onClickOutside } from '@vueuse/core'
 
 const runtimeConfig = useRuntimeConfig();

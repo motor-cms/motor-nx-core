@@ -13,7 +13,7 @@
 // import { Modal } from 'bootstrap'
 import { computed, defineComponent, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import BaseModal from "~/packages/motor-nx-core/components/admin/modal/BaseModal.vue";
+import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 
 export default defineComponent({
   name: 'DeleteConfirmation',

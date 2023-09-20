@@ -10,7 +10,7 @@
 </template>
 <script lang="ts">
 import {computed, defineComponent, reactive, watch} from 'vue'
-import BaseModal from "~/packages/motor-nx-core/components/admin/modal/BaseModal.vue";
+import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 
 export default defineComponent({
   name: 'Logout',

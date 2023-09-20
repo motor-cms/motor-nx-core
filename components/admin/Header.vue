@@ -89,9 +89,9 @@ import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
 
 import {storeToRefs} from "pinia";
-import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
-import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
-import EventNotificationHub from "~/packages/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
+import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
+import EventNotificationHub from "@zrm/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
 
 
 export default defineComponent({

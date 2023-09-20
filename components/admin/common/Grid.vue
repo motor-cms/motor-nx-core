@@ -319,9 +319,9 @@ import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue"
 import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
 import CellTree from "@zrm/motor-nx-core/components/admin/cell/Tree.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-import SpinnerSmall from "~/packages/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
-import CheckboxField from "~/packages/motor-nx-core/components/forms/CheckboxField.vue";
-import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
+import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
+import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {raf} from "vue-easy-lightbox/types/utils/raf";
 import app from "vue-easy-lightbox/src/dev-entry/App.vue";
 import {useToast} from "vue-toastification";

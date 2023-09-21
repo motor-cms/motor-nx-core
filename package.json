@@ -12,13 +12,13 @@
   },
   "devDependencies": {
     "nuxt": "^3.7.1",
-    "uuid": "^8.3.2",
     "vue-i18n": "^9.2.2",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "uuid": "^8.3.2",
     "@nuxt/devtools": "^0.6.7",
     "@nuxtjs/i18n": "^8.0.0-beta.9",
     "sass": "^1.58.1",

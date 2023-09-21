@@ -1,6 +1,6 @@
 import Repository from '../types/repository'
 import {ref} from 'vue'
-import {useToast} from 'vue-toastification'
+
 import {useI18n} from 'vue-i18n'
 
 
@@ -8,7 +8,7 @@ export default function callbackGrid<T>(
   repository: Repository,
   languagePrefix: string
 ) {
-  const toast = useToast()
+  const { $toast } = useNuxtApp()
   const appStore = useAppStore()
 
   const {t} = useI18n()
@@ -48,7 +48,7 @@ export default function callbackGrid<T>(
         await repository.delete(params.componentParams.record)
         // Remove record from rows for better ux
         removeRecordFromRows(params.componentParams.record);
-        toast.success(t(languagePrefix + '.deleted'))
+        $toast.success(t(languagePrefix + '.deleted'))
         appStore.isLoading(false)
         appStore.updateInBackground(true);
         // Fetch fresh dataset of rows in background to hydrate cache and rows
@@ -64,7 +64,7 @@ export default function callbackGrid<T>(
           params.componentParams.record
         )
         rows.value[params.componentParams.index] = newRecord.data.data
-        toast.success(t(languagePrefix + '.updated'))
+        $toast.success(t(languagePrefix + '.updated'))
         appStore.isLoading(false)
         break
       default:

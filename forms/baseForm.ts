@@ -1,7 +1,7 @@
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
-import { useToast } from 'vue-toastification'
+
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import { ObjectSchema, InferType } from "yup";
 import { configure } from 'vee-validate';
@@ -29,7 +29,7 @@ export default function baseForm(
 
   const formStore = useFormStore();
   const {model, schema, form, formData} = storeToRefs(formStore);
-  const toast = useToast()
+  const { $toast } = useNuxtApp()
   const appStore = useAppStore();
 
   // Get record from id and set values. Redirect back and show error if record was not found
@@ -84,7 +84,7 @@ export default function baseForm(
           await formStore.fillModel(response.value.data);
         }
         await afterSubmit(oldModel, model)
-        toast.success(t(languageFilePrefix + '.updated'))
+        $toast.success(t(languageFilePrefix + '.updated'))
         if (routePrefix && routePrefix.length) {
           await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
         }
@@ -96,13 +96,13 @@ export default function baseForm(
           await formStore.fillModel(response.value.data);
         }
         await afterSubmit(oldModel, model)
-        toast.success(t(languageFilePrefix + '.created'))
+        $toast.success(t(languageFilePrefix + '.created'))
         if (routePrefix && routePrefix.length) {
           await router.push({ path: useRouteParser().routeDottedToSlash(routePrefix) })
         }
       }
     } catch (e) {
-      toast.error(t('global.error_occurred'))
+      $toast.error(t('global.error_occurred'))
       console.error(e)
     } finally {
       appStore.isLoading(false);

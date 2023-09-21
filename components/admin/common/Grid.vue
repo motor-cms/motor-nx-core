@@ -324,7 +324,7 @@ import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {raf} from "vue-easy-lightbox/types/utils/raf";
 import app from "vue-easy-lightbox/src/dev-entry/App.vue";
-import {useToast} from "vue-toastification";
+
 
 interface GridAction {
   label: string,
@@ -563,15 +563,15 @@ export default defineComponent({
       gridStore.init(props.meta);
     })
 
-    const toast = useToast();
+    const { $toast } = useNuxtApp();
     const processGridAction = async () => {
       try {
         appStore.isLoading(true)
         await gridAction.value.func();
-        toast.success(t('exports.started'))
+        $toast.success(t('exports.started'))
       } catch (e) {
         console.error("Error occured while processing grid action: " + e)
-        toast.error(t('global.error_occurred'))
+        $toast.error(t('global.error_occurred'))
       } finally {
         appStore.isLoading(false)
       }

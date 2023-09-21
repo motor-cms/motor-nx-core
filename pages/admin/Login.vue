@@ -85,14 +85,14 @@
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {storeToRefs} from 'pinia'
-import {useToast} from "vue-toastification";
+
 
 const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore();
 const {loading} = storeToRefs(appStore)
 const {signInError} = storeToRefs(userStore)
-const toast = useToast();
+const { $toast } = useNuxtApp();
 
 definePageMeta({
   validate: async (route) => {
@@ -114,7 +114,7 @@ const loginUser = async () => {
     await userStore.signIn(login.value)
     await navigateTo('/admin/dashboard')
   } catch (e) {
-    toast.error(e.message)
+    $toast.error(e.message)
     console.log(e)
   } finally {
     appStore.isLoading(false)

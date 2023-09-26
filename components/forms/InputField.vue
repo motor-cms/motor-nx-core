@@ -12,7 +12,7 @@
       v-model="value"
       :class="{ 'is-invalid': errorMessage }"
       @blur="blur"
-      :disabled="disableForms"
+      :disabled="disableForms || disabled"
       :min="min ?? ''"
       :max="max ?? ''"
       @input="changed"
@@ -59,6 +59,10 @@ export default defineComponent({
     },
     max: {
       type: (Number || String),
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
     description: {
       type: String,

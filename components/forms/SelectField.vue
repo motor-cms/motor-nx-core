@@ -3,7 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect :disabled="loading" :id="id" :canClear="is_nullable" :can-deselect="is_nullable" :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="searchable" />
+    <Multiselect :disabled="loading || disabled" :id="id" :canClear="is_nullable" :can-deselect="is_nullable" :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="searchable" />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -14,6 +14,7 @@ import { useField } from 'vee-validate'
 import { defineComponent } from 'vue'
 import Multiselect from '@vueform/multiselect'
 import {storeToRefs} from "pinia";
+import { boolean } from 'yup';
 
 
 export default defineComponent({
@@ -22,9 +23,12 @@ export default defineComponent({
   emits: ['update:modelValue'],
   props: {
     id: String,
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     modelValue: {
       type: [String, Number],
-      required: true
     },
     object: {
       default: false

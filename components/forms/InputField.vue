@@ -3,6 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
+    <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-left': '5px'}"></AdminTooltip>
     <input
       :required="required"
       :type="type"
@@ -19,9 +20,6 @@
     />
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
-    </p>
-    <p v-if="description.length" class="text-sm">
-      {{description}}
     </p>
   </div>
 </template>

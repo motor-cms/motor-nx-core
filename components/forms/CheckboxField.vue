@@ -1,6 +1,7 @@
 <template>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
     <div class="atom-toggle">
+      <AdminTooltip v-if="!!hint" :text="hint" type="info" :style="{'margin-right': '5px'}" position="top"></AdminTooltip>
       <span class="atom-toggle__label">{{ label }}</span>
       <label :for="id" class="atom-toggle__switch">
         <input
@@ -34,6 +35,10 @@ export default defineComponent({
     name: {
       type: String,
     },
+    hint: {
+      type: String,
+      required: false,
+    }
   },
   setup(props, ctx) {
     const { checked, handleChange, errorMessage, meta } = useField(

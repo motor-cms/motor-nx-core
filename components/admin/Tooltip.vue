@@ -1,7 +1,8 @@
 <template>
-  <span class="tooltip-container" @mouseover="showTooltip" @mouseleave="hideTooltip">
-    <span class="tooltip-icon">?</span>
-    <div v-if="isTooltipVisible" class="tooltip-text" :class="tooltipPositionClass">
+    <span class="tooltip-container" @mouseover="showTooltip" @mouseleave="hideTooltip">
+    <span v-if="props.type == 'questionmark'" class="tooltip-icon" :style="{'background-color': props.iconColor}"><b>?</b></span>
+    <span v-else class="tooltip-icon" :style="{'background-color': props.iconColor}"><b>i</b></span>
+    <div v-if="isTooltipVisible" class="tooltip-text" :class="tooltipPositionClass" ref="el" :style="{'background-color': props.hintColor}">
       {{ text }}
       <div class="tooltip-arrow"></div>
     </div>
@@ -10,7 +11,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
 export default defineComponent({
   name: 'Tooltip',
   props: {
@@ -29,10 +29,18 @@ export default defineComponent({
     },
     position: {
       type: String,
-      default: 'top',
+      default: 'right',
     },
-  },
-  setup() {
+    iconColor: {
+      type: String,
+      default: '#F49B01',
+    },
+    hintColor: {
+      type: String,
+      default: '#FFF8EF',
+    },
+  }, 
+  setup(props) {
     const isTooltipVisible = ref(false);
 
     const showTooltip = () => {
@@ -47,6 +55,7 @@ export default defineComponent({
       isTooltipVisible,
       showTooltip,
       hideTooltip,
+      props
     };
   },
   computed: {
@@ -65,45 +74,48 @@ export default defineComponent({
 }
 
 .tooltip-icon {
-  cursor: pointer;
-  background-color: yellow;
   border-radius: 50%;
-  padding: 0.2rem 0.4rem;
-  margin-right: 0.2rem;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 12px;
 }
 
 .tooltip-text {
   position: absolute;
-  background-color: yellow;
-  border: 1px solid black; /* Black border around the tooltip */
+  border: 1px solid black;
   border-radius: 4px;
   padding: 0.5rem;
   z-index: 1;
   display: none;
+  min-width: 200px;
 }
 
 /* Tooltip positions */
 .tooltip-text.top {
-  top: -80px;
+  bottom: 35px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .tooltip-text.bottom {
-  bottom: -80px;
+  top: 35px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .tooltip-text.left {
+  right: 35px;
   top: 50%;
-  right: -150px;
   transform: translateY(-50%);
 }
 
 .tooltip-text.right {
+  left: 35px;
   top: 50%;
-  left: -150px;
   transform: translateY(-50%);
 }
 
@@ -133,17 +145,17 @@ export default defineComponent({
 
 .tooltip-text.left .tooltip-arrow {
   top: 50%;
-  left: -10px;
-  border-width: 5px 10px 5px 0;
-  border-color: transparent black transparent transparent;
+  right: -10px;
+  border-width: 5px 0px 5px 10px;
+  border-color: transparent transparent transparent black;
   transform: translateY(-50%);
 }
 
 .tooltip-text.right .tooltip-arrow {
   top: 50%;
-  right: -10px;
-  border-width: 5px 0 5px 10px;
-  border-color: transparent transparent transparent black;
+  left: -10px;
+  border-width: 5px 10px 5px 0px;
+  border-color: transparent black transparent transparent;
   transform: translateY(-50%);
 }
 

@@ -1,5 +1,19 @@
 <template>
-  <div class="form-group" :class="{ 'has-danger': validationError}">
+  <div class="dropzone"
+      v-if="fullScreenDragAndDrop &&(multiple || (!multiple && !files.length))"
+      ref="dropzone"
+      >
+    <div class="dropzone-text">
+      <template v-if="multiple">
+        {{ $t('motor-media.global.drop_files_here') }}
+      </template>
+      <template v-else>
+        {{ $t('motor-media.global.drop_file_here') }}
+      </template>
+    </div>
+  </div>
+
+  <div ref="form" class="form-group" :class="{ 'has-danger': validationError}">
     <label :for="id">
       {{ label }}
     </label>
@@ -10,7 +24,23 @@
       {{ validationErrorMessage }}
     </div>
     <div
-      v-if="multiple || (!multiple && !files.length)"
+      v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+      class="col-md-4 drop-zone"
+      :class="{
+          over: status.over,
+        }"
+    >
+        <span>
+          <template v-if="multiple">
+            {{ $t('motor-media.global.drop_files_here') }}
+          </template>
+          <template v-else>
+            {{ $t('motor-media.global.drop_file_here') }}
+          </template>
+        </span>
+    </div>
+    <div
+      v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
       class="col-md-4 drop-zone"
       v-on:dragover.prevent="handleDragOver"
       v-on:drop.prevent="handleDrop"
@@ -79,7 +109,7 @@
         </p>
       </div>
     </div>
-  </div>
+</div>
 </template>
 <script lang="ts">
 import {defineComponent, ref, watch} from 'vue'
@@ -117,8 +147,15 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    //!Don't use multiple FullScreenDragAndDrop Upload Fields on the same Page. Will lead to unexpected behaviour!
+    fullScreenDragAndDrop: {
+      type: Boolean,
+      default: false,
+    }
   },
   setup(props, ctx) {
+    const dropzone = ref<HTMLInputElement | null>(null);
+    const form = ref<HTMLInputElement | null>(null);
 
     const {
       value: inputValue,
@@ -161,15 +198,18 @@ export default defineComponent({
 
     const validationError = ref(false)
     const validationErrorMessage = ref("");
-    const handleDragOver = (event: any) => {
-      status.value.over = true
+
+    const handleDragOver = () => {
+      status.value.over = true;
     }
 
     const handleDragLeave = () => {
-      status.value.over = false
+      status.value.over = false;
     }
 
     const handleDrop = (event: any) => {
+      event.preventDefault();
+      hideDropZone();
       status.value.dropped = true
       status.value.over = false
       validationError.value = false;
@@ -219,7 +259,47 @@ export default defineComponent({
       }
     }
 
+    function showDropZone() {
+      if (!dropzone.value){
+        return;
+      }
+      dropzone.value.style.display = "flex";
+      handleDragOver();
+    }
 
+    function hideDropZone() {
+      if (!dropzone.value){
+        return;
+      }
+      dropzone.value.style.display = "none";
+      status.value.over = false;
+    }
+
+    function preventDefaultDropEvent(e: DragEvent) {
+        e.preventDefault();
+    }
+
+    function initFullScreenDragAndDrop(){
+      if(!props.fullScreenDragAndDrop || !dropzone.value){
+        return;
+      }
+
+      window.addEventListener('dragenter', showDropZone);
+
+      dropzone.value.addEventListener('dragenter', preventDefaultDropEvent);
+      dropzone.value.addEventListener('dragover', preventDefaultDropEvent);
+      dropzone.value.addEventListener('dragleave', hideDropZone);
+      dropzone.value.addEventListener('drop', handleDrop);
+    }
+
+    onMounted(() => {
+      initFullScreenDragAndDrop();
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('dragenter', showDropZone);
+    });
+    
     // Check mimetype before displaying an image
     const isImage = (type: string) => {
       const mimeTypes = [
@@ -274,8 +354,35 @@ export default defineComponent({
       fileInput,
       validationError,
       validationErrorMessage,
-      inputValue
+      inputValue,
+      dropzone
     }
   },
 })
 </script>
+
+<style>
+.dropzone {
+	box-sizing: border-box;
+	display: none;
+	position: fixed;
+	width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 99990;
+  justify-content: center;
+  align-items: center;
+
+	background: rgba(0, 255, 242, 0.1);
+	border: 8px dashed cyan;
+}
+
+.dropzone-text {
+  color: black;
+  font-size: 50px;
+  text-align:center;
+  font-weight: bold;
+  pointer-events: none;
+}
+</style>

@@ -1,6 +1,10 @@
 <template>
   <div class="dropzone"
       v-if="fullScreenDragAndDrop &&(multiple || (!multiple && !files.length))"
+      v-on:dragenter.prevent="preventDefaultDropEvent"
+      v-on:dragover.prevent="preventDefaultDropEvent"
+      v-on:drop.prevent="handleDrop"
+      v-on:dragleave.prevent="hideDropZone"
       ref="dropzone"
       >
     <div class="dropzone-text">
@@ -280,16 +284,11 @@ export default defineComponent({
     }
 
     function initFullScreenDragAndDrop(){
-      if(!props.fullScreenDragAndDrop || !dropzone.value){
+      if(!props.fullScreenDragAndDrop){
         return;
       }
 
       window.addEventListener('dragenter', showDropZone);
-
-      dropzone.value.addEventListener('dragenter', preventDefaultDropEvent);
-      dropzone.value.addEventListener('dragover', preventDefaultDropEvent);
-      dropzone.value.addEventListener('dragleave', hideDropZone);
-      dropzone.value.addEventListener('drop', handleDrop);
     }
 
     onMounted(() => {
@@ -350,6 +349,8 @@ export default defineComponent({
       handleDragOver,
       handleDragLeave,
       handleDrop,
+      hideDropZone,
+      preventDefaultDropEvent,
       isImage,
       fileInput,
       validationError,

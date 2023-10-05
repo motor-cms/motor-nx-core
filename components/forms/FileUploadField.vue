@@ -1,19 +1,14 @@
 <template>
   <div class="dropzone"
-      v-if="fullScreenDragAndDrop &&(multiple || (!multiple && !files.length))"
-      v-on:dragenter.prevent="preventDefaultDropEvent"
-      v-on:dragover.prevent="preventDefaultDropEvent"
-      v-on:drop.prevent="handleDrop"
-      v-on:dragleave.prevent="hideDropZone"
-      ref="dropzone"
-      >
+    v-if="fullScreenDragAndDrop"
+    v-on:dragenter.prevent="preventDefaultDropEvent"
+    v-on:dragover.prevent="preventDefaultDropEvent"
+    v-on:drop.prevent="handleDrop"
+    v-on:dragleave.prevent="hideDropZone"
+    ref="dropzone"
+  >
     <div class="dropzone-text">
-      <template v-if="multiple">
-        {{ $t('motor-media.global.drop_files_here') }}
-      </template>
-      <template v-else>
-        {{ $t('motor-media.global.drop_file_here') }}
-      </template>
+      {{ dropzoneText }}
     </div>
   </div>
 
@@ -27,73 +22,44 @@
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
       {{ validationErrorMessage }}
     </div>
-    <div
-      v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+
+    <!-- Highlight small drop zone for Fullscreen drag and drop -->
+    <div v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
       class="col-md-4 drop-zone"
-      :class="{
-          over: status.over,
-        }"
+      :class="{ over: status.over }"
     >
-        <span>
-          <template v-if="multiple">
-            {{ $t('motor-media.global.drop_files_here') }}
-          </template>
-          <template v-else>
-            {{ $t('motor-media.global.drop_file_here') }}
-          </template>
-        </span>
+      <span> {{ dropzoneText }} </span>
     </div>
-    <div
-      v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+
+    <!-- Display drop zone for non-fullscreen drag and drop -->
+    <div v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
       class="col-md-4 drop-zone"
       v-on:dragover.prevent="handleDragOver"
       v-on:drop.prevent="handleDrop"
       v-on:dragleave.prevent="handleDragLeave"
-      :class="{
-          over: status.over,
-        }"
+      :class="{ over: status.over }"
     >
-        <span>
-          <template v-if="multiple">
-            {{ $t('motor-media.global.drop_files_here') }}
-          </template>
-          <template v-else>
-            {{ $t('motor-media.global.drop_file_here') }}
-          </template>
-        </span>
+      <span> {{ dropzoneText }} </span>
     </div>
-    <div
+
+    <div v-for="(file, index) in files"
+      :key="index"
       class="row"
       style="padding-left: 0.75rem"
-      v-for="(file, index) in files"
-      :key="index"
     >
       <div
         class="col-md-4 drop-zone"
-        :style="
-          isImage(file.mime_type)
-            ? 'background-image:url(' +
-              (file.url) +
-              ');'
+        :style=" isImage(file.mime_type)
+            ? 'background-image:url(' + (file.url) + ');'
             : ''
         "
       >
-        <span v-if="file.url === ''">
-          <template v-if="multiple">
-            {{ $t('motor-media.global.drop_files_here') }}
-          </template>
-          <template v-else>
-            {{ $t('motor-media.global.drop_file_here') }}
-          </template>
-        </span>
+        <span v-if="file.url === ''"> {{ dropzoneText }} </span>
         <span v-if="!isImage(file.mime_type)" style="overflow-wrap: anywhere">
           {{ file.mime_type }}
         </span>
       </div>
-      <div
-        class="col-md-8"
-        v-if="file.name !== ''"
-      >
+      <div v-if="file.name !== ''" class="col-md-8" >
         <button
           v-if="allowDelete"
           @click="deleteFile(file.name)"
@@ -102,15 +68,9 @@
         >
           <fa icon="trash-alt"/>
         </button>
-        <p><strong>File:</strong> {{ file.name }}</p>
-        <p>
-          <strong>Type:</strong>
-          {{ file.mime_type }}
-        </p>
-        <p>
-          <strong>Size:</strong>
-          {{ file.size }} kb
-        </p>
+        <p><strong>{{ $t('motor-media.global.file') }}:</strong> {{ file.name }} </p>
+        <p><strong>{{ $t('motor-media.global.type') }}:</strong> {{ file.mime_type }} </p>
+        <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ file.size }} kb </p>
       </div>
     </div>
 </div>
@@ -118,6 +78,7 @@
 <script lang="ts">
 import {defineComponent, ref, watch} from 'vue'
 import {useField} from "vee-validate";
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'FileUploadField',
@@ -157,9 +118,16 @@ export default defineComponent({
       default: false,
     }
   },
-  setup(props, ctx) {
+  setup(props) {
+    const { t } = useI18n()
     const dropzone = ref<HTMLInputElement | null>(null);
-    const form = ref<HTMLInputElement | null>(null);
+
+    // Computed property for dropzone text based on props
+    const dropzoneText = computed(() => {
+      return props.multiple
+        ? t('motor-media.global.drop_files_here')
+        : t('motor-media.global.drop_file_here');
+    });
 
     const {
       value: inputValue,
@@ -197,8 +165,6 @@ export default defineComponent({
       over: false,
       dropped: false,
     })
-
-    const fileCount = ref(0)
 
     const validationError = ref(false)
     const validationErrorMessage = ref("");
@@ -247,7 +213,6 @@ export default defineComponent({
 
         // Wait for the browser to finish reading and fire the onloaded-event:
         reader.onloadend = (event) => {
-          fileCount.value++
           // Take the reader's result and use it for the next method
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
@@ -356,34 +321,9 @@ export default defineComponent({
       validationError,
       validationErrorMessage,
       inputValue,
-      dropzone
+      dropzone,
+      dropzoneText
     }
   },
 })
 </script>
-
-<style>
-.dropzone {
-	box-sizing: border-box;
-	display: none;
-	position: fixed;
-	width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 99990;
-  justify-content: center;
-  align-items: center;
-
-	background: rgba(0, 255, 242, 0.1);
-	border: 8px dashed cyan;
-}
-
-.dropzone-text {
-  color: black;
-  font-size: 50px;
-  text-align:center;
-  font-weight: bold;
-  pointer-events: none;
-}
-</style>

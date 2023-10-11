@@ -37,7 +37,7 @@ export const useUserStore = defineStore('users', () => {
 
   const login = async (email: string, password: string): Promise<void> => {
       const runTimeConfig = useRuntimeConfig();
-      await useFetch(runTimeConfig.public.baseUrl + 'sanctum/csrf-cookie');
+      await useFetch(runTimeConfig.public.backendApiBaseUrl + 'sanctum/csrf-cookie');
       const {data} = await api.post('auth/login', {
         email,
         password

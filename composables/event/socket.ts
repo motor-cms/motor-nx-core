@@ -21,11 +21,12 @@ export default function useSocket() {
     }
   })
 
+  const runtimeConfig = useRuntimeConfig();
   const initialize = async () => {
     const PusherJS = Pusher;
     client.value = new PusherJS(import.meta.env.VITE_PUSHER_APP_KEY, {
       cluster: '',
-      authEndpoint: import.meta.env.VITE_PUBLIC_API_BASE_URL + 'api/broadcasting/auth',
+      authEndpoint: runtimeConfig.public.backendApiBaseUrl + 'api/broadcasting/auth',
       auth: {
         headers: {
           Authorization: "Bearer " + token.value,

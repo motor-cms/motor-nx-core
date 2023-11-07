@@ -1,8 +1,8 @@
 <template>
-  <div class="form-check" :class="{ 'has-danger': errorMessage }">
+  <div class="form-group" :class="{ 'has-danger': errorMessage }">
     <div class="atom-toggle">
-      <AdminTooltip v-if="!!hint" :text="hint" type="info" :style="{'margin-right': '5px'}" position="top"></AdminTooltip>
       <span class="atom-toggle__label">{{ label }}</span>
+      <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-top': '-8px'}"></AdminTooltip>
       <label :for="id" class="atom-toggle__switch">
         <input
           type="checkbox"
@@ -35,9 +35,9 @@ export default defineComponent({
     name: {
       type: String,
     },
-    hint: {
+    description: {
       type: String,
-      required: false,
+      default: '',
     }
   },
   setup(props, ctx) {
@@ -67,3 +67,15 @@ export default defineComponent({
   },
 })
 </script>
+<style>
+.atom-toggle__switch {
+  margin-left: 1rem;
+}
+.atom-toggle__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #344767;
+  margin-left: 0.25rem;
+}
+</style>

@@ -14,9 +14,9 @@
 
               <div class="col-md-6 text-end">
                 <component
-                  v-for="component in headerActions"
-                  :key="component.name"
-                  :is="component.name"
+                    v-for="component in headerActions"
+                    :key="component.name"
+                    :is="component.name"
                 />
                 <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
                   <button class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1">
@@ -32,18 +32,18 @@
             </div>
             <div class="row align-items-center">
               <component
-                v-for="f in filters"
-                :key="f.name"
-                :is="f.name"
-                :options="f.options"
-                @submit="submitFilter"
+                  v-for="f in filters"
+                  :key="f.name"
+                  :is="f.name"
+                  :options="f.options"
+                  @submit="submitFilter"
               ></component>
               <div class="col" v-if="hasGridActions && selectedItemsLength">
                 <div class="d-flex">
                   <select
-                    class="form-control max-width-100 d-inline me-2"
-                    name="per-page"
-                    v-model="gridAction"
+                      class="form-control max-width-100 d-inline me-2"
+                      name="per-page"
+                      v-model="gridAction"
                   >
                     <option v-for="action in gridActions" :value="action">{{ action.label }}</option>
                   </select>
@@ -61,9 +61,9 @@
                   </li>
 
                   <li
-                    class="page-item"
-                    @click="firstPage"
-                    v-if="meta.current_page > 1"
+                      class="page-item"
+                      @click="firstPage"
+                      v-if="meta.current_page > 1"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-left"/>
@@ -71,9 +71,9 @@
                     </a>
                   </li>
                   <li
-                    class="page-item"
-                    @click="previousPage"
-                    v-if="meta.current_page > 1"
+                      class="page-item"
+                      @click="previousPage"
+                      v-if="meta.current_page > 1"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-left"/>
@@ -81,10 +81,10 @@
                   </li>
                   <li>
                     <select
-                      class="form-control"
-                      name="per-page"
-                      @change="goToPage"
-                      v-model="filterValues.page"
+                        class="form-control"
+                        name="per-page"
+                        @change="goToPage"
+                        v-model="filterValues.page"
                     >
                       <option v-for="option in pageOptions" :value="option">Seite {{ option }} von
                         {{ meta.last_page }}
@@ -92,9 +92,9 @@
                     </select>
                   </li>
                   <li
-                    class="page-item"
-                    @click="nextPage()"
-                    v-if="meta.current_page < meta.last_page"
+                      class="page-item"
+                      @click="nextPage()"
+                      v-if="meta.current_page < meta.last_page"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right"/>
@@ -102,9 +102,9 @@
                   </li>
 
                   <li
-                    class="page-item"
-                    @click="lastPage()"
-                    v-if="meta.current_page < meta.last_page"
+                      class="page-item"
+                      @click="lastPage()"
+                      v-if="meta.current_page < meta.last_page"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right"/>
@@ -113,8 +113,8 @@
                   </li>
 
                   <li
-                    class="page-item disabled"
-                    v-if="meta.current_page === meta.last_page"
+                      class="page-item disabled"
+                      v-if="meta.current_page === meta.last_page"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right"/>
@@ -122,10 +122,10 @@
                   </li>
                 </ul>
                 <select
-                  class="form-control max-width-100 d-inline float-end me-2"
-                  name="per-page"
-                  @change="submitFilter($event)"
-                  v-model="filterValues.per_page"
+                    class="form-control max-width-100 d-inline float-end me-2"
+                    name="per-page"
+                    @change="submitFilter($event)"
+                    v-model="filterValues.per_page"
                 >
                   <option value="25">25</option>
                   <option value="50">50</option>
@@ -149,9 +149,9 @@
                   <div class="form-check d-flex align-items-center"
                        @click.prevent="selectPopoverActive = !selectPopoverActive">
                     <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :checked="allSelected || pageSelected"
+                        type="checkbox"
+                        class="form-check-input"
+                        :checked="allSelected || pageSelected"
                     />
                     <p v-if="!allSelected"
                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
@@ -164,10 +164,10 @@
                   <Popover v-if="selectPopoverActive">
                     <div class="form-check">
                       <input
-                        type="checkbox"
-                        class="form-check-input"
-                        :checked="pageSelected"
-                        @input="setPageSelected"
+                          type="checkbox"
+                          class="form-check-input"
+                          :checked="pageSelected"
+                          @input="setPageSelected"
                       />
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         Select this page
@@ -175,10 +175,10 @@
                     </div>
                     <div class="form-check">
                       <input
-                        type="checkbox"
-                        class="form-check-input"
-                        :checked="allSelected"
-                        @input="setAllSelected"
+                          type="checkbox"
+                          class="form-check-input"
+                          :checked="allSelected"
+                          @input="setAllSelected"
                       />
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         Select all
@@ -194,10 +194,10 @@
                 </div>
               </th>
               <th
-                v-for="column in columns"
-                :key="column.name"
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                :style="column.columnStyle"
+                  v-for="column in columns"
+                  :key="column.name"
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  :style="column.columnStyle"
               >
                 {{ column.name }}
               </th>
@@ -213,67 +213,67 @@
             </tr>
             <template v-if="loading && rows.length === 0 || updatingInBackground && rows.length === 0">
               <tr
-                v-for="index in 5"
-                :key="index"
-                :class="index % 2 === 1 ? 'bg-gray-100' : ''"
+                  v-for="index in 5"
+                  :key="index"
+                  :class="index % 2 === 1 ? 'bg-gray-100' : ''"
               >
                 <td
-                  v-for="column in columns"
-                  :key="column.name"
-                  class="align-middle text-sm text-wrap"
-                  :class="column.rowClass"
+                    v-for="column in columns"
+                    :key="column.name"
+                    class="align-middle text-sm text-wrap"
+                    :class="column.rowClass"
                 >
                   <div
-                    class="d-flex px-3 py-1"
-                    :class="column.rowWrapperClass"
+                      class="d-flex px-3 py-1"
+                      :class="column.rowWrapperClass"
                   >
                     <Skeletor
-                      height="30"
-                      :width="Math.random() * 20 + 80 + '%'"
+                        height="30"
+                        :width="Math.random() * 20 + 80 + '%'"
                     />
                   </div>
                 </td>
               </tr>
             </template>
             <tr
-              v-for="(row, index) in rows"
-              :key="row.id"
-              :class="index % 2 === 0 ? 'bg-gray-100' : ''"
+                v-for="(row, index) in rows"
+                :key="row.id"
+                :class="index % 2 === 0 ? 'bg-gray-100' : ''"
             >
               <td class="align-items-center text-sm" v-if="hasGridActions">
                 <div class="form-check">
                   <input
-                    type="checkbox"
-                    class="form-check-input"
-                    :disabled="allSelected"
-                    :name="name"
-                    :value="name"
-                    :checked="gridStore.isSelected(row) || allSelected"
-                    @input="gridStore.selectItem(row)"
+                      type="checkbox"
+                      class="form-check-input"
+                      :disabled="allSelected"
+                      :name="name"
+                      :value="name"
+                      :checked="gridStore.isSelected(row) || allSelected"
+                      @input="gridStore.selectItem(row)"
                   />
                 </div>
               </td>
               <td
-                v-for="column in columns"
-                :key="column.name"
-                class="align-middle text-sm text-wrap"
-                :class="column.rowClass"
+                  v-for="column in columns"
+                  :key="column.name"
+                  class="align-middle text-sm text-wrap"
+                  :class="column.rowClass"
               >
                 <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
                   <component
-                    v-for="component in column.components"
-                    :key="component.name"
-                    :is="component.name"
-                    :options="component.options"
-                    :record="row"
-                    :prop="column.prop"
-                    :resource="resource"
-                    :index="index"
-                    @submit="submitCell"
+                      v-for="component in column.components"
+                      :key="component.name"
+                      :is="component.name"
+                      :options="component.options"
+                      :record="row"
+                      :prop="column.prop"
+                      :resource="resource"
+                      :index="index"
+                      @submit="submitCell"
                   />
                   <template v-if="column.renderer">
                     <div
-                      v-html="
+                        v-html="
                           renderer(
                             column.renderer,
                             getPropertyValue(row, column.prop)
@@ -295,13 +295,13 @@
   </div>
 </template>
 <script lang="ts">
+import type {
+  Component
+} from 'vue'
 import {
-  Component,
-  ComponentInternalInstance,
   computed,
   defineComponent,
   getCurrentInstance,
-  nextTick,
   onMounted,
   reactive,
   ref,
@@ -322,9 +322,6 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
-import {raf} from "vue-easy-lightbox/types/utils/raf";
-import app from "vue-easy-lightbox/src/dev-entry/App.vue";
-
 
 interface GridAction {
   label: string,
@@ -420,7 +417,7 @@ export default defineComponent({
 
     const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
     const {t} = useI18n()
-    const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page? route.query.page : 1})
+    const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page ? route.query.page : 1})
 
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
@@ -449,13 +446,13 @@ export default defineComponent({
     }
 
     const renderer = (
-      renderer: {
-        type: string
-        path: string
-        format: string
-        property: string
-      },
-      value: any
+        renderer: {
+          type: string
+          path: string
+          format: string
+          property: string
+        },
+        value: any
     ): string => {
       switch (renderer.type) {
         case 'translation':
@@ -563,7 +560,7 @@ export default defineComponent({
       gridStore.init(props.meta);
     })
 
-    const { $toast } = useNuxtApp();
+    const {$toast} = useNuxtApp();
     const processGridAction = async () => {
       try {
         appStore.isLoading(true)

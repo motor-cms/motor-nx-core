@@ -5,7 +5,7 @@
       scrollDisabled
       moveDisabled
       :visible="visible"
-      :imgs="[record[prop].conversions.thumb]"
+      :imgs="[record[prop].conversions.preview]"
       :index="0"
       @hide="visible = false"
     >
@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 // Todo: check if is needed?
-// import VueEasyLightbox from 'vue-easy-lightbox'
+import VueEasyLightbox from 'vue-easy-lightbox'
 
 export default defineComponent({
   name: 'File',
@@ -44,7 +44,7 @@ export default defineComponent({
     prop: String,
   },
   components: {
-    // VueEasyLightbox,
+    VueEasyLightbox,
   },
   setup() {
     const visible = ref(false)

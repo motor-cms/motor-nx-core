@@ -13,27 +13,29 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   console.log("Defining validation rules...")
+
+  const currentLocale = nuxtApp.vueApp.config.globalProperties.$i18n.locale;
   setLocale({
     // use constant translation keys for messages without values
     mixed: {
-      default: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages._default.replace('{field}', label)),
-      required: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
-      notType: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.one_of.replace('{field}', label))
+      default: ({label}) => (validationTranslations[currentLocale].messages._default.replace('{field}', label)),
+      required: ({label}) => (validationTranslations[currentLocale].messages.required.replace('{field}', label)),
+      notType: ({label}) => (validationTranslations[currentLocale].messages.one_of.replace('{field}', label))
     },
     // use functions to generate an error object that includes the value from the schema
     number: {
-      min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min_value.replace('{field}', label).replace('{min}', min)),
-      max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.max_value.replace('{field}', label).replace('{max}', max)),
-      integer: ({ label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.integer.replace('{field}', label)),
+      min: ({ min, label }) => (validationTranslations[currentLocale].messages.min_value.replace('{field}', label).replace('{min}', min)),
+      max: ({ max, label }) => (validationTranslations[currentLocale].messages.max_value.replace('{field}', label).replace('{max}', max)),
+      integer: ({ label }) => (validationTranslations[currentLocale].messages.integer.replace('{field}', label)),
     },
     string: {
-      min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.min.replace('{field}', label).replace('{length}', min)),
-      max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.max.replace('{field}', label).replace('{length}', max)),
-      email: ({label}) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.email.replace('{field}', label)),
+      min: ({ min, label }) => (validationTranslations[currentLocale].messages.min.replace('{field}', label).replace('{length}', min)),
+      max: ({ max, label }) => (validationTranslations[currentLocale].messages.max.replace('{field}', label).replace('{length}', max)),
+      email: ({label}) => (validationTranslations[currentLocale].messages.email.replace('{field}', label)),
     },
     array: {
-      min: ({ min, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
-      max: ({ max, label }) => (validationTranslations[nuxtApp.vueApp.__VUE_I18N__.global.locale.value].messages.required.replace('{field}', label)),
+      min: ({ min, label }) => (validationTranslations[currentLocale].messages.required.replace('{field}', label)),
+      max: ({ max, label }) => (validationTranslations[currentLocale].messages.required.replace('{field}', label)),
     },
     date: {
 

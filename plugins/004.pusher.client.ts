@@ -1,4 +1,4 @@
-import useSocket from "~/packages/motor-nx-core/composables/event/socket";
+import useSocket from "@zrm/motor-nx-core/composables/event/socket";
 
 import {watch} from "vue";
 

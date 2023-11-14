@@ -18,7 +18,7 @@
                       {{ $t('global.back') }}
                     </button>
                   </NuxtLink>
-                  <button v-if="withSaving" class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground">
+                  <button v-if="withSaving" class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground || !saveable">
                     {{ $t('global.save') }}
                   </button>
                 </div>
@@ -64,11 +64,18 @@ export default defineComponent({
     const route = routeParser.routeDottedToSlash(props.backRoute)
     const appStore = useAppStore();
     const { loading, updatingInBackground} = storeToRefs(appStore);
+    const formStore = useFormStore();
+    const { form } = storeToRefs(formStore);
+    const saveable = computed(() => {
+      return form.value.meta.valid;
+    })
+
     return {
       submit,
       route,
       loading,
-      updatingInBackground
+      updatingInBackground,
+      saveable
     }
   },
 })

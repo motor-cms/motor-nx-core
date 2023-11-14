@@ -1,25 +1,27 @@
 <template>
-  <draggable
-    class="dragArea"
-    tag="ul"
-    :list="tree"
-    :group="{ name: 'g1' }"
-    :move="checkMove"
-    item-key="id"
-  >
-    <template #item="{ element }">
-      <li>
-        <fa v-if="element.id !== record" icon="folder" />
-        <fa
-          v-if="element.id === record"
-          icon="file"
-          style="color: #cb0c9f"
-        />
-        {{ element.name }}
-        <nested-draggable :tree="element.children" :record="record" />
-      </li>
-    </template>
-  </draggable>
+  <client-only>
+    <draggable
+      class="dragArea"
+      tag="ul"
+      :list="tree"
+      :group="{ name: 'g1' }"
+      :move="checkMove"
+      item-key="id"
+    >
+      <template #item="{ element }">
+        <li>
+          <fa v-if="element.id !== record" icon="folder" />
+          <fa
+            v-if="element.id === record"
+            icon="file"
+            style="color: #cb0c9f"
+          />
+          {{ element.name }}
+          <nested-draggable :tree="element.children" :record="record" />
+        </li>
+      </template>
+    </draggable>
+  </client-only>
 </template>
 <script lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'

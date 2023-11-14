@@ -3,7 +3,8 @@ import {UseFetchOptions} from "#app";
 import {sha256} from "ohash";
 
 export default function useApi(useRpc: boolean = false) {
-  const baseUrl = useRpc ? import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_RPC_SLUG : import.meta.env.VITE_PUBLIC_API_BASE_URL + import.meta.env.VITE_PUBLIC_API_SLUG;
+  const runtimeConfig = useRuntimeConfig();
+  const baseUrl = String(runtimeConfig.public.backendApiBaseUrl) + String(runtimeConfig.public.backendApiSlug);
   const userStore = useUserStore();
 
 

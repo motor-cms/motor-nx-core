@@ -13,22 +13,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import {useToast} from "vue-toastification";
-
 import {storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
-import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {ref} from "vue";
 
 const notificationStore = useNotificationStore();
 const {latestNotification, notifications} = storeToRefs(notificationStore);
 const {t} = useI18n();
-const toast = useToast()
+const { $toast } = useNuxtApp()
 const notificationCenterOpen = ref(false);
 
 watch(() => latestNotification.value, () => {
   if (!latestNotification.value) return;
-  toast.info(t(latestNotification.value.message))
+  $toast.info(t(latestNotification.value.message))
 });
 
 </script>

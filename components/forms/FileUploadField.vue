@@ -1,5 +1,18 @@
 <template>
-  <div class="form-group" :class="{ 'has-danger': validationError}">
+  <div class="dropzone"
+    v-if="fullScreenDragAndDrop"
+    v-on:dragenter.prevent="preventDefaultDropEvent"
+    v-on:dragover.prevent="preventDefaultDropEvent"
+    v-on:drop.prevent="handleDrop"
+    v-on:dragleave.prevent="hideDropZone"
+    ref="dropzone"
+  >
+    <div class="dropzone-text">
+      {{ dropzoneText }}
+    </div>
+  </div>
+
+  <div ref="form" class="form-group" :class="{ 'has-danger': validationError}">
     <label :for="id">
       {{ label }}
     </label>
@@ -9,57 +22,44 @@
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
       {{ validationErrorMessage }}
     </div>
-    <div
-      v-if="multiple || (!multiple && !files.length)"
+
+    <!-- Highlight small drop zone for Fullscreen drag and drop -->
+    <div v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+      class="col-md-4 drop-zone"
+      :class="{ over: status.over }"
+    >
+      <span> {{ dropzoneText }} </span>
+    </div>
+
+    <!-- Display drop zone for non-fullscreen drag and drop -->
+    <div v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
       class="col-md-4 drop-zone"
       v-on:dragover.prevent="handleDragOver"
       v-on:drop.prevent="handleDrop"
       v-on:dragleave.prevent="handleDragLeave"
-      :class="{
-          over: status.over,
-        }"
+      :class="{ over: status.over }"
     >
-        <span>
-          <template v-if="multiple">
-            {{ $t('motor-media.global.drop_files_here') }}
-          </template>
-          <template v-else>
-            {{ $t('motor-media.global.drop_file_here') }}
-          </template>
-        </span>
+      <span> {{ dropzoneText }} </span>
     </div>
-    <div
+
+    <div v-for="(file, index) in files"
+      :key="index"
       class="row"
       style="padding-left: 0.75rem"
-      v-for="(file, index) in files"
-      :key="index"
     >
       <div
         class="col-md-4 drop-zone"
-        :style="
-          isImage(file.mime_type)
-            ? 'background-image:url(' +
-              (file.url) +
-              ');'
+        :style=" isImage(file.mime_type)
+            ? 'background-image:url(' + (file.url) + ');'
             : ''
         "
       >
-        <span v-if="file.url === ''">
-          <template v-if="multiple">
-            {{ $t('motor-media.global.drop_files_here') }}
-          </template>
-          <template v-else>
-            {{ $t('motor-media.global.drop_file_here') }}
-          </template>
-        </span>
+        <span v-if="file.url === ''"> {{ dropzoneText }} </span>
         <span v-if="!isImage(file.mime_type)" style="overflow-wrap: anywhere">
           {{ file.mime_type }}
         </span>
       </div>
-      <div
-        class="col-md-8"
-        v-if="file.name !== ''"
-      >
+      <div v-if="file.name !== ''" class="col-md-8" >
         <button
           v-if="allowDelete"
           @click="deleteFile(file.name)"
@@ -68,22 +68,17 @@
         >
           <fa icon="trash-alt"/>
         </button>
-        <p><strong>File:</strong> {{ file.name }}</p>
-        <p>
-          <strong>Type:</strong>
-          {{ file.mime_type }}
-        </p>
-        <p>
-          <strong>Size:</strong>
-          {{ file.size }} kb
-        </p>
+        <p><strong>{{ $t('motor-media.global.file') }}:</strong> {{ file.name }} </p>
+        <p><strong>{{ $t('motor-media.global.type') }}:</strong> {{ file.mime_type }} </p>
+        <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ file.size }} kb </p>
       </div>
     </div>
-  </div>
+</div>
 </template>
 <script lang="ts">
 import {defineComponent, ref, watch} from 'vue'
 import {useField} from "vee-validate";
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'FileUploadField',
@@ -117,8 +112,22 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    //!Don't use multiple FullScreenDragAndDrop Upload Fields on the same Page. Will lead to unexpected behaviour!
+    fullScreenDragAndDrop: {
+      type: Boolean,
+      default: false,
+    }
   },
-  setup(props, ctx) {
+  setup(props) {
+    const { t } = useI18n()
+    const dropzone = ref<HTMLInputElement | null>(null);
+
+    // Computed property for dropzone text based on props
+    const dropzoneText = computed(() => {
+      return props.multiple
+        ? t('motor-media.global.drop_files_here')
+        : t('motor-media.global.drop_file_here');
+    });
 
     const {
       value: inputValue,
@@ -128,6 +137,7 @@ export default defineComponent({
       meta,
     } = useField(<string>props.name, undefined, {
       initialValue: props.modelValue,
+      syncVModel: true
     })
 
     const fileTemplate = {
@@ -156,19 +166,20 @@ export default defineComponent({
       dropped: false,
     })
 
-    const fileCount = ref(0)
-
     const validationError = ref(false)
     const validationErrorMessage = ref("");
-    const handleDragOver = (event: any) => {
-      status.value.over = true
+
+    const handleDragOver = () => {
+      status.value.over = true;
     }
 
     const handleDragLeave = () => {
-      status.value.over = false
+      status.value.over = false;
     }
 
     const handleDrop = (event: any) => {
+      event.preventDefault();
+      hideDropZone();
       status.value.dropped = true
       status.value.over = false
       validationError.value = false;
@@ -202,11 +213,11 @@ export default defineComponent({
 
         // Wait for the browser to finish reading and fire the onloaded-event:
         reader.onloadend = (event) => {
-          fileCount.value++
           // Take the reader's result and use it for the next method
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
           tempFile.file = <string>fileResult
+          console.log('DEBUG: ', tempFile);
           parsedFiles.value.push(tempFile)
           if (!props.multiple) {
             handleChange(parsedFiles.value[0], false)
@@ -217,7 +228,42 @@ export default defineComponent({
       }
     }
 
+    function showDropZone() {
+      if (!dropzone.value){
+        return;
+      }
+      dropzone.value.style.display = "flex";
+      handleDragOver();
+    }
 
+    function hideDropZone() {
+      if (!dropzone.value){
+        return;
+      }
+      dropzone.value.style.display = "none";
+      status.value.over = false;
+    }
+
+    function preventDefaultDropEvent(e: DragEvent) {
+        e.preventDefault();
+    }
+
+    function initFullScreenDragAndDrop(){
+      if(!props.fullScreenDragAndDrop){
+        return;
+      }
+
+      window.addEventListener('dragenter', showDropZone);
+    }
+
+    onMounted(() => {
+      initFullScreenDragAndDrop();
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('dragenter', showDropZone);
+    });
+    
     // Check mimetype before displaying an image
     const isImage = (type: string) => {
       const mimeTypes = [
@@ -239,7 +285,7 @@ export default defineComponent({
         handleChange(parsedFiles.value, false);
       } else {
         parsedFiles.value = [];
-        handleChange({}, false);
+        handleChange(null, false);
       }
     }
 
@@ -253,7 +299,7 @@ export default defineComponent({
         } else {
           parsedFiles.value = inputValue.value;
         }
-    })
+    }, {immediate: true})
 
 
     onMounted(() => {
@@ -268,11 +314,15 @@ export default defineComponent({
       handleDragOver,
       handleDragLeave,
       handleDrop,
+      hideDropZone,
+      preventDefaultDropEvent,
       isImage,
       fileInput,
       validationError,
       validationErrorMessage,
-      inputValue
+      inputValue,
+      dropzone,
+      dropzoneText
     }
   },
 })

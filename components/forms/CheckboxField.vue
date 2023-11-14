@@ -1,16 +1,17 @@
-    <template>
-  <div class="form-check" :class="{ 'has-danger': errorMessage }">
-	  <div class="atom-toggle">
-		  <span class="atom-toggle__label">{{ label }}</span>
-		  <label :for="id" class="atom-toggle__switch">
-			  <input
-						type="checkbox"
-						:name="name"
-						:value="modelValue"
-						:checked="modelValue">
-			  <span class="atom-toggle__slider" @click="emitUpdate" ></span>
-		  </label>
-	  </div>
+<template>
+  <div class="form-group" :class="{ 'has-danger': errorMessage }">
+    <div class="atom-toggle">
+      <span class="atom-toggle__label">{{ label }}</span>
+      <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-top': '-8px'}"></AdminTooltip>
+      <label :for="id" class="atom-toggle__switch">
+        <input
+          type="checkbox"
+          :name="name"
+          :value="modelValue"
+          :checked="modelValue">
+        <span class="atom-toggle__slider" @click="emitUpdate" ></span>
+      </label>
+    </div>
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
     </p>
@@ -34,6 +35,10 @@ export default defineComponent({
     name: {
       type: String,
     },
+    description: {
+      type: String,
+      default: '',
+    }
   },
   setup(props, ctx) {
     const { checked, handleChange, errorMessage, meta } = useField(
@@ -45,20 +50,32 @@ export default defineComponent({
       }
     )
 
-	  const emitUpdate = () => {
-			console.log(props.modelValue);
-	    ctx.emit('update:modelValue', !props.modelValue);
-	  }
+    const emitUpdate = () => {
+      console.log(props.modelValue);
+      ctx.emit('update:modelValue', !props.modelValue);
+    }
     // select/unselect the input
- //   handleChange(<string>props.modelValue)
+    //   handleChange(<string>props.modelValue)
 
     return {
       checked, // readonly
-  //    handleChange,
+      //    handleChange,
       errorMessage,
       meta,
-	    emitUpdate
+      emitUpdate
     }
   },
 })
 </script>
+<style>
+.atom-toggle__switch {
+  margin-left: 1rem;
+}
+.atom-toggle__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #344767;
+  margin-left: 0.25rem;
+}
+</style>

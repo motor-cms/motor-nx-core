@@ -2,7 +2,7 @@
   <template v-if="authenticated">
   <AdminContainer>
     <AdminPartialsSpinner v-if="loading"/>
-    <div>
+    <div class="builder-main-container">
       <slot/>
     </div>
   </AdminContainer>
@@ -22,3 +22,11 @@ const {loading} = storeToRefs(appStore)
 
 import Login from "@zrm/motor-nx-core/pages/admin/Login.vue";
 </script>
+
+<style>
+.builder-main-container {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+</style>

@@ -3,7 +3,7 @@
     :to="to"
   >
     <button
-      class="btn btn-info btn-sm me-2"
+      class="btn btn-primary btn-sm me-2"
       type="button"
       :title="options.name"
     >

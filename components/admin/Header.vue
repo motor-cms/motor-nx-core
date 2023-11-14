@@ -67,12 +67,12 @@
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
             <a
-              href="javascript:;"
               class="nav-link text-body p-0"
               id="iconNavbarSidenav"
               @click="toggleNavbar"
             >
-              <fa icon="bars"/>
+              <fa icon="bars" v-if="!sidebarOpen"/>
+              <fa icon="close" v-else />
             </a>
           </li>
         </ul>
@@ -89,28 +89,19 @@ import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
 
 import {storeToRefs} from "pinia";
-import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
-import {has} from "immutable";
-import Popover from "~/packages/motor-nx-core/components/admin/cell/Popover.vue";
-import EventNotificationHub from "~/packages/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
+import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
+import EventNotificationHub from "@zrm/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
 
 
 export default defineComponent({
   name: 'AdminHeader',
   components: {EventNotificationHub, Popover, AdminModalLogout, ClientSwitch},
-  methods: {
-    has,
-    toggleNavbar() {
-      document.querySelector('aside').classList.toggle('open');
-    }
-  },
   setup() {
     const userStore = useUserStore()
-    const {removeUser} = userStore
     const {navbarSlot} = useTeleport();
     const active = ref(false)
     const appStore = useAppStore();
-    const {updatingInBackground} = storeToRefs(appStore)
     const {hasRole} = useRolesAndPermissions();
 
     const router = useRouter()
@@ -146,6 +137,10 @@ export default defineComponent({
       return []
     })
 
+    const toggleNavbar = () => {
+      appStore.toggleSidebar();
+    }
+
     return {
       title,
       breadcrumbs,
@@ -154,9 +149,10 @@ export default defineComponent({
       logout,
       active,
       ...storeToRefs(userStore),
+      ...storeToRefs(appStore),
       navbarSlot,
-      updatingInBackground,
       hasRole,
+      toggleNavbar
     }
   },
 })

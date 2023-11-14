@@ -3,6 +3,7 @@
     <label :for="id">
       {{ label }}
     </label>
+    <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-left': '5px'}"></AdminTooltip>
     <input
       :required="required"
       :type="type"
@@ -12,16 +13,13 @@
       v-model="value"
       :class="{ 'is-invalid': errorMessage }"
       @blur="blur"
-      :disabled="disableForms"
+      :disabled="disableForms || disabled"
       :min="min ?? ''"
       :max="max ?? ''"
       @input="changed"
     />
     <p class="text-danger" v-if="errorMessage && meta.touched">
       {{ errorMessage }}
-    </p>
-    <p v-if="description.length" class="text-sm">
-      {{description}}
     </p>
   </div>
 </template>
@@ -60,6 +58,10 @@ export default defineComponent({
     max: {
       type: (Number || String),
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     description: {
       type: String,
       default: '',
@@ -91,6 +93,8 @@ export default defineComponent({
       handleBlur(e)
       emit('blur', (<HTMLInputElement>e.target).value)
     }
+
+    emit('initialized');
 
     return {
       handleChange,

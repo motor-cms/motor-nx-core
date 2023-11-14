@@ -20,7 +20,7 @@ const userStore = useUserStore();
 const { authenticated } = storeToRefs(userStore);
 const {loading} = storeToRefs(appStore)
 
-import Login from "~/packages/motor-nx-core/pages/admin/Login.vue";
+import Login from "@zrm/motor-nx-core/pages/admin/Login.vue";
 </script>
 
 <style>

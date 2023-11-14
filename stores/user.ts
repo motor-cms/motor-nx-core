@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import { ref} from 'vue'
 import {useAppStore} from './app'
 import { CookieRef} from "#app";
-import useApi from "~/packages/motor-nx-core/composables/http/api";
+import useApi from "@zrm/motor-nx-core/composables/http/api";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
@@ -36,7 +36,8 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const login = async (email: string, password: string): Promise<void> => {
-      await useFetch(import.meta.env.VITE_PUBLIC_API_BASE_URL + 'sanctum/csrf-cookie');
+      const runTimeConfig = useRuntimeConfig();
+      await useFetch(runTimeConfig.public.backendApiBaseUrl + 'sanctum/csrf-cookie');
       const {data} = await api.post('auth/login', {
         email,
         password

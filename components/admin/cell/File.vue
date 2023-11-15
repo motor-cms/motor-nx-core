@@ -20,9 +20,10 @@
     />
     <a
       :href="record[prop].url"
+      target="_blank"
       v-if="record.exists"
       type="button"
-      class="btn btn-sm btn-secondary"
+      class="btn btn-sm btn-secondary d-block"
     >
       {{ $t('motor-media.global.download') }}
     </a>

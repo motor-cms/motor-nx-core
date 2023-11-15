@@ -85,7 +85,7 @@ export default defineComponent({
 
     const fileSize = computed(() => {
       if (props.file.size) {
-        return props.file.size + ' kb';
+        return props.file.size_human;
       }
       return '';
     })

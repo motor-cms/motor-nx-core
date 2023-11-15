@@ -619,3 +619,13 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped lang="scss">
+	.pagination {
+		gap: 8px;
+
+		.page-item .page-link, .page-item span {
+			margin: 0;
+		}
+	}
+</style>

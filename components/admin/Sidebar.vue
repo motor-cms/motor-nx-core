@@ -189,6 +189,10 @@ watch(() => route.fullPath, () => {
   cursor: pointer;
 }
 
+.sidenav {
+	background-color: var(--c-light-100);
+}
+
 .sidebar-dropdown {
   max-height: 0;
   overflow-y: hidden;

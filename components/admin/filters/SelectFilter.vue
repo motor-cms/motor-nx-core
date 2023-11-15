@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-3">
     <select
-      v-model="value"
+      v-model="selected"
       @change="submitFilter"
       class="form-control"
     >
@@ -28,21 +28,18 @@ export default defineComponent({
   },
   emits: ['submit'],
   setup(props, ctx) {
-    const data = reactive({
-      value: '',
-    })
+    const selected = ref('');
 
     const router = useRouter();
     const route = useRoute();
     const submitFilter = () => {
       let routeQuery = {}
-      routeQuery[props.options.parameter] = data.value
-      console.log(routeQuery)
+      routeQuery[props.options.parameter] = selected.value
       router.replace({query: Object.assign(route.query, routeQuery)});
-      ctx.emit('submit', { parameter: props.options.parameter, value: data.value })
+      ctx.emit('submit', { parameter: props.options.parameter, value: selected.value })
     }
     return {
-      ...data,
+      selected,
       submitFilter
     }
   },

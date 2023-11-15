@@ -1,6 +1,6 @@
 <template>
   <AdminPartialsSpinner v-if="loading"/>
-  <div v-if="!loading && !userStore.authenticated">
+  <div class="login" v-if="!loading && !userStore.authenticated">
     <section>
       <div class="page-header section-height-75">
         <div class="container">

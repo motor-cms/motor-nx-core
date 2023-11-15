@@ -424,6 +424,9 @@ export default defineComponent({
     const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
     const submitFilter = (data: { parameter: string; value: string }) => {
+      // Add search filter
+      filterValues[data.parameter] = data.value.value;
+
       // Reset page when filtering or searching
       filterValues.page = 1
       if (data.parameter) {

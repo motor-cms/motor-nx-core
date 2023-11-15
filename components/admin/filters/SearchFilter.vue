@@ -20,7 +20,6 @@ const emits = defineEmits(['submit'])
 const submitSearch = async () => {
   await router.replace({query: Object.assign(route.query, {search: term.value})});
   route.query.search = term.value
-  console.log(route.query)
   emits('submit', { parameter: 'search', value: term })
 }
 </script>

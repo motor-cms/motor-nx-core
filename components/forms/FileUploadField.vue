@@ -70,7 +70,7 @@
         </button>
         <p><strong>{{ $t('motor-media.global.file') }}:</strong> {{ file.name }} </p>
         <p><strong>{{ $t('motor-media.global.type') }}:</strong> {{ file.mime_type }} </p>
-        <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ file.size }} kb </p>
+        <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ file.size_human }} </p>
       </div>
     </div>
 </div>
@@ -263,7 +263,7 @@ export default defineComponent({
     onBeforeUnmount(() => {
       window.removeEventListener('dragenter', showDropZone);
     });
-    
+
     // Check mimetype before displaying an image
     const isImage = (type: string) => {
       const mimeTypes = [

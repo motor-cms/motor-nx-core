@@ -26,7 +26,7 @@
 <script lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
-import DraggableContent from '../../../types/draggable-content'
+import type DraggableContent from "@zrm/motor-nx-core/types/draggable-content";
 
 export default defineComponent({
   props: {

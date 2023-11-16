@@ -123,4 +123,13 @@ const loginUser = async () => {
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
 
+
+onMounted(() => {
+ // Add keyup enter event listener to button
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      loginUser()
+    }
+  })
+})
 </script>

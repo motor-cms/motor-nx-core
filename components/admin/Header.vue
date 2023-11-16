@@ -35,11 +35,10 @@
       </nav>
       <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto" id="navbar">
         <ul class="ms-md-auto pe-md-3 d-flex navbar-nav justify-content-end">
-          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot"/>
-          <li class="nav-item d-flex align-items-center mx-6" ref="navbarSlot">
+          <li class="nav-item d-flex align-items-center mx-3 mx-xxl-5" ref="navbarSlot">
             <EventNotificationHub/>
           </li>
-          <li class="nav-item d-flex align-items-center mx-6 w-20" v-if="hasRole('SuperAdmin')">
+          <li class="nav-item d-flex align-items-center mx-3 mx-xxl-5 w-25" v-if="hasRole('SuperAdmin')">
             <ClientSwitch/>
           </li>
           <li class="nav-item d-flex align-items-center" v-if="authenticated">

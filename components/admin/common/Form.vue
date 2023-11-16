@@ -80,3 +80,8 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped lang="scss">
+	form {
+		width: 100%;
+	}
+</style>

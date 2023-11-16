@@ -94,3 +94,13 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped lang="scss">
+	.form-group {
+		label {
+			&:empty {
+				display: none;
+			}
+		}
+	}
+</style>

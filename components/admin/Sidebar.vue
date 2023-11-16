@@ -185,6 +185,7 @@ watch(() => route.fullPath, () => {
 
 </script>
 <style lang="scss">
+
 .menu-dropdown {
   cursor: pointer;
 }
@@ -195,6 +196,10 @@ watch(() => route.fullPath, () => {
 
   &.open {
     transform: translateX(0);
+  }
+
+  &:not(.open) {
+    display: none;
   }
 }
 

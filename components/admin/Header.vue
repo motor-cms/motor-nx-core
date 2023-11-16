@@ -64,11 +64,10 @@
               @confirm="confirm"
             />
           </li>
-          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+          <li class="nav-item d-xl-none p-3 d-flex align-items-center" @click="toggleNavbar">
             <a
               class="nav-link text-body p-0"
               id="iconNavbarSidenav"
-              @click="toggleNavbar"
             >
               <fa icon="bars" v-if="!sidebarOpen"/>
               <fa icon="close" v-else />

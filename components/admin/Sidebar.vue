@@ -135,11 +135,11 @@ const appStore = useAppStore();
 const {sidebarOpen} = storeToRefs(appStore);
 const sidebar = ref(null);
 
-onClickOutside(sidebar, (event) => {
-  if (sidebarOpen.value) {
-    appStore.toggleSidebar();
-  }
-})
+// onClickOutside(sidebar, (event) => {
+//   if (sidebarOpen.value) {
+//     appStore.toggleSidebar();
+//   }
+// })
 
 // Route parser for different cases (01 März 2023  Martin Henrichs)
 const { routeSlashToDotted, routeRemoveCRUD } = useRouteParser()
@@ -191,6 +191,11 @@ watch(() => route.fullPath, () => {
 
 .sidenav {
 	background-color: var(--c-light-100);
+  transform: translateX(-100%);
+
+  &.open {
+    transform: translateX(0);
+  }
 }
 
 .sidebar-dropdown {

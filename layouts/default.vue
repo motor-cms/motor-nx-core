@@ -27,10 +27,10 @@ import Login from "@zrm/motor-nx-core/pages/admin/Login.vue";
 .builder-main-container {
 	display: flex;
 	align-items: flex-start;
-	justify-content: center;
+	justify-content: flex-start;
 
 	.main-content {
-		width: 100%;
+		//width: 100%;
 		margin-top: 50px;
 	}
 }

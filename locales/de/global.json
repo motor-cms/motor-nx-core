@@ -13,5 +13,10 @@
   "save": "Speichern",
   "logout": "Auf Wiedersehen",
   "logout_question": "Möchten Sie sich abmelden?",
-  "press_enter_to_serach": "Drücken Sie die Eingabetaste, um zu suchen"
+  "press_enter_to_serach": "Drücken Sie die Eingabetaste, um zu suchen",
+  "select_this_page": "Diese Seite auswählen",
+  "select_all_pages": "Alle Seiten auswählen",
+  "unselect_all_pages": "Alle Seiten abwählen",
+  "selected": "Ausgewählt",
+  "action_processed": "Aktion erfolgreich ausgeführt"
 }

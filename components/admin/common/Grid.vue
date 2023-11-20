@@ -479,6 +479,16 @@ export default defineComponent({
           })
         case 'currency':
           return value.toFixed(2) + ' ' + renderer.format
+        case 'links':
+          if (value.length) {
+            return value.map((object: Record<string, any>) => {
+              return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
+            }).join('')
+          } else
+          {
+            // Return fontawesome icon
+            return '-'
+          }
         default:
           return value
       }

@@ -155,10 +155,10 @@
                     />
                     <p v-if="!allSelected"
                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
-                      {{ selectedItemsLength }} selected
+                      {{ selectedItemsLength }} {{ t('global.selected')}}
                     </p>
                     <p v-else class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
-                      {{ meta.total }} selected
+                      {{ meta.total }} {{ t('global.selected')}}
                     </p>
                   </div>
                   <Popover v-if="selectPopoverActive">
@@ -170,7 +170,7 @@
                           @input="setPageSelected"
                       />
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
-                        Select this page
+                        {{ t('global.select_this_page')}}
                       </p>
                     </div>
                     <div class="form-check">
@@ -181,13 +181,13 @@
                           @input="setAllSelected"
                       />
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
-                        Select all
+                        {{ t('global.select_all_pages')}}
                       </p>
                     </div>
                     <div class="form-check" @click="deselect" v-if="selectedItemsLength">
                       <fa icon="xmark"></fa>
                       <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
-                        Deselect all
+                        {{ t('global.unselect_all_pages')}}
                       </p>
                     </div>
                   </Popover>
@@ -407,6 +407,7 @@ export default defineComponent({
       default: () => [],
     },
   },
+  emits: ['submit', 'submitCell', 'gridActionProcessed'],
   setup(props, ctx) {
     const appStore = useAppStore()
     const {loading, updatingInBackground} = storeToRefs(appStore)
@@ -568,12 +569,13 @@ export default defineComponent({
       try {
         appStore.isLoading(true)
         await gridAction.value.func();
-        $toast.success(t('exports.started'))
+        $toast.success(t('global.action_processed'))
       } catch (e) {
         console.error("Error occured while processing grid action: " + e)
         $toast.error(t('global.error_occurred'))
       } finally {
         appStore.isLoading(false)
+        ctx.emit('gridActionProcessed')
       }
     }
 
@@ -617,7 +619,8 @@ export default defineComponent({
       hasGridActions,
       gridAction,
       deselect,
-      processGridAction
+      processGridAction,
+      t
     }
   },
 })

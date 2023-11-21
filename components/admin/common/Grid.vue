@@ -274,6 +274,17 @@
                   <template v-if="column.renderer">
                     <fa v-if="column.renderer.type === 'boolIcon' && getPropertyValue(row, column.prop) == true" class="text-success" :icon="column.renderer.trueIcon"></fa>
                     <fa v-else-if="column.renderer.type === 'boolIcon' && getPropertyValue(row, column.prop) == false" class="text-danger" :icon="column.renderer.falseIcon"></fa>
+                    <div v-else-if="column.renderer.type === 'multiProps'"
+                        v-html="
+                          renderer(
+                            column.renderer,
+                            {
+                              prop: getPropertyValue(row, column.prop),
+                              prop2:  getPropertyValue(row, column.prop2)
+                            }
+                          )
+                        "
+                    ></div>
                     <div v-else
                         v-html="
                           renderer(
@@ -497,6 +508,13 @@ export default defineComponent({
           } else
           {
             // Return fontawesome icon
+            return '-'
+          }
+        case 'multiProps':
+          if (value.prop) {
+            return '<a href="' + renderer.route.replace('{id}', value.prop2) + '">' + value.prop + '</a>'
+          } else
+          {
             return '-'
           }
         default:

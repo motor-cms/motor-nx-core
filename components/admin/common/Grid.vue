@@ -464,7 +464,15 @@ export default defineComponent({
         case 'translation':
           return t(renderer.path + '.' + value)
         case 'boolean':
-          return value ? t('global.yes') : t('global.no')
+          return value ? t('global.yes') : t('global.no');
+        case 'array':
+          if (!value.length) return '-'
+          return value.map((object: Record<string, any>) => {
+            if (object.name.length) {
+              return ' ' + object.name
+            }
+            return ' ' + object.label
+          })
         case 'date':
           if (!value) {
             return

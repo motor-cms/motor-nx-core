@@ -272,7 +272,9 @@
                       @submit="submitCell"
                   />
                   <template v-if="column.renderer">
-                    <div
+                    <fa v-if="column.renderer.type === 'boolIcon' && getPropertyValue(row, column.prop) == true" class="text-success" :icon="column.renderer.trueIcon"></fa>
+                    <fa v-else-if="column.renderer.type === 'boolIcon' && getPropertyValue(row, column.prop) == false" class="text-danger" :icon="column.renderer.falseIcon"></fa>
+                    <div v-else
                         v-html="
                           renderer(
                             column.renderer,

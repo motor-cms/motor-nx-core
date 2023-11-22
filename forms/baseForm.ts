@@ -125,6 +125,6 @@ export default function baseForm(
     onSubmit,
     form,
     fillModel: formStore.fillModel,
-    ...form,
+    ...form
   }
 }

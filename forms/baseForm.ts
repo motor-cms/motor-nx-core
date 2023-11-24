@@ -11,6 +11,10 @@ import de from '@vee-validate/i18n/dist/locale/de.json';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
+import type {Ref} from "@vue/reactivity";
+import type {MaybeRef} from "vue";
+import {toTypedSchema} from "@vee-validate/yup";
+import * as yup from "yup";
 
 export default function baseForm(
   languageFilePrefix: string,
@@ -19,6 +23,10 @@ export default function baseForm(
   sanitizer: (formData: object) => void = () => { },
   afterSubmit: (oldModel: Ref<Record<string, any>>, newModel: Ref<Record<string, any>>) => void = () => { },
   repositoryParams?: {},
+  individualModel?: Ref<Record<string, any>>,
+  individualFormSchema?: MaybeRef<Record<string, any>>,
+  individualForm?: Ref<Record<string, any>>,
+  individualInitalFormData?: Record<string, any>,
 ) {
   // Load i18n module
   const { t } = useI18n()
@@ -28,9 +36,22 @@ export default function baseForm(
   const route = useRoute();
 
   const formStore = useFormStore();
-  const { model, schema, form, formData } = storeToRefs(formStore);
+  const { model: storeModel, schema, form: storeForm, formData: storeFormData } = storeToRefs(formStore);
   const { $toast } = useNuxtApp()
   const appStore = useAppStore();
+  const model = individualModel?.value ? individualModel : storeModel;
+  const formSchema = computed(() => {
+    if (individualFormSchema) {
+      return toTypedSchema(yup.object({
+        ...individualFormSchema.value
+      }))
+    }
+    return schema.value
+  })
+  const form = individualForm?.value ? individualForm : storeForm;
+  if (individualInitalFormData) {
+    model.value = Object.assign({}, JSON.parse(JSON.stringify(model.value)), JSON.parse(JSON.stringify(individualInitalFormData)));
+  }
 
   // Get record from id and set values. Redirect back and show error if record was not found
   const getData = async () => {
@@ -52,14 +73,12 @@ export default function baseForm(
 
   // Initialize form with default values and the validation schema
   form.value = useForm({
-    initialValues: formStore.formData,
-    validationSchema: formStore.schema,
+    initialValues: model,
+    validationSchema: formSchema,
   })
 
-  form.value = useForm({
-    initialValues: formData,
-    validationSchema: schema,
-  })
+  console.log("form", form.value)
+
 
   const onSubmit = form.value.handleSubmit(async (values, { resetForm }) => {
     try {

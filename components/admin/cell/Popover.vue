@@ -7,3 +7,22 @@
 </template>
 <script setup lang="ts">
 </script>
+
+<style lang="scss">
+	.popover {
+		.popover-body {
+			.form-check {
+				position: relative;
+
+				svg {
+					cursor: pointer;
+					height: 14px;
+					width: 14px;
+					position: absolute;
+					top: 4px;
+					left: 0;
+				}
+			}
+		}
+	}
+</style>

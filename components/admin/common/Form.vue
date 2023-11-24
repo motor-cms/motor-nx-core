@@ -13,7 +13,7 @@
                   </div>
                 </div>
                 <div class="col-md-6 text-end">
-                  <NuxtLink :to="route">
+                  <NuxtLink :to="route" v-if="route.length">
                     <button class="btn btn-outline-primary">
                       {{ $t('global.back') }}
                     </button>
@@ -61,7 +61,7 @@ export default defineComponent({
       ctx.emit('submit');
     }
     const routeParser = useRouteParser();
-    const route = routeParser.routeDottedToSlash(props.backRoute)
+    const route = props.backRoute.length ? routeParser.routeDottedToSlash(props.backRoute): '';
     const appStore = useAppStore();
     const { loading, updatingInBackground} = storeToRefs(appStore);
     const formStore = useFormStore();

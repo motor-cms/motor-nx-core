@@ -1,11 +1,11 @@
 <template>
   <div class="dropzone"
-    v-if="fullScreenDragAndDrop"
-    v-on:dragenter.prevent="preventDefaultDropEvent"
-    v-on:dragover.prevent="preventDefaultDropEvent"
-    v-on:drop.prevent="handleDrop"
-    v-on:dragleave.prevent="hideDropZone"
-    ref="dropzone"
+       v-if="fullScreenDragAndDrop"
+       v-on:dragenter.prevent="preventDefaultDropEvent"
+       v-on:dragover.prevent="preventDefaultDropEvent"
+       v-on:drop.prevent="handleDrop"
+       v-on:dragleave.prevent="hideDropZone"
+       ref="dropzone"
   >
     <div class="dropzone-text">
       {{ dropzoneText }}
@@ -25,27 +25,27 @@
 
     <!-- Highlight small drop zone for Fullscreen drag and drop -->
     <div v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
-      class="col-md-4 drop-zone"
-      :class="{ over: status.over }"
+         class="col-md-4 drop-zone"
+         :class="{ over: status.over }"
     >
       <span> {{ dropzoneText }} </span>
     </div>
 
     <!-- Display drop zone for non-fullscreen drag and drop -->
     <div v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
-      class="col-md-4 drop-zone"
-      v-on:dragover.prevent="handleDragOver"
-      v-on:drop.prevent="handleDrop"
-      v-on:dragleave.prevent="handleDragLeave"
-      :class="{ over: status.over }"
+         class="col-md-4 drop-zone"
+         v-on:dragover.prevent="handleDragOver"
+         v-on:drop.prevent="handleDrop"
+         v-on:dragleave.prevent="handleDragLeave"
+         :class="{ over: status.over }"
     >
       <span> {{ dropzoneText }} </span>
     </div>
 
     <div v-for="(file, index) in files"
-      :key="index"
-      class="row"
-      style="padding-left: 0.75rem"
+         :key="index"
+         class="row"
+         style="padding-left: 0.75rem"
     >
       <div
         class="col-md-4 drop-zone"
@@ -59,7 +59,7 @@
           {{ file.mime_type }}
         </span>
       </div>
-      <div v-if="file.name !== ''" class="col-md-8" >
+      <div v-if="file.name !== ''" class="col-md-4">
         <button
           v-if="allowDelete"
           @click="deleteFile(file.name)"
@@ -72,15 +72,43 @@
         <p><strong>{{ $t('motor-media.global.type') }}:</strong> {{ file.mime_type }} </p>
         <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ file.size_human }} </p>
       </div>
+      <div v-if="metadata.length > 1" class="col-4">
+
+        <div class="form-group">
+          <label :for="id">
+            {{ $t('motor-media.files.description') }}
+          </label>
+          <input
+              type="text"
+              class="form-control"
+              :id="`description_${index}`"
+              :name="`metadata[${index}].description`"
+              v-model="metadata[index].description"
+          />
+        </div>
+        <div class="form-group">
+          <label :for="id">
+            {{ $t('motor-media.files.alt_text') }}
+          </label>
+          <input
+              type="text"
+              class="form-control"
+              :id="`alt_text_${index}`"
+              :name="`metadata[${index}].alt_text`"
+              v-model="metadata[index].alt_text"
+          />
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref, watch} from 'vue'
+import {defineComponent, ref, watch, defineEmits} from 'vue'
 import {useField} from "vee-validate";
-import { useI18n } from 'vue-i18n';
+import {useI18n} from 'vue-i18n';
 
 export default defineComponent({
+  emits: ['updateMetadata'],
   name: 'FileUploadField',
   props: {
     id: String,
@@ -118,11 +146,11 @@ export default defineComponent({
       default: false,
     }
   },
-  setup(props) {
-    const { t } = useI18n()
+  setup(props, ctx ) {
+    const {t} = useI18n()
     const dropzone = ref<HTMLInputElement | null>(null);
 
-    // Computed property for dropzone text based on props
+      // Computed property for dropzone text based on props
     const dropzoneText = computed(() => {
       return props.multiple
         ? t('motor-media.global.drop_files_here')
@@ -131,10 +159,7 @@ export default defineComponent({
 
     const {
       value: inputValue,
-      errorMessage,
-      handleBlur,
       handleChange,
-      meta,
     } = useField(<string>props.name, undefined, {
       initialValue: props.modelValue,
       syncVModel: true
@@ -152,6 +177,8 @@ export default defineComponent({
       size: number,
       dataUrl: string,
       type: string
+      alt_text: string,
+      description: string
     }
 
     // Create a property that holds the file information
@@ -194,7 +221,6 @@ export default defineComponent({
       }
 
       for (let i = 0; i < event.dataTransfer.items.length; i++) {
-        console.log("files",event.target.files)
         const fileItem = event.dataTransfer.items[i].getAsFile()
         let tempFile = {
           name: fileItem.name,
@@ -203,9 +229,9 @@ export default defineComponent({
           file: '',
           mime_type: fileItem.type,
           type: fileItem.type,
+          description: '',
+          alt_text: ''
         }
-
-        console.log('DEBUG: ', fileItem);
 
         const reader = new FileReader()
         // Read the file's content as base64 encoded string, represented by a url
@@ -217,8 +243,8 @@ export default defineComponent({
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
           tempFile.file = <string>fileResult
-          console.log('DEBUG: ', tempFile);
           parsedFiles.value.push(tempFile)
+          metadata.value.push({description: '', alt_text: ''});
           if (!props.multiple) {
             handleChange(parsedFiles.value[0], false)
           } else {
@@ -229,7 +255,7 @@ export default defineComponent({
     }
 
     function showDropZone() {
-      if (!dropzone.value){
+      if (!dropzone.value) {
         return;
       }
       dropzone.value.style.display = "flex";
@@ -237,7 +263,7 @@ export default defineComponent({
     }
 
     function hideDropZone() {
-      if (!dropzone.value){
+      if (!dropzone.value) {
         return;
       }
       dropzone.value.style.display = "none";
@@ -245,11 +271,11 @@ export default defineComponent({
     }
 
     function preventDefaultDropEvent(e: DragEvent) {
-        e.preventDefault();
+      e.preventDefault();
     }
 
-    function initFullScreenDragAndDrop(){
-      if(!props.fullScreenDragAndDrop){
+    function initFullScreenDragAndDrop() {
+      if (!props.fullScreenDragAndDrop) {
         return;
       }
 
@@ -289,18 +315,36 @@ export default defineComponent({
       }
     }
 
+    // Take care of individual data for description and alt_text
+    const metadata = ref([]);
+
     watch(() => props.modelValue, () => {
-        if (!props.multiple) {
-          if (inputValue.value && Object.keys(inputValue.value).length) {
-            parsedFiles.value[0] = inputValue.value
-          } else {
-            parsedFiles.value = [];
-          }
+      if (!props.multiple) {
+        if (inputValue.value && Object.keys(inputValue.value).length) {
+          parsedFiles.value[0] = inputValue.value
         } else {
-          parsedFiles.value = inputValue.value;
+          parsedFiles.value = [];
         }
+      } else {
+        parsedFiles.value = inputValue.value;
+      }
     }, {immediate: true})
 
+    watch(() => metadata, () => {
+
+      for (let i = 0; i < metadata.value.length; i++) {
+        parsedFiles.value[i]["description"] = metadata.value[i].description;
+        parsedFiles.value[i]["alt_text"] = metadata.value[i].alt_text;
+      }
+
+      handleChange(parsedFiles.value, false);
+
+      // metadata.value.forEach((item, index) => {
+      //   parsedFiles.value[index].description = item.description;
+      //   parsedFiles.value[index].alt_text = item.alt_text;
+      // });
+      // ctx.emit('updateMetadata', JSON.parse(JSON.stringify(metadata.value)));
+    }, {deep: true});
 
     onMounted(() => {
       files.value = new DataTransfer();
@@ -322,7 +366,8 @@ export default defineComponent({
       validationErrorMessage,
       inputValue,
       dropzone,
-      dropzoneText
+      dropzoneText,
+      metadata,
     }
   },
 })

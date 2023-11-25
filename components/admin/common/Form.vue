@@ -72,6 +72,7 @@ export default defineComponent({
 
     return {
       submit,
+      form,
       route,
       loading,
       updatingInBackground,

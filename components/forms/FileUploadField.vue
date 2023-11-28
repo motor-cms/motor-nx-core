@@ -213,8 +213,6 @@ export default defineComponent({
       validationError.value = false;
       validationErrorMessage.value = '';
 
-      console.log("Files", parsedFiles.value);
-
       if (!props.multiple) {
         if (event.dataTransfer.files.length > 1 || parsedFiles.value.length > 0) {
           validationError.value = true;
@@ -243,8 +241,6 @@ export default defineComponent({
         // Wait for the browser to finish reading and fire the onloaded-event:
         reader.onloadend = (event) => {
 
-          console.log("Tempfile", tempFile);
-          console.log("Parsed", JSON.stringify(parsedFiles.value));
           // Take the reader's result and use it for the next method
           const fileResult = event.target.result
           tempFile.url = <string>fileResult
@@ -255,7 +251,6 @@ export default defineComponent({
           } else {
             parsedFiles.value[0] = tempFile;
           }
-          console.log("Parsed", JSON.stringify(parsedFiles.value));
           if (!props.multiple) {
             handleChange(parsedFiles.value[0], false)
           } else {

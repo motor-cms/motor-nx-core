@@ -13,5 +13,6 @@
   "save": "Sauvegarder",
   "logout": "Au revoir",
   "logout_question": "Voulez-vous vous déconnecter ?",
-  "press_enter_to_serach": "Appuyez sur Entrée pour rechercher"
+  "press_enter_to_serach": "Appuyez sur Entrée pour rechercher",
+  "type_to_add_tags": "Tapez pour ajouter des tags..."
 }

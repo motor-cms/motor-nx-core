@@ -18,5 +18,6 @@
   "select_all_pages": "Alle Seiten auswählen",
   "unselect_all_pages": "Alle Seiten abwählen",
   "selected": "Ausgewählt",
-  "action_processed": "Aktion erfolgreich ausgeführt"
+  "action_processed": "Aktion erfolgreich ausgeführt",
+  "type_to_add_tags": "Geben Sie Tags ein, um sie hinzuzufügen..."
 }

@@ -13,5 +13,6 @@
   "save": "Save",
   "logout": "Good bye",
   "logout_question": "Do you want to log out?",
-  "press_enter_to_serach": "Press Enter to serch"
+  "press_enter_to_serach": "Press Enter to serch",
+  "type_to_add_tags": "Type to add tags..."
 }

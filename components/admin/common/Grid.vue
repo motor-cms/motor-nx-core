@@ -124,7 +124,7 @@
                 <select
                     class="form-control max-width-100 d-inline float-end me-2"
                     name="per-page"
-                    @change="submitFilter($event)"
+                    @change="submitFilter"
                     v-model="filterValues.per_page"
                 >
                   <option value="25">25</option>
@@ -438,7 +438,15 @@ export default defineComponent({
     const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
     const submitFilter = (data: { parameter: string; value: string }) => {
+
+      if (data instanceof Event) {
+        data = ref({
+          parameter: 'per-page',
+          value: filterValues.perPage
+        });
+      }
       // Add search filter
+      console.log("filtervalue", data);
       filterValues[data.parameter] = data.value.value;
 
       // Reset page when filtering or searching

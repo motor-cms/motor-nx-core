@@ -58,7 +58,7 @@
                     <div class="text-center">
                       <button
                         @click="loginUser"
-                        type="button"
+                        type="submit"
                         class="btn bg-gradient-primary text-capitalize w-100 mt-4 mb-0"
                       >
                         {{ $t('global.sign_in') }}
@@ -123,13 +123,4 @@ const loginUser = async () => {
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
 
-
-onMounted(() => {
- // Add keyup enter event listener to button
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') {
-      loginUser()
-    }
-  })
-})
 </script>

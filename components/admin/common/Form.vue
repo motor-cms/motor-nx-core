@@ -13,8 +13,8 @@
                   </div>
                 </div>
                 <div class="col-md-6 text-end">
-                  <NuxtLink :to="route" v-if="route.length">
-                    <button class="btn btn-outline-primary">
+                  <NuxtLink :to="routeToGrid" v-if="routeToGrid.length">
+                    <button @click="checkDirty" class="btn btn-outline-primary">
                       {{ $t('global.back') }}
                     </button>
                   </NuxtLink>
@@ -32,15 +32,24 @@
       </div>
     </div>
   </form>
+  <BaseModal @confirm="confirmModal" @cancel="cancelModal" :active="showModal" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')">
+    <template #header>
+      Ungespeichertes Formular
+    </template>
+    <template #body>
+      Wollen Sie die ungespeicherten Änderungen verwerfen?
+    </template>
+  </BaseModal>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent, reactive} from 'vue'
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-
+import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 import {storeToRefs} from "pinia";
 
 export default defineComponent({
   emits: ['submit'],
+  components: { BaseModal },
   props: {
     title: {
       type: String,
@@ -61,7 +70,7 @@ export default defineComponent({
       ctx.emit('submit');
     }
     const routeParser = useRouteParser();
-    const route = props.backRoute.length ? routeParser.routeDottedToSlash(props.backRoute): '';
+    const routeToGrid = props.backRoute.length ? routeParser.routeDottedToSlash(props.backRoute): '';
     const appStore = useAppStore();
     const { loading, updatingInBackground} = storeToRefs(appStore);
     const formStore = useFormStore();
@@ -70,13 +79,34 @@ export default defineComponent({
       return form.value.meta.valid;
     })
 
+    const checkDirty = (event) => {
+      if (form.value.meta.touched) {
+        event.preventDefault();
+        showModal.value = true;
+      }
+    };
+
+    const showModal = ref(false);
+
+    const cancelModal = () => {
+      showModal.value = false
+    }
+    const confirmModal = () => {
+      showModal.value = false
+      navigateTo({ path: routeToGrid })
+    }
+
     return {
       submit,
       form,
-      route,
+      routeToGrid,
       loading,
       updatingInBackground,
-      saveable
+      saveable,
+      checkDirty,
+      showModal,
+      cancelModal,
+      confirmModal
     }
   },
 })

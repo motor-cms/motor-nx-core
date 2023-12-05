@@ -1,6 +1,7 @@
 <template>
   <div class="inline mb-0 ms-1">
     <a @click="askForConfirmation" class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><fa icon="trash-alt"></fa></a>
+
     <AdminModalDeleteConfirmation
       :active="active"
       :record="record"
@@ -38,6 +39,7 @@ export default defineComponent({
         resource: props.resource,
       })
     }
+
     return {
       active,
       askForConfirmation,

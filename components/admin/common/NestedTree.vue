@@ -58,6 +58,7 @@ export default defineComponent({
 <style scoped>
 .dragArea {
   list-style-type: none; /* Remove bullets */
+  min-height: 5px;
   /*min-height: 50px;*/
   /*outline: 1px dashed;*/
 }

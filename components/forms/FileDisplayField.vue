@@ -25,7 +25,7 @@
         class="col-md-8"
         v-if="file.name !== ''"
       >
-        <p><strong>File:</strong> {{ file.name }}</p>
+        <p><strong>File:</strong> {{ file?.name }}</p>
         <p>
           <strong>Type:</strong>
           {{ convertMimeType(file.mime_type) }}

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-column">
     <vue-easy-lightbox
-      v-if="record.exists && isImage(record[prop].mime_type)"
+      v-if="record.exists && record[prop] && isImage(record[prop].mime_type)"
       scrollDisabled
       moveDisabled
       :visible="visible"
@@ -12,7 +12,7 @@
     </vue-easy-lightbox>
 
     <img
-      v-if="record.exists && isImage(record[prop].mime_type)"
+      v-if="record.exists && record[prop] && isImage(record[prop].mime_type)"
       :src="record[prop].conversions.thumb"
       class="img-fluid border-radius-lg"
       alt="Responsive image"
@@ -36,6 +36,7 @@
 import { defineComponent, ref } from 'vue'
 // Todo: check if is needed?
 import VueEasyLightbox from 'vue-easy-lightbox'
+import {useMimeType} from "@zrm/base-components/composables/useMimeType";
 
 export default defineComponent({
   name: 'File',
@@ -49,20 +50,9 @@ export default defineComponent({
   },
   setup() {
     const visible = ref(false)
-    // Check mimetype before displaying an image
-    const isImage = (type: string) => {
-      const mimeTypes = [
-        'image/apng',
-        'image/avif',
-        'image/gif',
-        'image/jpeg',
-        'image/png',
-        'image/svg+xml',
-        'image/webp',
-      ]
 
-      return mimeTypes.indexOf(type) > -1
-    }
+    const { isImage } = useMimeType();
+    // Check mimetype before displaying an image
 
     return { isImage, visible }
   },

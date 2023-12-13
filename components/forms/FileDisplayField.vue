@@ -10,15 +10,15 @@
       <div
         class="col-md-4 drop-zone"
         :style="
-          isImage(file.mime_type)
+          (file && isImage(file.mime_type))
             ? 'background-image:url(' +
               (file.url) +
               ');'
             : ''
         "
       >
-        <span v-if="!isImage(file.mime_type)" style="overflow-wrap: anywhere">
-          {{ file.mime_type }}
+        <span v-if="!(isImage(file?.mime_type))" style="overflow-wrap: anywhere">
+          {{ convertMimeType(file.mime_type) }}
         </span>
       </div>
       <div
@@ -28,7 +28,7 @@
         <p><strong>File:</strong> {{ file.name }}</p>
         <p>
           <strong>Type:</strong>
-          {{ file.mime_type }}
+          {{ convertMimeType(file.mime_type) }}
         </p>
         <p>
           <strong>Size:</strong>
@@ -40,6 +40,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
+import {useMimeType} from "@zrm/base-components/composables/useMimeType";
 
 export default defineComponent({
   name: 'FileDisplayField',
@@ -68,20 +69,7 @@ export default defineComponent({
   },
   setup(props, ctx) {
 
-    // Check mimetype before displaying an image
-    const isImage = (type: string) => {
-      const mimeTypes = [
-        'image/apng',
-        'image/avif',
-        'image/gif',
-        'image/jpeg',
-        'image/png',
-        'image/svg+xml',
-        'image/webp',
-      ]
-
-      return mimeTypes.indexOf(type) > -1
-    }
+    const { convertMimeType, isImage } = useMimeType();
 
     const fileSize = computed(() => {
       if (props.file.size) {
@@ -92,6 +80,7 @@ export default defineComponent({
 
     return {
       isImage,
+      convertMimeType,
       fileSize
     }
   },

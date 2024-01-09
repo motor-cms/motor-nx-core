@@ -10,7 +10,7 @@
           :id="'checkbox_' + option.value"
           type="checkbox"
           class="form-check-input"
-          :class="({ 'is-invalid': errorMessage }, id)"
+          :class="{ 'is-invalid': errorMessage }"
           :name="name"
           :value="option.value"
         />
@@ -22,11 +22,11 @@
   </div>
 </template>
 <script lang="ts">
-import { useField, Field } from 'vee-validate'
-import { defineComponent } from 'vue'
+import { useField, Field } from "vee-validate";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'CheckboxArrayField',
+  name: "CheckboxArrayField",
   props: {
     // Field's own value
     id: String,
@@ -49,18 +49,18 @@ export default defineComponent({
       <string>props.name,
       undefined,
       {
-        type: 'checkbox',
+        type: "checkbox",
         valueProp: props.modelValue,
         initialValue: props.modelValue,
         syncVModel: true,
       }
-    )
+    );
 
     return {
       checked, // readonly
       handleChange,
       errorMessage,
-    }
+    };
   },
-})
+});
 </script>

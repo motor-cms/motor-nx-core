@@ -11,9 +11,9 @@ import de from '@vee-validate/i18n/dist/locale/de.json';
 import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
-import type {Ref} from "@vue/reactivity";
-import type {MaybeRef} from "vue";
-import {toTypedSchema} from "@vee-validate/yup";
+import type { Ref } from "@vue/reactivity";
+import type { MaybeRef } from "vue";
+import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
 
 export default function baseForm(
@@ -48,6 +48,7 @@ export default function baseForm(
     }
     return schema.value
   })
+
   const form = individualForm?.value ? individualForm : storeForm;
   if (individualInitalFormData) {
     model.value = Object.assign({}, JSON.parse(JSON.stringify(model.value)), JSON.parse(JSON.stringify(individualInitalFormData)));
@@ -76,9 +77,6 @@ export default function baseForm(
     initialValues: model,
     validationSchema: formSchema,
   })
-
-  console.log("form", form.value)
-
 
   const onSubmit = form.value.handleSubmit(async (values, { resetForm }) => {
     try {

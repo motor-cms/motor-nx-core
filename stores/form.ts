@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
+import { FormContext } from 'vee-validate';
 
 export const useFormStore = defineStore('form', () => {
 
   const model = ref<Record<string, any>>({});
   const formData = ref<Record<string, any>>({});
   const formSchema = ref({});
-  const form = ref({});
+  const form = ref<FormContext>();
 
   /**
    * Computed schema, if formSchema changes, the schema will be updated and schema in useForm (baseForm.ts) will be updated
@@ -31,7 +32,7 @@ export const useFormStore = defineStore('form', () => {
    * Fill model with data, only keys that are in model will be filled
    * @param data
    */
-  const fillModel = async (data: Record<string, any> | undefined | null) => {
+  const fillModel = (data: Record<string, any> | undefined | null) => {
     model.value = Object.assign(...Object.keys(model.value).map(k => ({ [k]: data[k] })));
   }
 
@@ -40,6 +41,7 @@ export const useFormStore = defineStore('form', () => {
    */
   watch(() => model.value, () => {
     formData.value = Object.assign(...Object.keys(formData.value).map(k => ({ [k]: model.value[k] })));
+    // form.value?.setValues(formData.value);
   }, { deep: true })
 
   return {

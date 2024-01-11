@@ -50,6 +50,7 @@ export default function baseForm(
   })
 
   const form = individualForm?.value ? individualForm : storeForm;
+
   if (individualInitalFormData) {
     model.value = Object.assign({}, JSON.parse(JSON.stringify(model.value)), JSON.parse(JSON.stringify(individualInitalFormData)));
   }
@@ -62,7 +63,7 @@ export default function baseForm(
     if (error.value) {
       throw createError(error.value)
     }
-    await formStore.fillModel(response.value.data);
+    formStore.fillModel(response.value.data);
   }
 
   localize({ de });
@@ -98,7 +99,7 @@ export default function baseForm(
         )
         if (error.value) throw new Error(error)
         if (response.value.data) {
-          await formStore.fillModel(response.value.data);
+          formStore.fillModel(response.value.data);
         }
         await afterSubmit(oldModel, model)
         $toast.success(t(languageFilePrefix + '.updated'))
@@ -110,7 +111,7 @@ export default function baseForm(
         const { data: response, pending, error, refresh } = await repository.create(formData, repositoryParams)
         if (error.value) throw new Error(error)
         if (response.value.data) {
-          await formStore.fillModel(response.value.data);
+          formStore.fillModel(response.value.data);
         }
         await afterSubmit(oldModel, model)
         $toast.success(t(languageFilePrefix + '.created'))

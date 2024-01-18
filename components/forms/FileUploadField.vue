@@ -103,7 +103,7 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref, watch, defineEmits} from 'vue'
+import {defineComponent, ref, watch} from 'vue'
 import {useField} from "vee-validate";
 import {useI18n} from 'vue-i18n';
 import {filesize} from "filesize";

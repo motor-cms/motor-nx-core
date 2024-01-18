@@ -11,7 +11,7 @@
 
 <script lang="ts">
 // import { Modal } from 'bootstrap'
-import { computed, defineComponent, reactive, watch } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 

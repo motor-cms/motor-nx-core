@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
-import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {ref} from "vue";
 
 const notificationStore = useNotificationStore();

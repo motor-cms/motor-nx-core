@@ -1,6 +1,6 @@
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import usePermission from './permission'
-import useRole, { Role } from './role'
+import useRole from './role'
 import { storeToRefs } from 'pinia'
 
 export default function useRolesAndPermissions() {

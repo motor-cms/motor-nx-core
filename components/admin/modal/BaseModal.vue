@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, reactive, watch} from 'vue'
+import {defineComponent, reactive} from 'vue'
 
 export default defineComponent({
   name: 'BaseModal',

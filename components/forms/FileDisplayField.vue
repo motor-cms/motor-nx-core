@@ -40,7 +40,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import {useMimeType} from "@zrm/base-components/composables/useMimeType";
+import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
 
 export default defineComponent({
   name: 'FileDisplayField',

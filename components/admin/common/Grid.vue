@@ -329,6 +329,7 @@ import {storeToRefs} from 'pinia';
 import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
 import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
+import CustomActionButton from "@zrm/motor-nx-core/components/admin/cell/CustomActionButton.vue";
 import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
 import CellTree from "@zrm/motor-nx-core/components/admin/cell/Tree.vue";
 import PageLink from "@zrm/motor-nx-builder/components/admin/cell/PageLink.vue";
@@ -353,6 +354,7 @@ export default defineComponent({
     Skeletor,
     Button,
     EditButton,
+    CustomActionButton,
     DeleteButton,
     StatusIcon,
     CellTree,

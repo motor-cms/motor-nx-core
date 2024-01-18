@@ -9,7 +9,7 @@
  </BaseModal>
 </template>
 <script lang="ts">
-import {computed, defineComponent, reactive, watch} from 'vue'
+import {defineComponent, reactive} from 'vue'
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 
 export default defineComponent({

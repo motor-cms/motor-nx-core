@@ -12,7 +12,6 @@
   </NuxtLink>
 </template>
 <script lang="ts">
-import { useRouter } from 'vue-router'
 import { defineComponent } from 'vue'
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 

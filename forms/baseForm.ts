@@ -3,12 +3,9 @@ import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
-import { ObjectSchema, InferType } from "yup";
 import { configure } from 'vee-validate';
 import { localize } from '@vee-validate/i18n';
-import en from '@vee-validate/i18n/dist/locale/en.json';
 import de from '@vee-validate/i18n/dist/locale/de.json';
-import fr from '@vee-validate/i18n/dist/locale/fr.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
 import type { Ref } from "@vue/reactivity";

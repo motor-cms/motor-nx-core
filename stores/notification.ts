@@ -1,6 +1,4 @@
 import {defineStore} from 'pinia'
-import Pusher from 'pusher-js';
-import * as PusherTypes from 'pusher-js';
 
 interface EventNotification {
   message: string,

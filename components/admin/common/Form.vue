@@ -42,7 +42,7 @@
   </BaseModal>
 </template>
 <script lang="ts">
-import {defineComponent, reactive} from 'vue'
+import {defineComponent} from 'vue'
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 import {storeToRefs} from "pinia";

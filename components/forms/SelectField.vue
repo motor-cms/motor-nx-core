@@ -3,7 +3,24 @@
     <label :for="id">
       {{ label }}
     </label>
-    <Multiselect :disabled="loading || disabled" :id="id" :canClear="is_nullable" :can-deselect="is_nullable" :object="object" :mode="mode" v-model="inputValue" :value="inputValue" :options="parsedOptions" :searchable="searchable" />
+    <AdminTooltip
+      v-if="description.length"
+      :text="description"
+      type="info"
+      :style="{ 'margin-left': '5px' }"
+    ></AdminTooltip>
+    <Multiselect
+      :disabled="loading || disabled"
+      :id="id"
+      :canClear="is_nullable"
+      :can-deselect="is_nullable"
+      :object="object"
+      :mode="mode"
+      v-model="inputValue"
+      :value="inputValue"
+      :options="parsedOptions"
+      :searchable="searchable"
+    />
     <p class="text-danger" v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -50,7 +67,11 @@ export default defineComponent({
     mode: {
       type: String,
       default: 'single'
-    }
+    },
+    description: {
+      type: String,
+      default: '',
+    },
   },
   setup(props, ctx) {
     const {
@@ -94,11 +115,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-	.form-group {
-		label {
-			&:empty {
-				display: none;
-			}
-		}
-	}
+.form-group {
+  label {
+    &:empty {
+      display: none;
+    }
+  }
+}
 </style>

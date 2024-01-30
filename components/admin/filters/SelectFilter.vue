@@ -13,7 +13,7 @@
         :key="option.value"
         :value="option.value"
       >
-        {{ option.name }}
+        {{ option.name || option.label }}
       </option>
     </select>
   </div>

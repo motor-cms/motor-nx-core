@@ -10,6 +10,8 @@ export default function callbackGrid<T>(
 ) {
   const { $toast } = useNuxtApp()
   const appStore = useAppStore()
+  const route = useRoute()
+  const filterStore = useFilterStore()
 
   const {t} = useI18n()
 
@@ -75,6 +77,11 @@ export default function callbackGrid<T>(
 
 
   const refreshRecords = async (params: any = {}) => {
+
+    // Get values from filter store and add them to the search params
+    const filterParams = filterStore.getFilterValuesForGrid(route.name);
+    Object.assign(params, filterParams);
+
     await getGridData(params, '');
   }
 

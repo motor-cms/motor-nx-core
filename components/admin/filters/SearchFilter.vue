@@ -17,6 +17,10 @@ const router = useRouter();
 const route = useRoute();
 const emits = defineEmits(['submit'])
 
+watch(() => route.query, () => {
+  term.value = route.query.search || ''
+}, { immediate: true })
+
 const submitSearch = async () => {
   await router.replace({query: Object.assign(route.query, {search: term.value})});
   route.query.search = term.value

@@ -25,17 +25,22 @@ export default defineComponent({
   name: 'SelectFilter',
   props: {
     options: Object,
+    name: String,
   },
   emits: ['submit'],
   setup(props, ctx) {
-    const selected = ref('');
-
     const router = useRouter();
     const route = useRoute();
+
+    const selected = ref('');
+
+    watch(() => route.query, () => {
+      selected.value = route.query[props.options.parameter] || ''
+    }, { immediate: true })
+
     const submitFilter = () => {
       let routeQuery = {}
       routeQuery[props.options.parameter] = selected.value
-      router.replace({query: Object.assign(route.query, routeQuery)});
       ctx.emit('submit', { parameter: props.options.parameter, value: selected.value })
     }
     return {

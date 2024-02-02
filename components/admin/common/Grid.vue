@@ -36,6 +36,8 @@
                   :key="f.name"
                   :is="f.name"
                   :options="f.options"
+                  :name="f.name"
+                  :defaultValue="$route.query[f.options.parameter]"
                   @submit="submitFilter"
               ></component>
               <div class="col" v-if="hasGridActions && selectedItemsLength">
@@ -337,6 +339,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
+import {useFilterStore} from "~/packages/motor-nx-core/stores/filter";
 
 interface GridAction {
   label: string,
@@ -432,6 +435,7 @@ export default defineComponent({
     gridStore.init(props.meta);
     const router = useRouter();
     const route = useRoute();
+    const filterStore = useFilterStore();
 
     const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
     const {t} = useI18n()
@@ -440,6 +444,8 @@ export default defineComponent({
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
     const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
+
+    Object.assign(filterValues, filterStore.getFilterValuesForGrid(route.name));
 
     const submitFilter = (data: { parameter: string; value: string }) => {
 
@@ -450,7 +456,6 @@ export default defineComponent({
         });
       }
       // Add search filter
-      console.log("filtervalue", data);
       filterValues[data.parameter] = data.value.value;
 
       // Reset page when filtering or searching
@@ -458,7 +463,11 @@ export default defineComponent({
       if (data.parameter) {
         filterValues[data.parameter] = data.value
       }
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+
+      // Save current filter values
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
 
@@ -548,7 +557,7 @@ export default defineComponent({
         if (object && k in object) {
           object = object[k]
         } else {
-          return
+          return;
         }
       }
       return object

@@ -339,7 +339,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
-import {useFilterStore} from "~/packages/motor-nx-core/stores/filter";
+import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
 
 interface GridAction {
   label: string,

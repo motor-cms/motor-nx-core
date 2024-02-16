@@ -33,4 +33,4 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"#devops-github-actions\", \"username\": \"github-actions-notification\", \"text\": \"motor-nx-admin erfolgreich deployed. Tag: $RELEASE_VERSION  \", \"icon_emoji\": \":rocket:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST --data-urlencode "payload={\"channel\": \"#devops-github-actions\", \"username\": \"github-actions-notification\", \"text\": \"motor-nx-core erfolgreich deployed. Tag: $RELEASE_VERSION  \", \"icon_emoji\": \":rocket:\"}" ${{ secrets.SLACK_WEBHOOK_URL }}

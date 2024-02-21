@@ -26,13 +26,24 @@
                   </button>
                 </NuxtLink>
                 <NuxtLink
+                  v-if="hasTriggerTableActionButton && triggerTableActionButtonLabel"
+                >
+                  <a
+                    @click="$emit('triggerTableAction')"
+                    class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
+                  >
+                    {{ triggerTableActionButtonLabel }}
+                  </a>
+                </NuxtLink>
+                <NuxtLink
                   v-if="!withoutCreate && createRecordRoute"
                   :to="createRecordRoute"
                 >
                   <a
                     class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
-                    >{{ createLabel }}</a
                   >
+                    {{ createLabel }}
+                  </a>
                 </NuxtLink>
               </div>
             </div>
@@ -463,8 +474,16 @@ export default defineComponent({
       type: Array<GridAction>,
       default: () => [],
     },
+    hasTriggerTableActionButton:{
+      type: Boolean,
+      default: false
+    },
+    triggerTableActionButtonLabel:{
+      type: String,
+      default: ''
+    }
   },
-  emits: ['submit', 'submitCell', 'gridActionProcessed'],
+  emits: ['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction'],
   setup(props, ctx) {
     const appStore = useAppStore()
     const {loading, updatingInBackground} = storeToRefs(appStore)

@@ -24,7 +24,6 @@ export const useUserStore = defineStore('users', () => {
 
   const setToken = (value: string) => {
     token.value = value
-    console.log("set token", token)
   }
 
   const removeUser = () => {
@@ -52,9 +51,7 @@ export const useUserStore = defineStore('users', () => {
       return false;
     }
     setToken(tkn.value);
-    console.log("token", tkn );
     const {data: meResponse, pending, error, refresh } = await api.get('me')
-    console.log("data2", meResponse.value);
     if (error.value) {
       removeUser();
       appStore.isLoading(false)

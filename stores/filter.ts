@@ -13,8 +13,6 @@ interface FilterItem {
 
 export const useFilterStore = defineStore('filters', () => {
   const filterItems = ref<Record<string, GridItem>>({})
-
-  console.log(filterItems.value);
   const getFilterValuesForGrid = (gridName: string) => {
     const returnValues = {};
     filterItems.value[gridName]?.filters.forEach((filter) => {

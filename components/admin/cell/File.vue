@@ -26,7 +26,10 @@
       class="btn btn-sm btn-secondary d-block"
     >
       {{ $t('motor-media.global.download') }}
+
     </a>
+
+    <input class="mt-2 download-url" disabled :value="backendUrl + 'download/' + record.id">
     <span v-if="!record.exists">{{
       $t('motor-media.global.file_not_found')
     }}</span>
@@ -54,7 +57,11 @@ export default defineComponent({
     const { isImage } = useMimeType();
     // Check mimetype before displaying an image
 
-    return { isImage, visible }
+    const runtimeConfig = useRuntimeConfig();
+
+    const backendUrl = runtimeConfig.public.backendApiBaseUrl;
+
+    return { isImage, visible, backendUrl }
   },
 })
 </script>
@@ -62,5 +69,8 @@ export default defineComponent({
 .img-fluid {
   margin-bottom: 8px;
   cursor: pointer;
+}
+.download-url {
+  width: 100%;
 }
 </style>

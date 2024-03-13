@@ -37,5 +37,9 @@ import Login from "@zrm/motor-nx-core/pages/admin/Login.vue";
 	.form-check-input:checked[type=checkbox] {
 		background-image: linear-gradient(310deg, var(--c-primary-100) 0%, var(--c-primary-80) 100%);
 	}
+
+	.atom-button {
+		pointer-events: none;
+	}
 }
 </style>

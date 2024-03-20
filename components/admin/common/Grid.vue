@@ -529,12 +529,14 @@ export default defineComponent({
 
     const previousPage = () => {
       filterValues.page--
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
 
     const nextPage = () => {
       filterValues.page++
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
@@ -627,11 +629,13 @@ export default defineComponent({
 
     const firstPage = () => {
       filterValues.page = 1;
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
     const lastPage = () => {
       filterValues.page = props.meta.last_page;
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }
@@ -639,6 +643,7 @@ export default defineComponent({
     const pageOptions = computed(() => Array(props.meta.last_page).fill(1).map((_, i) => i + 1))
 
     const goToPage = () => {
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
       ctx.emit('submit', filterValues)
     }

@@ -33,9 +33,17 @@ export default defineComponent({
     const route = useRoute();
 
     const selected = ref('');
+    const filterStore = useFilterStore();
+    const filterValues = ref(filterStore.getFilterValuesForGrid(route.name));
 
     watch(() => route.query, () => {
-      selected.value = route.query[props.options.parameter] || ''
+      if(route.query[props.options.parameter]) {
+        selected.value = route.query[props.options.parameter]
+      } else if(filterValues.value && filterValues.value[props.options.parameter]) {
+        selected.value = filterValues.value[props.options.parameter]
+      } else {
+        selected.value = ''
+      }
     }, { immediate: true })
 
     const submitFilter = () => {

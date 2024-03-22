@@ -530,14 +530,14 @@ export default defineComponent({
     const previousPage = () => {
       filterValues.page--
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
 
     const nextPage = () => {
       filterValues.page++
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
 
@@ -630,13 +630,13 @@ export default defineComponent({
     const firstPage = () => {
       filterValues.page = 1;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
     const lastPage = () => {
       filterValues.page = props.meta.last_page;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
 
@@ -644,7 +644,7 @@ export default defineComponent({
 
     const goToPage = () => {
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: {page: filterValues.page, per_page: filterValues.per_page}})
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
 

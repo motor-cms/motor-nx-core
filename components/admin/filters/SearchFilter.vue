@@ -22,8 +22,6 @@ watch(() => route.query, () => {
 }, { immediate: true })
 
 const submitSearch = async () => {
-  await router.replace({query: Object.assign(route.query, {search: term.value})});
-  route.query.search = term.value
   emits('submit', { parameter: 'search', value: term })
 }
 </script>

@@ -54,7 +54,7 @@ export default function callbackGrid<T>(
         appStore.isLoading(false)
         appStore.updateInBackground(true);
         // Fetch fresh dataset of rows in background to hydrate cache and rows
-        await getGridData({}, '', false);
+        await getGridData(params.filterValues, '');
         appStore.updateInBackground(false);
         break
       case 'UpdateRecord':

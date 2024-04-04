@@ -22,6 +22,8 @@ watch(() => route.query, () => {
 }, { immediate: true })
 
 const submitSearch = async () => {
+  const gridStore = useGridStore();
+  gridStore.selectedItems = [];
   emits('submit', { parameter: 'search', value: term })
 }
 </script>

@@ -621,7 +621,7 @@
 
 //Global Spinner
 .spinner {
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 9000;
   width: 100vw;

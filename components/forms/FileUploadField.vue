@@ -313,7 +313,9 @@ export default defineComponent({
 
     const deleteFile = (fileName: string) => {
       if (props.multiple) {
-        parsedFiles.value = parsedFiles.value.filter(file => file.name !== fileName);
+        let index = parsedFiles.value.findIndex(file => file.name !== fileName);
+        parsedFiles.value.splice(index, 1);
+        metadata.value.splice(index, 1);
         handleChange(parsedFiles.value, false);
       } else {
         parsedFiles.value = [];
@@ -338,7 +340,6 @@ export default defineComponent({
     }, {immediate: true})
 
     watch(() => metadata, () => {
-
       for (let i = 0; i < metadata.value.length; i++) {
         parsedFiles.value[i]["description"] = metadata.value[i].description;
         parsedFiles.value[i]["alt_text"] = metadata.value[i].alt_text;

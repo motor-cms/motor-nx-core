@@ -528,6 +528,7 @@ export default defineComponent({
     }
 
     const previousPage = () => {
+      props.meta.current_page--;
       filterValues.page--
       filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
@@ -535,6 +536,7 @@ export default defineComponent({
     }
 
     const nextPage = () => {
+      props.meta.current_page++;
       filterValues.page++
       filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
@@ -628,12 +630,14 @@ export default defineComponent({
     const gridAction = ref<GridAction>(null);
 
     const firstPage = () => {
+      props.meta.current_page = 1;
       filterValues.page = 1;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
       ctx.emit('submit', filterValues)
     }
     const lastPage = () => {
+      props.meta.current_page = props.meta.last_page;
       filterValues.page = props.meta.last_page;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
       router.replace({query: filterStore.getFilterValuesForGrid(route.name)})

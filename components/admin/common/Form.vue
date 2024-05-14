@@ -18,9 +18,9 @@
                       {{ $t('global.back') }}
                     </button>
                   </NuxtLink>
-                  <button v-if="withSaving" class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground || !saveable">
+                  <span @click="validate"><button v-if="withSaving" class="btn bg-gradient-primary ms-2" type="submit" :disabled="loading || updatingInBackground || !saveable">
                     {{ $t('global.save') }}
-                  </button>
+                    </button></span>
                 </div>
               </div>
             </div>
@@ -95,8 +95,12 @@ export default defineComponent({
       showModal.value = false
       navigateTo({ path: routeToGrid })
     }
+    const validate = () => {
+      form.value.validate();
+    }
 
     return {
+      validate,
       submit,
       form,
       routeToGrid,

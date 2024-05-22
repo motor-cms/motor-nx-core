@@ -137,9 +137,8 @@ export default defineComponent({
     * provided at motor-admin.email_templates.create
     * The last part of the path can be duplicated but doesn't have to.
     * The last part of the path should have all hyphons replaced with underscores
-    * Other parts of the path can have their hyphons replaced if the last part
-    * isn't duplicated
-    * variables are removed from the path, e.g the name for
+    * Other parts of the path can have their hyphons replaced.
+    * Variables are removed from the path, e.g the name for
     * /admin/motor-admin/email-templates/edit/1234 is found at
     * motor-admin.email_templates.edit
     */
@@ -159,19 +158,14 @@ export default defineComponent({
             .split('/')
             .filter(a => a != "");
           path.splice(0,1); //remove admin prefix
-          path[path.length - 1] = path[path.length - 1].replaceAll('-', '_');
-          let name = path.reduce((a, b) => a + '.' + b);
-          if (te(name + '.' + path.at(-1))) {
-            name = name + '.' + path.at(-1);
-          } else if (te(name)) {
-            name = name;
-          } else {
-            for (let i = 2; i <= path.length; ++i) {
-              path[path.length - i] = path[path.length - i].replaceAll('-', '_');
-              name = path.reduce((a, b) => a + '.' + b);
-              if (te(name)) {
-                break;
-              }
+          for (let i = 1; i <= path.length; ++i) {
+            path[path.length - i] = path[path.length - i].replaceAll('-', '_');
+            name = path.reduce((a, b) => a + '.' + b);
+            if (te(name + '.' + path.at(-1))) {
+              name = name + '.' + path.at(-1);
+              break;
+            } else if (te(name)) {
+              break;
             }
           }
           if(!te(name)) {

@@ -44,4 +44,8 @@
   > :not(:last-child) > :last-child > * {
     border-bottom-color: $light;
   }
+
+  &__column-title-sort-icon {
+    margin-left: $table-head-font-size;
+  }
 }

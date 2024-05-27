@@ -248,8 +248,9 @@
                   href = "javascript:void(0)"
                   @click="sort(column.prop)">
                     {{ column.name }}
-                      <fa v-show="sortcol != column.prop || sortasc" icon="sort-asc" class="text-dark" />
-                      <fa v-show="sortcol != column.prop || !sortasc" icon="sort-desc" class="text-dark" />
+                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'" class="table__column-title-sort-icon" :class="[
+                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                  ]" />
                 </a>
                 <template v-else>
                     {{ column.name}}

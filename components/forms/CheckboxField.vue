@@ -61,7 +61,8 @@ export default defineComponent({
       undefined,
       {
         type: "checkbox",
-        valueProp: <string>props.modelValue,
+        checkedValue: <string>props.modelValue,
+        syncVModel: true,
       }
     );
 

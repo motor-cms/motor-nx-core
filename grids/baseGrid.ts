@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import {useI18n} from 'vue-i18n'
 
 
-export default function callbackGrid<T>(
+export default function baseGrid<T>(
   repository: Repository,
   languagePrefix: string
 ) {
@@ -15,19 +15,6 @@ export default function callbackGrid<T>(
 
   const {t} = useI18n()
 
-
-  const rowsSortedByUpdatedAt = computed({
-    // get rows sorted by updated_at
-    get() {
-      return rows.value?.sort((a,b) => {
-        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-      })
-    },
-    // set rows
-    set(newValue) {
-      rows.value = newValue;
-    }
-  })
 
   const rows = ref<Array<T>>([])
   const meta = ref({current_page: 1, from: 1, to: 1})
@@ -90,5 +77,5 @@ export default function callbackGrid<T>(
     rows.value = rows.value.filter((row) => row.id !== record);
   }
 
-  return {rows: rowsSortedByUpdatedAt, meta, refreshRecords, handleCellEvent}
+  return {rows , meta, refreshRecords, handleCellEvent}
 }

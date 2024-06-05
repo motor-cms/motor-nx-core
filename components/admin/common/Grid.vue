@@ -233,12 +233,28 @@
                   </div>
                 </th>
                 <th
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                   v-for="column in columns"
                   :key="column.name"
-                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                   :style="column.columnStyle"
+
                 >
-                  {{ column.name }}
+                <a
+                  v-if="column.sortable"
+                  class="text-uppercase text-xxs font-weight-bolder"
+                  :class="[
+                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                  ]"
+                  href = "javascript:void(0)"
+                  @click="sort(column.prop)">
+                    {{ column.name }}
+                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'" class="table__column-title-sort-icon" :class="[
+                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                  ]" />
+                </a>
+                <template v-else>
+                    {{ column.name}}
+                </template>
                 </th>
               </tr>
             </thead>
@@ -702,6 +718,16 @@ export default defineComponent({
         ctx.emit('gridActionProcessed')
       }
     }
+    const sortcol = ref();
+    const sortasc = ref(true);
+    const sort = (prop: String) => {
+      sortasc.value = sortcol.value == prop ? !sortasc.value : true;
+      sortcol.value = prop;
+      submitFilter({
+        parameter: "sort",
+        value: sortcol.value + (sortasc.value? "": ":desc"),
+      });
+    };
 
     onMounted(() => {
       const components = props.loadComponents as Array<{
@@ -744,7 +770,10 @@ export default defineComponent({
       gridAction,
       deselect,
       processGridAction,
-      t
+      sort,
+      sortcol,
+      sortasc,
+      t,
     }
   },
 })

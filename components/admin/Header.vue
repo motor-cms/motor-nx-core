@@ -6,7 +6,7 @@
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
           <li class="breadcrumb-item text-sm">
-            <a class="opacity-5 text-dark" href="javascript:;">Backend</a>
+            <a class="opacity-5 text-dark" href="/">Backend</a>
           </li>
           <li
             class="breadcrumb-item text-sm text-dark active"
@@ -119,7 +119,7 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const {t} = useI18n()
+    const {t, te} = useI18n()
 
     const title = computed(() => {
       if (route.meta && route.meta.title) {
@@ -128,6 +128,20 @@ export default defineComponent({
       return 'Dashboard'
     })
 
+    /*
+    * Breadcrumb translations are to be provided in a specific format. Here are
+    * some examples:
+    * the breadcrumb name for /admin/motor-admin/email-templates is provided
+    * at motor-admin.email_templates.email_templates
+    * the breadcrumb name for /admin/motor-admin/email-templates/create is
+    * provided at motor-admin.email_templates.create
+    * The last part of the path can be duplicated but doesn't have to.
+    * The last part of the path should have all hyphons replaced with underscores
+    * Other parts of the path can have their hyphons replaced.
+    * Variables are removed from the path, e.g the name for
+    * /admin/motor-admin/email-templates/edit/1234 is found at
+    * motor-admin.email_templates.edit
+    */
     const breadcrumbs = computed(() => {
       if (route.meta && route.meta.breadcrumbs) {
         return route.meta.breadcrumbs
@@ -135,11 +149,37 @@ export default defineComponent({
       let path = '';
       const breadcrumbs = route.path.substring(1).split('/').flatMap((item, index, array) => {
         const crumb = {};
-        crumb.name = item;
         path = `${path}/${item}`;
         let route = router.resolve(path);
-        crumb.route = route.name;
-        return route.name ? crumb : [];
+        if (route.matched.length) {
+          let path = route.matched[0].path
+            .substring(1)
+            .replace(/:(.*?)\(\)/g, '')
+            .split('/')
+            .filter(a => a != "");
+          path.splice(0,1); //remove admin prefix
+          for (let i = 1; i <= path.length; ++i) {
+            path[path.length - i] = path[path.length - i].replaceAll('-', '_');
+            name = path.reduce((a, b) => a + '.' + b);
+            if (te(name + '.' + path.at(-1))) {
+              name = name + '.' + path.at(-1);
+              break;
+            } else if (te(name)) {
+              break;
+            }
+          }
+          if(!te(name)) {
+            name = path.at(-1);
+            if(te('global.' + name)) {
+              name = 'global.' + name;
+            }
+          }
+          crumb.name = name;
+          crumb.route = route.name;
+          return crumb;
+        } else {
+          return [];
+        }
       });
       return breadcrumbs;
     })

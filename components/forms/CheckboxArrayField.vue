@@ -4,7 +4,7 @@
   </label>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
     <div class="row" style="padding-left: 0.75rem">
-      <div class="col-4" v-for="option in options" :key = "option.value">
+      <div class="col-4" v-for="option in options" :key="JSON.stringify(option)">
         <label :for="'checkbox_' + option.value">{{ option.label }}</label>
         <v-field
           :id="'checkbox_' + option.value"

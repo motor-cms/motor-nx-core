@@ -24,12 +24,16 @@
   </client-only>
 </template>
 <script lang="ts">
+export default {
+  name: 'nested-draggable',
+}
+</script>
+<script lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
 import type DraggableContent from "@zrm/motor-nx-core/types/draggable-content";
 
-export default defineComponent({
-  props: {
+  const props =defineProps({
     tree: {
       required: true,
       type: Object as PropType<DraggableContent>
@@ -37,23 +41,18 @@ export default defineComponent({
     record: {
       type: Number,
     },
-  },
-  components: {
-    draggable,
-  },
-  name: 'nested-draggable',
-  setup(props) {
-    const checkMove = (event: any) => {
-      if (
-        event.draggedContext &&
-        event.draggedContext.element.id !== props.record
-      ) {
-        return false
-      }
-    }
-    return { checkMove }
-  },
-})
+  });
+//  components: {
+//    draggable,
+//  },
+const checkMove = (event: any) => {
+  if (
+    event.draggedContext &&
+    event.draggedContext.element.id !== props.record
+  ) {
+    return false
+  }
+}
 </script>
 <style scoped>
 .dragArea {

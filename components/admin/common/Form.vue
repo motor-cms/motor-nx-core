@@ -41,79 +41,61 @@
     </template>
   </BaseModal>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import {defineComponent} from 'vue'
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 import {storeToRefs} from "pinia";
 
-export default defineComponent({
-  emits: ['submit'],
-  components: { BaseModal },
-  props: {
-    title: {
-      type: String,
-      default: 'Form',
-    },
-    backRoute: {
-      type: String,
-      default: '',
-    },
-    withSaving: {
-      type: Boolean,
-      default: true
-    }
+const emit = defineEmits(['submit']);
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Form',
   },
-  setup(props,ctx) {
-    const submit = (e: Event) => {
-      e.preventDefault()
-      ctx.emit('submit');
-    }
-    const routeParser = useRouteParser();
-    const routeToGrid = props.backRoute.length ? routeParser.routeDottedToSlash(props.backRoute): '';
-    const appStore = useAppStore();
-    const { loading, updatingInBackground} = storeToRefs(appStore);
-    const formStore = useFormStore();
-    const { form } = storeToRefs(formStore);
-    const saveable = computed(() => {
-      return form.value.meta.valid;
-    })
-
-    const checkDirty = (event) => {
-      if (form.value.meta.touched) {
-        event.preventDefault();
-        showModal.value = true;
-      }
-    };
-
-    const showModal = ref(false);
-
-    const cancelModal = () => {
-      showModal.value = false
-    }
-    const confirmModal = () => {
-      showModal.value = false
-      navigateTo({ path: routeToGrid })
-    }
-    const validate = () => {
-      form.value.validate();
-    }
-
-    return {
-      validate,
-      submit,
-      form,
-      routeToGrid,
-      loading,
-      updatingInBackground,
-      saveable,
-      checkDirty,
-      showModal,
-      cancelModal,
-      confirmModal
-    }
+  backRoute: {
+    type: String,
+    default: '',
   },
+  withSaving: {
+    type: Boolean,
+    default: true
+  }
+});
+const submit = (e: Event) => {
+  e.preventDefault()
+  emit('submit');
+}
+const routeParser = useRouteParser();
+const routeToGrid = props.backRoute.length ? routeParser.routeDottedToSlash(props.backRoute): '';
+const appStore = useAppStore();
+const { loading, updatingInBackground} = storeToRefs(appStore);
+const formStore = useFormStore();
+const { form } = storeToRefs(formStore);
+const saveable = computed(() => {
+  return form.value.meta.valid;
 })
+
+const checkDirty = (event) => {
+  if (form.value.meta.touched) {
+    event.preventDefault();
+    showModal.value = true;
+  }
+};
+
+const showModal = ref(false);
+
+const cancelModal = () => {
+  showModal.value = false
+}
+const confirmModal = () => {
+  showModal.value = false
+  navigateTo({ path: routeToGrid })
+}
+const validate = () => {
+  form.value.validate();
+}
+
 </script>
 <style scoped lang="scss">
 	form {

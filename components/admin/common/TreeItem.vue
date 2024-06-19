@@ -19,45 +19,38 @@
   </li>
 </template>
 <script lang="ts">
+  export default {
+    name: 'TreeItem',
+  }
+</script>
+<script setup lang="ts">
 // demo data
 import { computed, defineComponent, ref } from 'vue'
 
-export default defineComponent({
-  name: 'TreeItem',
-  props: {
-    item: <any>Object,
-    record: {
-      type: Number,
-      default: 0,
-    },
+const props = defineProps({
+  item: <any>Object,
+  record: {
+    type: Number,
+    default: 0,
   },
-  setup(props) {
-    const isOpen = ref(true)
-    const toggle = () => {
-      if (isFolder.value) {
-        isOpen.value = !isOpen.value
-      }
-    }
+})
+const isOpen = ref(true)
+const toggle = () => {
+  if (isFolder.value) {
+    isOpen.value = !isOpen.value
+  }
+}
 
-    // We don't need this currently
-    const makeFolder = () => {
-      return
-      // if (!this.isFolder) {
-      //   this.$emit('make-folder', this.item)
-      //   this.isOpen = true
-      // }
-    }
+// We don't need this currently
+const makeFolder = () => {
+  return
+  // if (!this.isFolder) {
+  //   this.$emit('make-folder', this.item)
+  //   this.isOpen = true
+  // }
+}
 
-    const isFolder = computed(() => {
-      return props.item.children && props.item.children.length
-    })
-
-    return {
-      isOpen,
-      toggle,
-      makeFolder,
-      isFolder,
-    }
-  },
+const isFolder = computed(() => {
+  return props.item.children && props.item.children.length
 })
 </script>

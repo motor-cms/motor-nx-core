@@ -11,48 +11,35 @@
     </ul>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import TreeItem from './TreeItem.vue'
-
-// demo data
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  props: {
-    id: {
-      type: String,
-      default: 'tree',
-    },
-    record: {
-      type: Number,
-      default: 0,
-    },
-    treeData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
+const props =defineProps({
+  id: {
+    type: String,
+    default: 'tree',
+  },
+  record: {
+    type: Number,
+    default: 0,
+  },
+  treeData: {
+    type: Object,
+    default: () => {
+      return {}
     },
   },
-  components: { TreeItem },
-  setup() {
-    const makeFolder = (item: any) => {
-      item.children = []
-      addItem(item)
-    }
+});
+const makeFolder = (item: any) => {
+  item.children = []
+  addItem(item)
+}
 
-    const addItem = (item: any) => {
-      item.children.push({
-        name: 'new stuff',
-      })
-    }
+const addItem = (item: any) => {
+  item.children.push({
+    name: 'new stuff',
+  })
+}
 
-    return {
-      makeFolder,
-      addItem,
-    }
-  },
-})
 </script>
 <style lang="scss">
 .item {

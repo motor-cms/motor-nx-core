@@ -7,19 +7,15 @@
         <input
           type="checkbox"
           :name="name"
-          :checked="modelValue"
+          v-model="model"
           @input="emitUpdate">
       </label>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const emits = defineEmits(['update:modelValue']);
 const props = defineProps({
   id: String,
-  modelValue: {
-    type: null,
-  },
   label: String,
   name: {
     type: String,
@@ -29,10 +25,7 @@ const props = defineProps({
     default: '',
   }
 });
-const emitUpdate = () => {
-  emits('update:modelValue', !props.modelValue);
-}
-
+const model = defineModel();
 </script>
 <style>
 .atom-toggle__switch {

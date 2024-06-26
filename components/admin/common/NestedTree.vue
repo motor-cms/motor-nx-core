@@ -28,20 +28,19 @@ export default {
   name: 'nested-draggable',
 }
 </script>
-<script lang="ts">
+<script setup lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'
-import { defineComponent } from 'vue'
 import type DraggableContent from "@zrm/motor-nx-core/types/draggable-content";
 
-  const props =defineProps({
-    tree: {
-      required: true,
-      type: Object as PropType<DraggableContent>
-    },
-    record: {
-      type: Number,
-    },
-  });
+const props =defineProps({
+  tree: {
+    required: true,
+    type: Object as PropType<DraggableContent>
+  },
+  record: {
+    type: Number,
+  },
+});
 //  components: {
 //    draggable,
 //  },

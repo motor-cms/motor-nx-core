@@ -237,24 +237,32 @@
                   v-for="column in columns"
                   :key="column.name"
                   :style="column.columnStyle"
-
                 >
-                <a
-                  v-if="column.sortable"
-                  class="text-uppercase text-xxs font-weight-bolder"
-                  :class="[
-                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
-                  ]"
-                  href = "javascript:void(0)"
-                  @click="sort(column.prop)">
+                  <a
+                    v-if="column.sortable"
+                    class="text-uppercase text-xxs font-weight-bolder"
+                    :class="[sortcol == column.prop ? 'text-primary' : 'text-secondary']"
+                    href="javascript:void(0)"
+                    @click="sort(column.prop)"
+                  >
                     {{ column.name }}
-                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'" class="table__column-title-sort-icon" :class="[
-                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
-                  ]" />
-                </a>
-                <template v-else>
-                    {{ column.name}}
-                </template>
+                    <fa
+                      :icon="
+                        sortcol == column.prop
+                          ? sortasc
+                            ? 'sort-up'
+                            : 'sort-down'
+                          : 'sort'
+                      "
+                      class="table__column-title-sort-icon"
+                      :class="[
+                        sortcol == column.prop ? 'text-primary' : 'text-secondary',
+                      ]"
+                    />
+                  </a>
+                  <template v-else>
+                    {{ column.name }}
+                  </template>
                 </th>
               </tr>
             </thead>
@@ -503,7 +511,6 @@ const dynamicComponent = (name: String) => defineAsyncComponent(() => {
 const emit = defineEmits(['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction']);
 const appStore = useAppStore();
 const {loading, updatingInBackground} = storeToRefs(appStore);
-appStore.isLoading(true);
 const gridStore = useGridStore();
 gridStore.init(props.meta);
 const router = useRouter();

@@ -16,7 +16,7 @@
                 <component
                   v-for="component in headerActions"
                   :key="component.name"
-                  :is="dynamicComponent(component.name)"
+                  :is="component.name"
                 />
                 <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
                   <button
@@ -50,8 +50,8 @@
             <div class="row align-items-center">
               <component
                 v-for="f in filters"
-                :key="f"
-                :is="dynamicComponent(f.name)"
+                :key="f.name"
+                :is="f.name"
                 :options="f.options"
                 :name="f.name"
                 :defaultValue="$route.query[f.options.parameter]"
@@ -64,7 +64,7 @@
                     name="per-page"
                     v-model="gridAction"
                   >
-                    <option v-for="action in gridActions" :value="action" :key="action">
+                    <option v-for="action in gridActions" :value="action">
                       {{ action.label }}
                     </option>
                   </select>
@@ -237,32 +237,24 @@
                   v-for="column in columns"
                   :key="column.name"
                   :style="column.columnStyle"
+
                 >
-                  <a
-                    v-if="column.sortable"
-                    class="text-uppercase text-xxs font-weight-bolder"
-                    :class="[sortcol == column.prop ? 'text-primary' : 'text-secondary']"
-                    href="javascript:void(0)"
-                    @click="sort(column.prop)"
-                  >
+                <a
+                  v-if="column.sortable"
+                  class="text-uppercase text-xxs font-weight-bolder"
+                  :class="[
+                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                  ]"
+                  href = "javascript:void(0)"
+                  @click="sort(column.prop)">
                     {{ column.name }}
-                    <fa
-                      :icon="
-                        sortcol == column.prop
-                          ? sortasc
-                            ? 'sort-up'
-                            : 'sort-down'
-                          : 'sort'
-                      "
-                      class="table__column-title-sort-icon"
-                      :class="[
-                        sortcol == column.prop ? 'text-primary' : 'text-secondary',
-                      ]"
-                    />
-                  </a>
-                  <template v-else>
-                    {{ column.name }}
-                  </template>
+                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'" class="table__column-title-sort-icon" :class="[
+                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                  ]" />
+                </a>
+                <template v-else>
+                    {{ column.name}}
+                </template>
                 </th>
               </tr>
             </thead>
@@ -324,8 +316,8 @@
                   <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
                     <component
                       v-for="component in column.components"
-                      :key="component"
-                      :is="dynamicComponent(component.name)"
+                      :key="component.name"
+                      :is="component.name"
                       :options="component.options"
                       :record="row"
                       :prop="column.prop"
@@ -379,16 +371,37 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts">
+import type {
+  Component
+} from 'vue'
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  reactive,
+  ref,
+} from 'vue'
+import SearchFilter from '../filters/SearchFilter.vue'
+import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
 import {Skeletor} from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
 import {useI18n} from 'vue-i18n'
 import {storeToRefs} from 'pinia';
-import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
+import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
+import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
+import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
+import ActionButton from "@zrm/motor-nx-core/components/admin/cell/ActionButton.vue";
+import CustomActionButton from "@zrm/motor-nx-core/components/admin/cell/CustomActionButton.vue";
+import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
+import CellTree from "@zrm/motor-nx-core/components/admin/cell/Tree.vue";
+import PageLink from "@zrm/motor-nx-builder/components/admin/cell/PageLink.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
 
 interface GridAction {
@@ -397,346 +410,372 @@ interface GridAction {
   func: () => Promise<any>
 }
 
-
-const props = defineProps({
-  name: {
-    type: String,
-    default: 'Grid',
+export default defineComponent({
+  components: {
+    Popover,
+    CheckboxField,
+    SpinnerSmall,
+    SearchFilter,
+    SelectFilter,
+    Skeletor,
+    Button,
+    EditButton,
+    ActionButton,
+    CustomActionButton,
+    DeleteButton,
+    StatusIcon,
+    CellTree,
+    PageLink
   },
-  columns: {
-    type: Array<Record<string, any>>,
-    default: ref([]),
-  },
-  rows: {
-    type: Array<Record<string, any>>,
-    default: ref([]),
-  },
-  meta: {
-    type: Object,
-    default: () => {
-      return {}
+  props: {
+    name: {
+      type: String,
+      default: 'Grid',
     },
-  },
-  resource: {
-    type: String,
-    default: '',
-  },
-  filters: {
-    type: Array,
-    default: ref([]),
-  },
-  loadComponents: {
-    type: Array,
-    default: () => [],
-  },
-  createLabel: {
-    type: String,
-    default: 'New record',
-  },
-  createRoute: {
-    type: String,
-    default: '',
-  },
-  headerActions: {
-    type: Array,
-    default: () => [],
-  },
-  withoutCreate: {
-    type: Boolean,
-    default: false
-  },
-  hasBackButton: {
-    type: Boolean,
-    default: false,
-  },
-  backRoute: {
-    type: String,
-    default: '',
-  },
-  withSelection: {
-    type: Boolean,
-    default: true,
-  },
-  gridActions: {
-    type: Array<GridAction>,
-    default: () => [],
-  },
-  hasTriggerTableActionButton:{
-    type: Boolean,
-    default: false
-  },
-  triggerTableActionButtonLabel:{
-    type: String,
-    default: ''
-  }
-});
-const components_new = props.loadComponents as Array<{
-  name: string
-  object: Component
-}>
-
-const components = new Map();
-
-if (components_new.length) {
-  components_new.forEach((component) => {
-    components.set(component.name, component.object.__file);
-  })
-}
-
-//FIXME: find better way to do this
-const getRelativepath = (to: String) => {
-  // format: /_nuxt/packages/motor-nx-core/components/admin/common/Grid.vue
-  const current_url = new URL(import.meta.url).pathname;
-  const depth = (current_url.match(/o/g)||[]).length - 3;
-  let path = "";
-  for (let i = 0; i < depth; ++i) {
-    path += "../";
-  }
-  path += to.substring(to.indexOf("packages") + 9);
-  console.log(path);
-  return path;
-}
-
-const dynamicComponent = (name: String) => defineAsyncComponent(() => {
-  const component = components.get(name);
-  if (component) {
-    return import(/* @vite-ignore */ getRelativepath(component));
-  }
-  if (name.includes("Filter")) {
-    return import (`../filters/${name}.vue`);
-  }
-  return import (`../cell/${name}.vue`);
-});
-
-const emit = defineEmits(['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction']);
-const appStore = useAppStore();
-const {loading, updatingInBackground} = storeToRefs(appStore);
-const gridStore = useGridStore();
-gridStore.init(props.meta);
-const router = useRouter();
-const route = useRoute();
-const filterStore = useFilterStore();
-
-const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
-const {t} = useI18n()
-const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page ? route.query.page : 1})
-
-const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
-
-const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
-
-Object.assign(filterValues, filterStore.getFilterValuesForGrid(route.name));
-
-const submitFilter = (data: { parameter: string; value: string }) => {
-
-  if (data instanceof Event) {
-    data = ref({
-      parameter: 'per-page',
-      value: filterValues.perPage
-    });
-  }
-  // Add search filter
-  filterValues[data.parameter] = data.value.value;
-
-  // Reset page when filtering or searching
-  filterValues.page = 1
-  if (data.parameter) {
-    filterValues[data.parameter] = data.value
-  }
-
-  // Save current filter values
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
-
-const previousPage = () => {
-  props.meta.current_page--;
-  filterValues.page--
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
-
-const nextPage = () => {
-  props.meta.current_page++;
-  filterValues.page++
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
-
-const renderer = (
-    renderer: {
-      type: string
-      path: string
-      format: string
-      property: string
+    columns: {
+      type: Array<Record<string, any>>,
+      default: ref([]),
     },
-    value: any
-): string => {
-  switch (renderer.type) {
-    case 'translation':
-      return t(renderer.path + '.' + value)
-    case 'boolean':
-      return value ? t('global.yes') : t('global.no');
-    case 'array':
-      if (!value.length) return '-'
-      return value.map((object: Record<string, any>) => {
-        if (object.name.length) {
-          return ' ' + object.name
-        }
-        return ' ' + object.label
-      })
-    case 'date':
-      if (!value) {
-        return
-      }
-      if (renderer.format) {
-        return moment(value).format(renderer.format)
-      }
-      return moment(value).toString()
-    case 'count':
-      return value.length ? value.length.toString() : 'ß'
-    case 'list':
-      return value.map((object: any) => {
-        return ' ' + object[renderer.property]
-      })
-    case 'currency':
-      return value.toFixed(2) + ' ' + renderer.format
-    case 'links':
-      if (value.length) {
-        return value.map((object: Record<string, any>) => {
-          return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
-        }).join('')
-      } else
-      {
-        // Return fontawesome icon
-        return '-'
-      }
-    case 'linkLabelId':
-      if (value.label) {
-        return '<a href="' + renderer.route.replace('{id}', value.id) + '">' + value.label + '</a>'
-      } else
-      {
-        return '-'
-      }
-    default:
-      return value
-  }
-}
-const submitCell = (params: any) => {
-  emit('submitCell', {
-    componentParams: params,
-    filterValues,
-  })
-}
-
-const getPropertyValue = (object: any, property: string): string => {
-  property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
-  let a = property.split('.')
-  for (let i = 0, n = a.length; i < n; ++i) {
-    var k = a[i]
-    if (object && k in object) {
-      object = object[k]
-    } else {
-      return;
+    rows: {
+      type: Array<Record<string, any>>,
+      default: ref([]),
+    },
+    meta: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    resource: {
+      type: String,
+      default: '',
+    },
+    filters: {
+      type: Array,
+      default: ref([]),
+    },
+    loadComponents: {
+      type: Array,
+      default: () => [],
+    },
+    createLabel: {
+      type: String,
+      default: 'New record',
+    },
+    createRoute: {
+      type: String,
+      default: '',
+    },
+    headerActions: {
+      type: Array,
+      default: () => [],
+    },
+    withoutCreate: {
+      type: Boolean,
+      default: false
+    },
+    hasBackButton: {
+      type: Boolean,
+      default: false,
+    },
+    backRoute: {
+      type: String,
+      default: '',
+    },
+    withSelection: {
+      type: Boolean,
+      default: true,
+    },
+    gridActions: {
+      type: Array<GridAction>,
+      default: () => [],
+    },
+    hasTriggerTableActionButton:{
+      type: Boolean,
+      default: false
+    },
+    triggerTableActionButtonLabel:{
+      type: String,
+      default: ''
     }
-  }
-  return object
-}
+  },
+  emits: ['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction'],
+  setup(props, ctx) {
+    const appStore = useAppStore()
+    const {loading, updatingInBackground} = storeToRefs(appStore)
+    const gridStore = useGridStore();
+    gridStore.init(props.meta);
+    const router = useRouter();
+    const route = useRoute();
+    const filterStore = useFilterStore();
 
-// GridActions
-const hasGridActions = computed(() => props.gridActions.length)
-const gridAction = ref<GridAction>(null);
+    const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
+    const {t} = useI18n()
+    const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page ? route.query.page : 1})
 
-const firstPage = () => {
-  props.meta.current_page = 1;
-  filterValues.page = 1;
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
-const lastPage = () => {
-  props.meta.current_page = props.meta.last_page;
-  filterValues.page = props.meta.last_page;
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
+    const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
-const pageOptions = computed(() => Array(props.meta.last_page).fill(1).map((_, i) => i + 1))
+    const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
-const goToPage = () => {
-  filterStore.setFilterValuesForGrid(route.name, filterValues);
-  router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
-  emit('submit', filterValues)
-}
+    Object.assign(filterValues, filterStore.getFilterValuesForGrid(route.name));
 
-const selectPopoverActive = ref(false);
-const setPageSelected = () => {
-  if (pageSelected.value) {
-    props.rows.forEach(row => {
-      gridStore.removeSelectedItem(row);
-    })
-  } else {
-    props.rows.forEach(row => {
-      if (!gridStore.isSelected(row)) {
-        gridStore.addSelectedItem(row);
+    const submitFilter = (data: { parameter: string; value: string }) => {
+
+      if (data instanceof Event) {
+        data = ref({
+          parameter: 'per-page',
+          value: filterValues.perPage
+        });
       }
+      // Add search filter
+      filterValues[data.parameter] = data.value.value;
+
+      // Reset page when filtering or searching
+      filterValues.page = 1
+      if (data.parameter) {
+        filterValues[data.parameter] = data.value
+      }
+
+      // Save current filter values
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+
+    const previousPage = () => {
+      props.meta.current_page--;
+      filterValues.page--
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+
+    const nextPage = () => {
+      props.meta.current_page++;
+      filterValues.page++
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+
+    const renderer = (
+        renderer: {
+          type: string
+          path: string
+          format: string
+          property: string
+        },
+        value: any
+    ): string => {
+      switch (renderer.type) {
+        case 'translation':
+          return t(renderer.path + '.' + value)
+        case 'boolean':
+          return value ? t('global.yes') : t('global.no');
+        case 'array':
+          if (!value.length) return '-'
+          return value.map((object: Record<string, any>) => {
+            if (object.name.length) {
+              return ' ' + object.name
+            }
+            return ' ' + object.label
+          })
+        case 'date':
+          if (!value) {
+            return
+          }
+          if (renderer.format) {
+            return moment(value).format(renderer.format)
+          }
+          return moment(value).toString()
+        case 'count':
+          return value.length ? value.length.toString() : 'ß'
+        case 'list':
+          return value.map((object: any) => {
+            return ' ' + object[renderer.property]
+          })
+        case 'currency':
+          return value.toFixed(2) + ' ' + renderer.format
+        case 'links':
+          if (value.length) {
+            return value.map((object: Record<string, any>) => {
+              return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
+            }).join('')
+          } else
+          {
+            // Return fontawesome icon
+            return '-'
+          }
+        case 'linkLabelId':
+          if (value.label) {
+            return '<a href="' + renderer.route.replace('{id}', value.id) + '">' + value.label + '</a>'
+          } else
+          {
+            return '-'
+          }
+        default:
+          return value
+      }
+    }
+    const submitCell = (params: any) => {
+      ctx.emit('submitCell', {
+        componentParams: params,
+        filterValues,
+      })
+    }
+
+    const getPropertyValue = (object: any, property: string): string => {
+      property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
+      let a = property.split('.')
+      for (let i = 0, n = a.length; i < n; ++i) {
+        var k = a[i]
+        if (object && k in object) {
+          object = object[k]
+        } else {
+          return;
+        }
+      }
+      return object
+    }
+
+    const instance = getCurrentInstance()
+
+    // GridActions
+    const hasGridActions = computed(() => props.gridActions.length)
+    const gridAction = ref<GridAction>(null);
+
+    const firstPage = () => {
+      props.meta.current_page = 1;
+      filterValues.page = 1;
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+    const lastPage = () => {
+      props.meta.current_page = props.meta.last_page;
+      filterValues.page = props.meta.last_page;
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+
+    const pageOptions = computed(() => Array(props.meta.last_page).fill(1).map((_, i) => i + 1))
+
+    const goToPage = () => {
+      filterStore.setFilterValuesForGrid(route.name, filterValues);
+      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      ctx.emit('submit', filterValues)
+    }
+
+    const selectPopoverActive = ref(false);
+    const setPageSelected = () => {
+      if (pageSelected.value) {
+        props.rows.forEach(row => {
+          gridStore.removeSelectedItem(row);
+        })
+      } else {
+        props.rows.forEach(row => {
+          if (!gridStore.isSelected(row)) {
+            gridStore.addSelectedItem(row);
+          }
+        })
+      }
+      selectedPageMap.value.set(props.meta.current_page, !selectedPageMap.value.get(props.meta.current_page));
+      selectPopoverActive.value = !selectPopoverActive.value;
+    }
+
+    const setAllSelected = () => {
+      if (allSelected.value) {
+        gridStore.setSelectedItems([]);
+      } else {
+        gridStore.setSelectedItems(JSON.parse(JSON.stringify(props.rows)))
+      }
+      allSelected.value = !allSelected.value;
+      selectPopoverActive.value = !selectPopoverActive.value;
+    }
+
+    const deselect = () => {
+      gridStore.deselectAll();
+      selectPopoverActive.value = !selectPopoverActive.value;
+    }
+
+    watchEffect(() => {
+      gridStore.init(props.meta);
     })
-  }
-  selectedPageMap.value.set(props.meta.current_page, !selectedPageMap.value.get(props.meta.current_page));
-  selectPopoverActive.value = !selectPopoverActive.value;
-}
 
-const setAllSelected = () => {
-  if (allSelected.value) {
-    gridStore.setSelectedItems([]);
-  } else {
-    gridStore.setSelectedItems(JSON.parse(JSON.stringify(props.rows)))
-  }
-  allSelected.value = !allSelected.value;
-  selectPopoverActive.value = !selectPopoverActive.value;
-}
+    const {$toast} = useNuxtApp();
+    const processGridAction = async () => {
+      try {
+        appStore.isLoading(true)
+        await gridAction.value.func();
+        $toast.success(t('global.action_processed'))
+      } catch (e) {
+        console.error("Error occured while processing grid action: " + e)
+        $toast.error(t('global.error_occurred'))
+      } finally {
+        appStore.isLoading(false)
+        ctx.emit('gridActionProcessed')
+      }
+    }
+    const sortcol = ref();
+    const sortasc = ref(true);
+    const sort = (prop: String) => {
+      sortasc.value = sortcol.value == prop ? !sortasc.value : true;
+      sortcol.value = prop;
+      submitFilter({
+        parameter: "sort",
+        value: sortcol.value + (sortasc.value? "": ":desc"),
+      });
+    };
 
-const deselect = () => {
-  gridStore.deselectAll();
-  selectPopoverActive.value = !selectPopoverActive.value;
-}
+    onMounted(() => {
+      const components = props.loadComponents as Array<{
+        name: string
+        object: Component
+      }>
 
-watchEffect(() => {
-  gridStore.init(props.meta);
-})
+      if (components.length) {
+        components.forEach((component) => {
+          instance.components[component.name] = component.object
+        })
+      }
+      gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
+    })
 
-const {$toast} = useNuxtApp();
-const processGridAction = async () => {
-  try {
-    appStore.isLoading(true)
-    await gridAction.value.func();
-    $toast.success(t('global.action_processed'))
-  } catch (e) {
-    console.error("Error occured while processing grid action: " + e)
-    $toast.error(t('global.error_occurred'))
-  } finally {
-    appStore.isLoading(false)
-    emit('gridActionProcessed')
-  }
-}
-const sortcol = ref();
-const sortasc = ref(true);
-const sort = (prop: String) => {
-  sortasc.value = sortcol.value == prop ? !sortasc.value : true;
-  sortcol.value = prop;
-  submitFilter({
-    parameter: "sort",
-    value: sortcol.value + (sortasc.value? "": ":desc"),
-  });
-};
-
-onMounted(() => {
-  gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
+    return {
+      filterValues,
+      loading,
+      nextPage,
+      previousPage,
+      submitFilter,
+      renderer,
+      submitCell,
+      getPropertyValue,
+      createRecordRoute,
+      updatingInBackground,
+      firstPage,
+      lastPage,
+      pageOptions,
+      goToPage,
+      goBackRoute,
+      selectedItemsLength,
+      setAllSelected,
+      setPageSelected,
+      allSelected,
+      pageSelected,
+      gridStore,
+      selectPopoverActive,
+      hasGridActions,
+      gridAction,
+      deselect,
+      processGridAction,
+      sort,
+      sortcol,
+      sortasc,
+      t,
+    }
+  },
 })
 </script>
 

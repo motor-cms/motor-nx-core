@@ -28,7 +28,7 @@ import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
 import type DraggableContent from "@zrm/motor-nx-core/types/draggable-content";
 
-  const props =defineProps({
+  const props = defineProps({
     tree: {
       required: true,
       type: Object as PropType<DraggableContent>

@@ -1,5 +1,6 @@
 <template>
   <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+    {{ loadComponents }}
     <div class="card">
       <div class="card-header pb-0">
         <div class="row">
@@ -499,6 +500,7 @@ const getRelativepath = (to: String) => {
 
 const dynamicComponent = (name: String) => defineAsyncComponent(() => {
   const component = components.get(name);
+  console.log('NAME:', name, 'COMPONENT:', component)
   if (component) {
     return import(/* @vite-ignore */ getRelativepath(component));
   }

@@ -5,6 +5,7 @@ on:
       - production
       - staging
       - develop
+      - grid_composition
 
 jobs:
   publish:

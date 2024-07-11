@@ -24,11 +24,6 @@
   </client-only>
 </template>
 <script lang="ts">
-export default {
-  name: 'nested-draggable',
-}
-</script>
-<script lang="ts">
 import draggable from 'vuedraggable/src/vuedraggable'
 import { defineComponent } from 'vue'
 import type DraggableContent from "@zrm/motor-nx-core/types/draggable-content";

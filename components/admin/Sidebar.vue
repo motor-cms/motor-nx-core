@@ -42,16 +42,17 @@
           </li>
         </template>
         <template v-else>
-          <li class="nav-item" v-for="topLayerNavItem in navigationItems" :key="topLayerNavItem.name">
-            <NuxtLink
-              @click="toggleMenu(topLayerNavItem.slug)"
-              v-if="topLayerNavItem.route"
-              class="nav-link"
-              :to="routeParser.routeDottedToSlash(topLayerNavItem.route)"
-              :class="{active: activeParent && activeParent ===topLayerNavItem.slug || !activeParent && topLayerNavItem.slug === 'dashboard' }"
-            >
-              <div
-                class="
+          <template v-for="topLayerNavItem in navigationItems">
+            <li class="nav-item" :key="topLayerNavItem.name" v-if="rolesAndPermissions.hasAnyPermission(topLayerNavItem.permissions) || rolesAndPermissions.hasRole('SuperAdmin')">
+              <NuxtLink
+                @click="toggleMenu(topLayerNavItem.slug)"
+                v-if="topLayerNavItem.route"
+                class="nav-link"
+                :to="routeParser.routeDottedToSlash(topLayerNavItem.route)"
+                :class="{active: activeParent && activeParent ===topLayerNavItem.slug || !activeParent && topLayerNavItem.slug === 'dashboard' }"
+              >
+                <div
+                  class="
                 icon icon-shape icon-sm
                 shadow
                 border-radius-md
@@ -62,55 +63,57 @@
                 align-items-center
                 justify-content-center
               "
-              >
-                <fa :icon="topLayerNavItem.icon"/>
-              </div>
-              <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
-            </NuxtLink>
-            <a
-              @click="toggleMenu(routeParser.routeDottedToSlash(topLayerNavItem.slug, false))"
-              v-else
-              class="nav-link menu-dropdown"
-              :class="[{active: activeParent === routeParser.routeDottedToSlash(topLayerNavItem.slug, false)}, 'menu-' + topLayerNavItem.slug]"
-            >
-              <div
-                class="
-                icon icon-shape icon-sm
-                shadow
-                border-radius-md
-                bg-white
-                text-center
-                me-2
-                d-flex
-                align-items-center
-                justify-content-center
-              "
-              >
-                <fa :icon="topLayerNavItem.icon" />
-              </div>
-              <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
-            </a>
-            <ul
-              v-if="topLayerNavItem.items"
-              :class="[{open: activeParent === topLayerNavItem.slug}, 'menu-' + topLayerNavItem.slug + '-items']"
-              class="navbar-nav sidebar-dropdown"
-            >
-              <li
-                v-for="childNavItem in topLayerNavItem.items"
-                :key="childNavItem.slug"
-                class="nav-item ps-5"
-                @click="setActiveChild(childNavItem.slug)"
-              >
-                <NuxtLink
-                  :to="routeParser.routeDottedToSlash(childNavItem.route ? childNavItem.route : '')"
-                  class="nav-link"
-                  :class="[{active: activeChild === childNavItem.slug}, 'route-' + childNavItem.route?.replace(/\./g, '-')]"
                 >
-                  {{ $t(childNavItem.name) }}
-                </NuxtLink>
-              </li>
-            </ul>
-          </li>
+                  <fa :icon="topLayerNavItem.icon"/>
+                </div>
+                <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
+              </NuxtLink>
+              <a
+                @click="toggleMenu(routeParser.routeDottedToSlash(topLayerNavItem.slug, false))"
+                v-else
+                class="nav-link menu-dropdown"
+                :class="[{active: activeParent === routeParser.routeDottedToSlash(topLayerNavItem.slug, false)}, 'menu-' + topLayerNavItem.slug]"
+              >
+                <div
+                  class="
+                icon icon-shape icon-sm
+                shadow
+                border-radius-md
+                bg-white
+                text-center
+                me-2
+                d-flex
+                align-items-center
+                justify-content-center
+              "
+                >
+                  <fa :icon="topLayerNavItem.icon" />
+                </div>
+                <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
+              </a>
+              <ul
+                v-if="topLayerNavItem.items"
+                :class="[{open: activeParent === topLayerNavItem.slug}, 'menu-' + topLayerNavItem.slug + '-items']"
+                class="navbar-nav sidebar-dropdown"
+              >
+                <template v-for="childNavItem in topLayerNavItem.items" :key="childNavItem.slug">
+                  <li
+                    v-if="rolesAndPermissions.hasAnyPermission(childNavItem.permissions) || rolesAndPermissions.hasRole('SuperAdmin')"
+                    class="nav-item ps-5"
+                    @click="setActiveChild(childNavItem.slug)"
+                  >
+                    <NuxtLink
+                      :to="routeParser.routeDottedToSlash(childNavItem.route ? childNavItem.route : '')"
+                      class="nav-link"
+                      :class="[{active: activeChild === childNavItem.slug}, 'route-' + childNavItem.route?.replace(/\./g, '-')]"
+                    >
+                      {{ $t(childNavItem.name) }}
+                    </NuxtLink>
+                  </li>
+                </template>
+              </ul>
+            </li>
+          </template>
         </template>
       </ul>
     </div>
@@ -122,6 +125,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 import type NavigationItem from "@zrm/motor-nx-core/types/navigation-item";
+import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);
@@ -182,6 +186,7 @@ watch(() => route.fullPath, () => {
   initialNaviActionState()
 }, {immediate: true})
 
+const rolesAndPermissions = useRolesAndPermissions();
 </script>
 <style lang="scss">
 

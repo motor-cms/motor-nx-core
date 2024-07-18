@@ -18,11 +18,6 @@
     </ul>
   </li>
 </template>
-<script lang="ts">
-  export default {
-    name: 'TreeItem',
-  }
-</script>
 <script setup lang="ts">
 // demo data
 import { computed, defineComponent, ref } from 'vue'

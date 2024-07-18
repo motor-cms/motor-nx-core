@@ -7,15 +7,10 @@
     &nbsp;
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ColorBox',
-  props: {
-    options: Object,
-    record: Object,
-    prop: String,
-  },
-})
+<script setup lang="ts">
+const props = defineProps({
+  options: Object,
+  record: Object,
+  prop: String,
+});
 </script>

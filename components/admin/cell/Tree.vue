@@ -3,19 +3,9 @@
     {{ record[prop] }}
   </div>
 </template>
-<script lang="ts">
-import { useRouter } from 'vue-router'
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'Tree',
-  props: {
-    prop: String,
-    record: Object,
-  },
-  setup() {
-    const router = useRouter()
-    return { router }
-  },
-})
+<script setup lang="ts">
+const props = defineProps({
+  prop: String,
+  record: Object,
+});
 </script>

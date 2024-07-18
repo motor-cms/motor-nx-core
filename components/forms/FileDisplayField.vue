@@ -38,51 +38,40 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
 
-export default defineComponent({
-  name: 'FileDisplayField',
-  props: {
-    id: String,
-    type: {
-      type: String,
-      default: 'text',
-    },
-    file: {
-      type: Object,
-      default: () => {},
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    cssClass: {
-      type: String,
-      default: '',
-    },
+const props = defineProps({
+  id: String,
+  type: {
+    type: String,
+    default: 'text',
   },
-  setup(props, ctx) {
-
-    const { convertMimeType, isImage } = useMimeType();
-
-    const fileSize = computed(() => {
-      if (props.file.size) {
-        return props.file.size_human;
-      }
-      return '';
-    })
-
-    return {
-      isImage,
-      convertMimeType,
-      fileSize
-    }
+  file: {
+    type: Object,
+    default: () => {},
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    required: true,
+  },
+  cssClass: {
+    type: String,
+    default: '',
+  },
+});
+
+const { convertMimeType, isImage } = useMimeType();
+
+const fileSize = computed(() => {
+  if (props.file.size) {
+    return props.file.size_human;
+  }
+  return '';
 })
+
 </script>

@@ -6,7 +6,7 @@ export default defineNuxtPlugin( {
     const navigationStore = useNavigationStore();
     const userStore = useUserStore();
     const { getNavigationItems } = navigationStore;
-    if (userStore.authenticated.value) {
+    if (userStore.authenticated) {
       await getNavigationItems();
     }
   }

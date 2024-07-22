@@ -314,17 +314,19 @@
                   :class="column.rowClass"
                 >
                   <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
-                    <component
-                      v-for="component in column.components"
-                      :key="component.name"
-                      :is="component.name"
-                      :options="component.options"
-                      :record="row"
-                      :prop="column.prop"
-                      :resource="resource"
-                      :index="index"
-                      @submit="submitCell"
-                    />
+                    <template v-for="component in column.components">
+                      <component
+                        :key="component.name"
+                        :is="component.name"
+                        :options="component.options"
+                        :record="row"
+                        :prop="column.prop"
+                        :resource="resource"
+                        v-if="hasPermissionToRenderComponent(component.name)"
+                        :index="index"
+                        @submit="submitCell"
+                      />
+                    </template>
                     <template v-if="column.renderer">
                       <fa
                         v-if="
@@ -403,6 +405,8 @@ import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSm
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
+import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
+import {PERMISSIONS} from "~/packages/motor-nx-core/types/roles_and_permissions";
 
 interface GridAction {
   label: string,
@@ -743,7 +747,24 @@ export default defineComponent({
       gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
     })
 
+    const rolesAndPermissions = useRolesAndPermissions();
+    const hasPermissionToRenderComponent = (componentName: string) => {
+      let permissionNeeded = route.fullPath.split('/').pop();
+      // Replace "-" with "_" in permissionNeeded to match the permission name from the backend
+      // e.g. "motor-nx-core.admin.grid" => "motor_nx_core.admin.grid"
+      permissionNeeded = permissionNeeded.replace(/-/g, '_');
+      switch (componentName) {
+        case 'EditButton':
+          return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.WRITE);
+        case 'DeleteButton':
+          return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.DELETE);
+        default:
+          return true
+      }
+    }
+
     return {
+      hasPermissionToRenderComponent,
       filterValues,
       loading,
       nextPage,

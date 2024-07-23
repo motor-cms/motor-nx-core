@@ -406,7 +406,7 @@ import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
-import {PERMISSIONS} from "~/packages/motor-nx-core/types/roles_and_permissions";
+import {PERMISSIONS, ROLES} from "~/packages/motor-nx-core/types/roles_and_permissions";
 
 interface GridAction {
   label: string,
@@ -749,6 +749,10 @@ export default defineComponent({
 
     const rolesAndPermissions = useRolesAndPermissions();
     const hasPermissionToRenderComponent = (componentName: string) => {
+      if (rolesAndPermissions.hasRole(ROLES.SUPER_ADMIN)) {
+        return true
+      }
+
       let permissionNeeded = route.fullPath.split('/').pop();
       // Replace "-" with "_" in permissionNeeded to match the permission name from the backend
       // e.g. "motor-nx-core.admin.grid" => "motor_nx_core.admin.grid"

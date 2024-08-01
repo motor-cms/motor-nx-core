@@ -35,35 +35,25 @@
     }}</span>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent, ref } from 'vue'
 // Todo: check if is needed?
 import VueEasyLightbox from 'vue-easy-lightbox'
 import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
 
-export default defineComponent({
-  name: 'File',
-  props: {
-    options: Object,
-    record: Object,
-    prop: String,
-  },
-  components: {
-    VueEasyLightbox,
-  },
-  setup() {
-    const visible = ref(false)
+const props = defineProps({
+  options: Object,
+  record: Object,
+  prop: String,
+});
+const visible = ref(false)
 
-    const { isImage } = useMimeType();
-    // Check mimetype before displaying an image
+const { isImage } = useMimeType();
+// Check mimetype before displaying an image
 
-    const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useRuntimeConfig();
 
-    const backendUrl = runtimeConfig.public.backendApiBaseUrl;
-
-    return { isImage, visible, backendUrl }
-  },
-})
+const backendUrl = runtimeConfig.public.backendApiBaseUrl;
 </script>
 <style lang="scss">
 .img-fluid {

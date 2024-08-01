@@ -11,20 +11,13 @@
     </button>
   </NuxtLink>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 
-export default defineComponent({
-  name: 'Button',
-  props: {
-    options: Object,
-    record: Object,
-  },
-  setup(props) {
-    const routeParser = useRouteParser();
-    const to = routeParser.routeDottedToSlash(props.options.route) + '/' +  props.record.id + '/' + props.options.property;
-    return { to }
-  }
-})
+const props = defineProps({
+  options: Object,
+  record: Object,
+});
+const routeParser = useRouteParser();
+const to = routeParser.routeDottedToSlash(props.options.route) + '/' +  props.record.id + '/' + props.options.property;
 </script>

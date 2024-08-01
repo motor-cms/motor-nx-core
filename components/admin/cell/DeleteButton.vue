@@ -10,42 +10,27 @@
     />
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import AdminModalDeleteConfirmation from '../modal/DeleteConfirmation.vue'
-import { defineComponent, ref } from 'vue'
-
-export default defineComponent({
-  name: 'DeleteButton',
-  props: {
-    options: Object,
-    record: Object,
-    resource: String,
-  },
-  components: { AdminModalDeleteConfirmation },
-  emits: ['submit'],
-  setup(props, ctx) {
-    const active = ref(false)
-    const askForConfirmation = () => {
-      active.value = true
-    }
-    const cancel = () => {
-      active.value = false
-    }
-    const confirm = () => {
-      active.value = false
-      ctx.emit('submit', {
-        component: 'DeleteButton',
-        record: props.record.id,
-        resource: props.resource,
-      })
-    }
-
-    return {
-      active,
-      askForConfirmation,
-      cancel,
-      confirm,
-    }
-  },
-})
+const props = defineProps({
+  options: Object,
+  record: Object,
+  resource: String,
+});
+const emit = defineEmits(['submit']);
+const active = ref(false)
+const askForConfirmation = () => {
+  active.value = true
+}
+const cancel = () => {
+  active.value = false
+}
+const confirm = () => {
+  active.value = false
+  emit('submit', {
+    component: 'DeleteButton',
+    record: props.record.id,
+    resource: props.resource,
+  })
+}
 </script>

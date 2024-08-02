@@ -8,18 +8,26 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex flex-row align-items-center">
-                  <h6 class="m-0" v-if="!loading">{{ name }}</h6>
+                  <h6
+                    v-if="!loading"
+                    class="m-0"
+                  >
+                    {{ name }}
+                  </h6>
                   <SpinnerSmall v-if="updatingInBackground" />
                 </div>
               </div>
 
               <div class="col-md-6 text-end">
                 <component
+                  :is="markRaw(components[component.name])"
                   v-for="component in headerActions"
                   :key="component.name"
-                  :is="dynamicComponent(component.name)"
                 />
-                <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
+                <NuxtLink
+                  v-if="hasBackButton && backRoute?.length > 0"
+                  :to="goBackRoute"
+                >
                   <button
                     class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1"
                   >
@@ -30,8 +38,8 @@
                   v-if="hasTriggerTableActionButton && triggerTableActionButtonLabel"
                 >
                   <a
-                    @click="$emit('triggerTableAction')"
                     class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
+                    @click="$emit('triggerTableAction')"
                   >
                     {{ triggerTableActionButtonLabel }}
                   </a>
@@ -50,52 +58,69 @@
             </div>
             <div class="row align-items-center">
               <component
+                :is="markRaw(components[f.name])"
                 v-for="f in filters"
-                :key="f"
-                :is="dynamicComponent(f.name)"
+                :key="f.name"
                 :options="f.options"
                 :name="f.name"
-                :defaultValue="$route.query[f.options.parameter]"
+                :default-value="$route.query[f.options.parameter]"
                 @submit="submitFilter"
-              ></component>
-              <div class="col" v-if="hasGridActions && selectedItemsLength">
+              />
+              <div
+                v-if="hasGridActions && selectedItemsLength"
+                class="col"
+              >
                 <div class="d-flex">
                   <select
+                    v-model="gridAction"
                     class="form-control max-width-100 d-inline me-2"
                     name="per-page"
-                    v-model="gridAction"
                   >
-                    <option v-for="action in gridActions" :value="action" :key="action">
+                    <option
+                      v-for="action in gridActions"
+                      :key="action.label"
+                      :value="action"
+                    >
                       {{ action.label }}
                     </option>
                   </select>
                   <button
                     type="button"
-                    @click="processGridAction"
                     class="accordion-button"
+                    @click="processGridAction"
                   >
-                    <fa icon="play"></fa>
+                    <fa icon="play" />
                   </button>
                 </div>
               </div>
-              <div class="col" v-if="!loading">
+              <div
+                v-if="!loading"
+                class="col"
+              >
                 <ul class="pagination float-end m-0">
-                  <li class="page-item disabled" v-if="meta.current_page === 1">
+                  <li
+                    v-if="meta.current_page === 1"
+                    class="page-item disabled"
+                  >
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
                     </a>
                   </li>
 
-                  <li class="page-item" @click="firstPage" v-if="meta.current_page > 1">
+                  <li
+                    v-if="meta.current_page > 1"
+                    class="page-item"
+                    @click="firstPage"
+                  >
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
                       <fa icon="chevron-left" />
                     </a>
                   </li>
                   <li
+                    v-if="meta.current_page > 1"
                     class="page-item"
                     @click="previousPage"
-                    v-if="meta.current_page > 1"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
@@ -103,21 +128,25 @@
                   </li>
                   <li>
                     <select
+                      v-model="filterValues.page"
                       class="form-control"
                       name="per-page"
                       @change="goToPage"
-                      v-model="filterValues.page"
                     >
-                      <option v-for="option in pageOptions" :value="option">
+                      <option
+                        v-for="option in pageOptions"
+                        :key="option"
+                        :value="option"
+                      >
                         Seite {{ option }} von
                         {{ meta.last_page }}
                       </option>
                     </select>
                   </li>
                   <li
+                    v-if="meta.current_page < meta.last_page"
                     class="page-item"
                     @click="nextPage()"
-                    v-if="meta.current_page < meta.last_page"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
@@ -125,9 +154,9 @@
                   </li>
 
                   <li
+                    v-if="meta.current_page < meta.last_page"
                     class="page-item"
                     @click="lastPage()"
-                    v-if="meta.current_page < meta.last_page"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
@@ -136,8 +165,8 @@
                   </li>
 
                   <li
-                    class="page-item disabled"
                     v-if="meta.current_page === meta.last_page"
+                    class="page-item disabled"
                   >
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
@@ -145,16 +174,25 @@
                   </li>
                 </ul>
                 <select
+                  v-model="filterValues.per_page"
                   class="form-control max-width-100 d-inline float-end me-2"
                   name="per-page"
                   @change="submitFilter"
-                  v-model="filterValues.per_page"
                 >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
+                  <option value="25">
+                    25
+                  </option>
+                  <option value="50">
+                    50
+                  </option>
+                  <option value="100">
+                    100
+                  </option>
                 </select>
-                <div v-if="meta.total > 0" class="float-end mt-2 me-2">
+                <div
+                  v-if="meta.total > 0"
+                  class="float-end mt-2 me-2"
+                >
                   {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
                 </div>
               </div>
@@ -177,7 +215,7 @@
                         type="checkbox"
                         class="form-check-input"
                         :checked="allSelected || pageSelected"
-                      />
+                      >
                       <p
                         v-if="!allSelected"
                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
@@ -198,7 +236,7 @@
                           class="form-check-input"
                           :checked="pageSelected"
                           @input="setPageSelected"
-                        />
+                        >
                         <p
                           class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
                         >
@@ -211,7 +249,7 @@
                           class="form-check-input"
                           :checked="allSelected"
                           @input="setAllSelected"
-                        />
+                        >
                         <p
                           class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
                         >
@@ -219,11 +257,11 @@
                         </p>
                       </div>
                       <div
+                        v-if="selectedItemsLength"
                         class="form-check"
                         @click="deselect"
-                        v-if="selectedItemsLength"
                       >
-                        <fa icon="xmark"></fa>
+                        <fa icon="xmark" />
                         <p
                           class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
                         >
@@ -234,30 +272,26 @@
                   </div>
                 </th>
                 <th
-                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                   v-for="column in columns"
                   :key="column.name"
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                   :style="column.columnStyle"
                 >
                   <a
                     v-if="column.sortable"
                     class="text-uppercase text-xxs font-weight-bolder"
-                    :class="[sortcol == column.prop ? 'text-primary' : 'text-secondary']"
+                    :class="[
+                      (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                    ]"
                     href="javascript:void(0)"
                     @click="sort(column.prop)"
                   >
                     {{ column.name }}
                     <fa
-                      :icon="
-                        sortcol == column.prop
-                          ? sortasc
-                            ? 'sort-up'
-                            : 'sort-down'
-                          : 'sort'
-                      "
+                      :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'"
                       class="table__column-title-sort-icon"
                       :class="[
-                        sortcol == column.prop ? 'text-primary' : 'text-secondary',
+                        (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
                       ]"
                     />
                   </a>
@@ -278,7 +312,7 @@
               <template
                 v-if="
                   (loading && rows.length === 0) ||
-                  (updatingInBackground && rows.length === 0)
+                    (updatingInBackground && rows.length === 0)
                 "
               >
                 <tr
@@ -292,8 +326,14 @@
                     class="align-middle text-sm text-wrap"
                     :class="column.rowClass"
                   >
-                    <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
-                      <Skeletor height="30" :width="Math.random() * 20 + 80 + '%'" />
+                    <div
+                      class="d-flex px-3 py-1"
+                      :class="column.rowWrapperClass"
+                    >
+                      <Skeletor
+                        height="30"
+                        :width="Math.random() * 20 + 80 + '%'"
+                      />
                     </div>
                   </td>
                 </tr>
@@ -303,7 +343,10 @@
                 :key="row.id"
                 :class="index % 2 === 0 ? 'bg-gray-100' : ''"
               >
-                <td class="align-items-center text-sm" v-if="hasGridActions">
+                <td
+                  v-if="hasGridActions"
+                  class="align-items-center text-sm"
+                >
                   <div class="form-check">
                     <input
                       type="checkbox"
@@ -313,7 +356,7 @@
                       :value="name"
                       :checked="gridStore.isSelected(row) || allSelected"
                       @input="gridStore.selectItem(row)"
-                    />
+                    >
                   </div>
                 </td>
                 <td
@@ -322,11 +365,14 @@
                   class="align-middle text-sm text-wrap"
                   :class="column.rowClass"
                 >
-                  <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
+                  <div
+                    class="d-flex px-3 py-1"
+                    :class="column.rowWrapperClass"
+                  >
                     <component
+                      :is="markRaw(components[component.name])"
                       v-for="component in column.components"
-                      :key="component"
-                      :is="dynamicComponent(component.name)"
+                      :key="component.name"
                       :options="component.options"
                       :record="row"
                       :prop="column.prop"
@@ -338,19 +384,19 @@
                       <fa
                         v-if="
                           column.renderer.type === 'boolIcon' &&
-                          getPropertyValue(row, column.prop) == true
+                            getPropertyValue(row, column.prop) == true
                         "
                         class="text-success"
                         :icon="column.renderer.trueIcon"
-                      ></fa>
+                      />
                       <fa
                         v-else-if="
                           column.renderer.type === 'boolIcon' &&
-                          getPropertyValue(row, column.prop) == false
+                            getPropertyValue(row, column.prop) == false
                         "
                         class="text-danger"
                         :icon="column.renderer.falseIcon"
-                      ></fa>
+                      />
                       <div
                         v-else-if="column.renderer.type === 'linkLabelId'"
                         v-html="
@@ -365,7 +411,7 @@
                         v-html="
                           renderer(column.renderer, getPropertyValue(row, column.prop))
                         "
-                      ></div>
+                      />
                     </template>
                     <template v-if="!column.renderer && !column.components">
                       {{ getPropertyValue(row, column.prop) }}
@@ -381,35 +427,62 @@
   </div>
 </template>
 <script setup lang="ts">
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+} from 'vue'
+import SearchFilter from '../filters/SearchFilter.vue'
+import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
 import {Skeletor} from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
 import {useI18n} from 'vue-i18n'
 import {storeToRefs} from 'pinia';
-import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
+import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
+import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
+import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
+import ActionButton from "@zrm/motor-nx-core/components/admin/cell/ActionButton.vue";
+import CustomActionButton from "@zrm/motor-nx-core/components/admin/cell/CustomActionButton.vue";
+import DeleteButton from "@zrm/motor-nx-core/components/admin/cell/DeleteButton.vue";
+import CellTree from "@zrm/motor-nx-core/components/admin/cell/Tree.vue";
 import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
+import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
 
 interface GridAction {
   label: string,
   action: string,
-  func: () => Promise<any>
+  func: () => Promise<null>
 }
 
-
+const components = {
+  Popover,
+  CheckboxField,
+  SearchFilter,
+  SelectFilter,
+  Button,
+  EditButton,
+  ActionButton,
+  CustomActionButton,
+  DeleteButton,
+  StatusIcon,
+  CellTree,
+};
 const props = defineProps({
   name: {
     type: String,
     default: 'Grid',
   },
   columns: {
-    type: Array<Record<string, any>>,
+    type: Array<Record<string, object>>,
     default: ref([]),
   },
   rows: {
-    type: Array<Record<string, any>>,
+    type: Array<Record<string, object>>,
     default: ref([]),
   },
   meta: {
@@ -471,48 +544,17 @@ const props = defineProps({
     default: ''
   }
 });
-const components_new = props.loadComponents as Array<{
-  name: string
-  object: Component
-}>
+const emit = defineEmits(['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction']);
 
-const components = new Map();
-
-if (components_new.length) {
-  components_new.forEach((component) => {
-    components.set(component.name, component.object.__file);
+if (props.loadComponents.length) {
+  props.loadComponents.forEach((component) => {
+    components[component.name] = component.object;
   })
 }
 
-//FIXME: find better way to do this
-const getRelativepath = (to: String) => {
-  // format: /_nuxt/packages/motor-nx-core/components/admin/common/Grid.vue
-  const current_url = new URL(import.meta.url).pathname;
-  const depth = (current_url.match(/o/g)||[]).length - 3;
-  let path = "";
-  for (let i = 0; i < depth; ++i) {
-    path += "../";
-  }
-  path += to.substring(to.indexOf("packages") + 9);
-  console.log(path);
-  return path;
-}
+const appStore = useAppStore()
+const {loading, updatingInBackground} = storeToRefs(appStore)
 
-const dynamicComponent = (name: String) => defineAsyncComponent(() => {
-  const component = components.get(name);
-  console.log('NAME:', name, 'COMPONENT:', component)
-  if (component) {
-    return import(/* @vite-ignore */ getRelativepath(component));
-  }
-  if (name.includes("Filter")) {
-    return import (`../filters/${name}.vue`);
-  }
-  return import (`../cell/${name}.vue`);
-});
-
-const emit = defineEmits(['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction']);
-const appStore = useAppStore();
-const {loading, updatingInBackground} = storeToRefs(appStore);
 const gridStore = useGridStore();
 gridStore.init(props.meta);
 const router = useRouter();
@@ -576,7 +618,7 @@ const renderer = (
       format: string
       property: string
     },
-    value: any
+    value: object
 ): string => {
   switch (renderer.type) {
     case 'translation':
@@ -585,7 +627,7 @@ const renderer = (
       return value ? t('global.yes') : t('global.no');
     case 'array':
       if (!value.length) return '-'
-      return value.map((object: Record<string, any>) => {
+      return value.map((object: Record<string, object>) => {
         if (object.name.length) {
           return ' ' + object.name
         }
@@ -602,14 +644,14 @@ const renderer = (
     case 'count':
       return value.length ? value.length.toString() : 'ß'
     case 'list':
-      return value.map((object: any) => {
+      return value.map((object: object) => {
         return ' ' + object[renderer.property]
       })
     case 'currency':
       return value.toFixed(2) + ' ' + renderer.format
     case 'links':
       if (value.length) {
-        return value.map((object: Record<string, any>) => {
+        return value.map((object: Record<string, object>) => {
           return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
         }).join('')
       } else
@@ -628,14 +670,14 @@ const renderer = (
       return value
   }
 }
-const submitCell = (params: any) => {
+const submitCell = (params: object) => {
   emit('submitCell', {
     componentParams: params,
     filterValues,
   })
 }
 
-const getPropertyValue = (object: any, property: string): string => {
+const getPropertyValue = (object: object, property: string): string => {
   property = property.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '') // convert indexes to properties and strip leading dot
   let a = property.split('.')
   for (let i = 0, n = a.length; i < n; ++i) {
@@ -728,7 +770,7 @@ const processGridAction = async () => {
 }
 const sortcol = ref();
 const sortasc = ref(true);
-const sort = (prop: String) => {
+const sort = (prop: string) => {
   sortasc.value = sortcol.value == prop ? !sortasc.value : true;
   sortcol.value = prop;
   submitFilter({
@@ -740,6 +782,7 @@ const sort = (prop: String) => {
 onMounted(() => {
   gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
 })
+
 </script>
 
 <style scoped lang="scss">

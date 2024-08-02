@@ -12,8 +12,7 @@
         <input
           type="checkbox"
           :name="name"
-          :value="modelValue"
-          :checked="modelValue"
+          v-model="model"
           :disabled="true"
         />
         <span
@@ -28,62 +27,48 @@
     </p>
   </div>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { useField } from "vee-validate";
 
 import { defineComponent } from "vue";
 
-export default defineComponent({
-  name: "CheckboxField",
-  props: {
-    // Field's own value
-    id: String,
-    modelValue: {
-      type: null,
-    },
-    emits: ["update:modelValue"],
-    label: String,
-    name: {
-      type: String,
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+const props = defineProps({
+  // Field's own value
+  id: String,
+  label: String,
+  name: {
+    type: String,
   },
-  setup(props, ctx) {
-    const { checked, handleChange, errorMessage, meta } = useField(
-      <string>props.name,
-      undefined,
-      {
-        type: "checkbox",
-        checkedValue: <string>props.modelValue,
-        syncVModel: true,
-      }
-    );
-
-    const emitUpdate = () => {
-      if (props.disabled) {
-        return;
-      }
-      ctx.emit("update:modelValue", !props.modelValue);
-    };
-    // select/unselect the input
-    //   handleChange(<string>props.modelValue)
-
-    return {
-      checked, // readonly
-      //    handleChange,
-      errorMessage,
-      meta,
-      emitUpdate,
-    };
+  description: {
+    type: String,
+    default: "",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
+const model = defineModel();
+const emit = defineEmits(["update:modelValue"]);
+const { checked, handleChange, errorMessage, meta } = useField(
+  <string>props.name,
+  undefined,
+  {
+    type: "checkbox",
+    checkedValue: <string>props.modelValue,
+    syncVModel: true,
+  }
+);
+
+const emitUpdate = () => {
+  if (props.disabled) {
+    return;
+  }
+  emit("update:modelValue", !props.modelValue);
+};
+// select/unselect the input
+//   handleChange(<string>props.modelValue)
+
 </script>
 <style>
 .atom-toggle__switch {

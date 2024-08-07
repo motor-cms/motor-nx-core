@@ -7,151 +7,105 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="d-flex flex-row align-items-center">
-                  <h6 class="m-0" v-if="!loading">{{ name }}</h6>
+                  <h6 v-if="!loading" class="m-0">
+                    {{ name }}
+                  </h6>
                   <SpinnerSmall v-if="updatingInBackground" />
                 </div>
               </div>
 
               <div class="col-md-6 text-end">
-                <component
-                  v-for="component in headerActions"
-                  :key="component.name"
-                  :is="component.name"
-                />
+                <component :is="component.name" v-for="component in headerActions" :key="component.name" />
                 <NuxtLink v-if="hasBackButton && backRoute?.length > 0" :to="goBackRoute">
-                  <button
-                    class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1"
-                  >
+                  <button class="btn btn-outline-primary border-radius-sm text-capitalize text-base mb-4 me-1">
                     {{ $t("global.back") }}
                   </button>
                 </NuxtLink>
-                <NuxtLink
-                  v-if="hasTriggerTableActionButton && triggerTableActionButtonLabel"
-                >
-                  <a
-                    @click="$emit('triggerTableAction')"
-                    class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
-                  >
+                <NuxtLink v-if="hasTriggerTableActionButton && triggerTableActionButtonLabel">
+                  <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
+                    @click="$emit('triggerTableAction')">
                     {{ triggerTableActionButtonLabel }}
                   </a>
                 </NuxtLink>
-                <NuxtLink
-                  v-if="!withoutCreate && createRecordRoute"
-                  :to="createRecordRoute"
-                >
-                  <a
-                    class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
-                  >
+                <NuxtLink v-if="!withoutCreate && createRecordRoute && hasPermissionToRenderComponent('CreateButton')" :to="createRecordRoute">
+                  <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">
                     {{ createLabel }}
                   </a>
                 </NuxtLink>
               </div>
             </div>
             <div class="row align-items-center">
-              <component
-                v-for="f in filters"
-                :key="f.name"
-                :is="f.name"
-                :options="f.options"
-                :name="f.name"
-                :defaultValue="$route.query[f.options.parameter]"
-                @submit="submitFilter"
-              ></component>
-              <div class="col" v-if="hasGridActions && selectedItemsLength">
+              <component :is="f.name" v-for="f in filters" :key="f.name" :options="f.options" :name="f.name"
+                :default-value="$route.query[f.options.parameter]" @submit="submitFilter" />
+              <div v-if="hasGridActions && selectedItemsLength" class="col">
                 <div class="d-flex">
-                  <select
-                    class="form-control max-width-100 d-inline me-2"
-                    name="per-page"
-                    v-model="gridAction"
-                  >
+                  <select v-model="gridAction" class="form-control max-width-100 d-inline me-2" name="per-page">
                     <option v-for="action in gridActions" :value="action">
                       {{ action.label }}
                     </option>
                   </select>
-                  <button
-                    type="button"
-                    @click="processGridAction"
-                    class="accordion-button"
-                  >
-                    <fa icon="play"></fa>
+                  <button type="button" class="accordion-button" @click="processGridAction">
+                    <fa icon="play" />
                   </button>
                 </div>
               </div>
-              <div class="col" v-if="!loading">
+              <div v-if="!loading" class="col">
                 <ul class="pagination float-end m-0">
-                  <li class="page-item disabled" v-if="meta.current_page === 1">
+                  <li v-if="meta.current_page === 1" class="page-item disabled">
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
                     </a>
                   </li>
 
-                  <li class="page-item" @click="firstPage" v-if="meta.current_page > 1">
+                  <li v-if="meta.current_page > 1" class="page-item" @click="firstPage">
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
                       <fa icon="chevron-left" />
                     </a>
                   </li>
-                  <li
-                    class="page-item"
-                    @click="previousPage"
-                    v-if="meta.current_page > 1"
-                  >
+                  <li v-if="meta.current_page > 1" class="page-item" @click="previousPage">
                     <a class="page-link text-black">
                       <fa icon="chevron-left" />
                     </a>
                   </li>
                   <li>
-                    <select
-                      class="form-control"
-                      name="per-page"
-                      @change="goToPage"
-                      v-model="filterValues.page"
-                    >
+                    <select v-model="filterValues.page" class="form-control" name="per-page" @change="goToPage">
                       <option v-for="option in pageOptions" :value="option">
                         Seite {{ option }} von
                         {{ meta.last_page }}
                       </option>
                     </select>
                   </li>
-                  <li
-                    class="page-item"
-                    @click="nextPage()"
-                    v-if="meta.current_page < meta.last_page"
-                  >
+                  <li v-if="meta.current_page < meta.last_page" class="page-item" @click="nextPage()">
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
                     </a>
                   </li>
 
-                  <li
-                    class="page-item"
-                    @click="lastPage()"
-                    v-if="meta.current_page < meta.last_page"
-                  >
+                  <li v-if="meta.current_page < meta.last_page" class="page-item" @click="lastPage()">
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
                       <fa icon="chevron-right" />
                     </a>
                   </li>
 
-                  <li
-                    class="page-item disabled"
-                    v-if="meta.current_page === meta.last_page"
-                  >
+                  <li v-if="meta.current_page === meta.last_page" class="page-item disabled">
                     <a class="page-link text-black">
                       <fa icon="chevron-right" />
                     </a>
                   </li>
                 </ul>
-                <select
-                  class="form-control max-width-100 d-inline float-end me-2"
-                  name="per-page"
-                  @change="submitFilter"
-                  v-model="filterValues.per_page"
-                >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
+                <select v-model="filterValues.per_page" class="form-control max-width-100 d-inline float-end me-2"
+                  name="per-page" @change="submitFilter">
+                  <option value="25">
+                    25
+                  </option>
+                  <option value="50">
+                    50
+                  </option>
+                  <option value="100">
+                    100
+                  </option>
                 </select>
                 <div v-if="meta.total > 0" class="float-end mt-2 me-2">
                   {{ meta.from }} - {{ meta.to }} / {{ meta.total }}
@@ -168,93 +122,55 @@
               <tr>
                 <th v-if="hasGridActions">
                   <div style="position: relative">
-                    <div
-                      class="form-check d-flex align-items-center"
-                      @click.prevent="selectPopoverActive = !selectPopoverActive"
-                    >
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        :checked="allSelected || pageSelected"
-                      />
-                      <p
-                        v-if="!allSelected"
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                      >
+                    <div class="form-check d-flex align-items-center"
+                      @click.prevent="selectPopoverActive = !selectPopoverActive">
+                      <input type="checkbox" class="form-check-input" :checked="allSelected || pageSelected">
+                      <p v-if="!allSelected"
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         {{ selectedItemsLength }} {{ t("global.selected") }}
                       </p>
-                      <p
-                        v-else
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                      >
+                      <p v-else class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         {{ meta.total }} {{ t("global.selected") }}
                       </p>
                     </div>
                     <Popover v-if="selectPopoverActive">
                       <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          :checked="pageSelected"
-                          @input="setPageSelected"
-                        />
-                        <p
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                        >
+                        <input type="checkbox" class="form-check-input" :checked="pageSelected"
+                          @input="setPageSelected">
+                        <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                           {{ t("global.select_this_page") }}
                         </p>
                       </div>
                       <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          :checked="allSelected"
-                          @input="setAllSelected"
-                        />
-                        <p
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                        >
+                        <input type="checkbox" class="form-check-input" :checked="allSelected" @input="setAllSelected">
+                        <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                           {{ t("global.select_all_pages") }}
                         </p>
                       </div>
-                      <div
-                        class="form-check"
-                        @click="deselect"
-                        v-if="selectedItemsLength"
-                      >
-                        <fa icon="xmark"></fa>
-                        <p
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                        >
+                      <div v-if="selectedItemsLength" class="form-check" @click="deselect">
+                        <fa icon="xmark" />
+                        <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                           {{ t("global.unselect_all_pages") }}
                         </p>
                       </div>
                     </Popover>
                   </div>
                 </th>
-                <th
+                <th v-for="column in columns" :key="column.name"
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                  v-for="column in columns"
-                  :key="column.name"
-                  :style="column.columnStyle"
-
-                >
-                <a
-                  v-if="column.sortable"
-                  class="text-uppercase text-xxs font-weight-bolder"
-                  :class="[
+                  :style="column.columnStyle">
+                  <a v-if="column.sortable" class="text-uppercase text-xxs font-weight-bolder" :class="[
                     (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
-                  ]"
-                  href = "javascript:void(0)"
-                  @click="sort(column.prop)">
+                  ]" href="javascript:void(0)" @click="sort(column.prop)">
                     {{ column.name }}
-                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'" class="table__column-title-sort-icon" :class="[
-                    (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
-                  ]" />
-                </a>
-                <template v-else>
-                    {{ column.name}}
-                </template>
+                    <fa :icon="sortcol == column.prop ? (sortasc ? 'sort-up' : 'sort-down') : 'sort'"
+                      class="table__column-title-sort-icon" :class="[
+                        (sortcol == column.prop) ? 'text-primary' : 'text-secondary',
+                      ]" />
+                  </a>
+                  <template v-else>
+                    {{ column.name }}
+                  </template>
                 </th>
               </tr>
             </thead>
@@ -266,99 +182,50 @@
                   </h3>
                 </td>
               </tr>
-              <template
-                v-if="
-                  (loading && rows.length === 0) ||
-                  (updatingInBackground && rows.length === 0)
-                "
-              >
-                <tr
-                  v-for="index in 5"
-                  :key="index"
-                  :class="index % 2 === 1 ? 'bg-gray-100' : ''"
-                >
-                  <td
-                    v-for="column in columns"
-                    :key="column.name"
-                    class="align-middle text-sm text-wrap"
-                    :class="column.rowClass"
-                  >
+              <template v-if="
+                (loading && rows.length === 0) ||
+                (updatingInBackground && rows.length === 0)
+              ">
+                <tr v-for="index in 5" :key="index" :class="index % 2 === 1 ? 'bg-gray-100' : ''">
+                  <td v-for="column in columns" :key="column.name" class="align-middle text-sm text-wrap"
+                    :class="column.rowClass">
                     <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
                       <Skeletor height="30" :width="Math.random() * 20 + 80 + '%'" />
                     </div>
                   </td>
                 </tr>
               </template>
-              <tr
-                v-for="(row, index) in rows"
-                :key="row.id"
-                :class="index % 2 === 0 ? 'bg-gray-100' : ''"
-              >
-                <td class="align-items-center text-sm" v-if="hasGridActions">
+              <tr v-for="(row, index) in rows" :key="row.id" :class="index % 2 === 0 ? 'bg-gray-100' : ''">
+                <td v-if="hasGridActions" class="align-items-center text-sm">
                   <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :disabled="allSelected"
-                      :name="name"
-                      :value="name"
-                      :checked="gridStore.isSelected(row) || allSelected"
-                      @input="gridStore.selectItem(row)"
-                    />
+                    <input type="checkbox" class="form-check-input" :disabled="allSelected" :name="name" :value="name"
+                      :checked="gridStore.isSelected(row) || allSelected" @input="gridStore.selectItem(row)">
                   </div>
                 </td>
-                <td
-                  v-for="column in columns"
-                  :key="column.name"
-                  class="align-middle text-sm text-wrap"
-                  :class="column.rowClass"
-                >
+                <td v-for="column in columns" :key="column.name" class="align-middle text-sm text-wrap"
+                  :class="column.rowClass">
                   <div class="d-flex px-3 py-1" :class="column.rowWrapperClass">
                     <template v-for="component in column.components">
-                      <component
-                        :key="component.name"
-                        :is="component.name"
-                        :options="component.options"
-                        :record="row"
-                        :prop="column.prop"
-                        :resource="resource"
-                        v-if="hasPermissionToRenderComponent(component.name)"
-                        :index="index"
-                        @submit="submitCell"
-                      />
+                      <component :is="component.name" v-if="hasPermissionToRenderComponent(component.name)"
+                        :key="component.name" :options="component.options" :record="row" :prop="column.prop"
+                        :resource="resource" :index="index" @submit="submitCell" />
                     </template>
                     <template v-if="column.renderer">
-                      <fa
-                        v-if="
-                          column.renderer.type === 'boolIcon' &&
-                          getPropertyValue(row, column.prop) == true
-                        "
-                        class="text-success"
-                        :icon="column.renderer.trueIcon"
-                      ></fa>
-                      <fa
-                        v-else-if="
-                          column.renderer.type === 'boolIcon' &&
-                          getPropertyValue(row, column.prop) == false
-                        "
-                        class="text-danger"
-                        :icon="column.renderer.falseIcon"
-                      ></fa>
-                      <div
-                        v-else-if="column.renderer.type === 'linkLabelId'"
-                        v-html="
-                          renderer(column.renderer, {
-                            label: getPropertyValue(row, column.label),
-                            id: getPropertyValue(row, column.id),
-                          })
-                        "
-                      />
-                      <div
-                        v-else
-                        v-html="
-                          renderer(column.renderer, getPropertyValue(row, column.prop))
-                        "
-                      ></div>
+                      <fa v-if="
+                        column.renderer.type === 'boolIcon' &&
+                        getPropertyValue(row, column.prop) == true
+                      " class="text-success" :icon="column.renderer.trueIcon" />
+                      <fa v-else-if="
+                        column.renderer.type === 'boolIcon' &&
+                        getPropertyValue(row, column.prop) == false
+                      " class="text-danger" :icon="column.renderer.falseIcon" />
+                      <div v-else-if="column.renderer.type === 'linkLabelId'" v-html="renderer(column.renderer, {
+                        label: getPropertyValue(row, column.label),
+                        id: getPropertyValue(row, column.id),
+                      })
+                        " />
+                      <div v-else v-html="renderer(column.renderer, getPropertyValue(row, column.prop))
+                        " />
                     </template>
                     <template v-if="!column.renderer && !column.components">
                       {{ getPropertyValue(row, column.prop) }}
@@ -388,10 +255,10 @@ import {
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
-import {Skeletor} from 'vue-skeletor'
+import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
-import {useI18n} from 'vue-i18n'
-import {storeToRefs} from 'pinia';
+import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia';
 import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
 import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
@@ -404,7 +271,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
-import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
+import { useFilterStore } from "@zrm/motor-nx-core/stores/filter";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
 import {PERMISSIONS} from "~/packages/motor-nx-core/types/roles_and_permissions";
 
@@ -494,11 +361,11 @@ export default defineComponent({
       type: Array<GridAction>,
       default: () => [],
     },
-    hasTriggerTableActionButton:{
+    hasTriggerTableActionButton: {
       type: Boolean,
       default: false
     },
-    triggerTableActionButtonLabel:{
+    triggerTableActionButtonLabel: {
       type: String,
       default: ''
     }
@@ -506,16 +373,16 @@ export default defineComponent({
   emits: ['submit', 'submitCell', 'gridActionProcessed', 'triggerTableAction'],
   setup(props, ctx) {
     const appStore = useAppStore()
-    const {loading, updatingInBackground} = storeToRefs(appStore)
+    const { loading, updatingInBackground } = storeToRefs(appStore)
     const gridStore = useGridStore();
     gridStore.init(props.meta);
     const router = useRouter();
     const route = useRoute();
     const filterStore = useFilterStore();
 
-    const {selectedItemsLength, selectedPageMap, pageSelected, allSelected} = storeToRefs(gridStore);
-    const {t} = useI18n()
-    const filterValues = reactive({per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page ? route.query.page : 1})
+    const { selectedItemsLength, selectedPageMap, pageSelected, allSelected } = storeToRefs(gridStore);
+    const { t } = useI18n()
+    const filterValues = reactive({ per_page: route.query.per_page ? route.query.per_page : 25, page: route.query.page ? route.query.page : 1 })
 
     const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRoute))
 
@@ -543,7 +410,7 @@ export default defineComponent({
       // Save current filter values
       filterStore.setFilterValuesForGrid(route.name, filterValues);
 
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
 
@@ -551,7 +418,7 @@ export default defineComponent({
       props.meta.current_page--;
       filterValues.page--
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
 
@@ -559,18 +426,18 @@ export default defineComponent({
       props.meta.current_page++;
       filterValues.page++
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
 
     const renderer = (
-        renderer: {
-          type: string
-          path: string
-          format: string
-          property: string
-        },
-        value: any
+      renderer: {
+        type: string
+        path: string
+        format: string
+        property: string
+      },
+      value: any
     ): string => {
       switch (renderer.type) {
         case 'translation':
@@ -606,16 +473,14 @@ export default defineComponent({
             return value.map((object: Record<string, any>) => {
               return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
             }).join('')
-          } else
-          {
+          } else {
             // Return fontawesome icon
             return '-'
           }
         case 'linkLabelId':
           if (value.label) {
             return '<a href="' + renderer.route.replace('{id}', value.id) + '">' + value.label + '</a>'
-          } else
-          {
+          } else {
             return '-'
           }
         default:
@@ -653,14 +518,14 @@ export default defineComponent({
       props.meta.current_page = 1;
       filterValues.page = 1;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
     const lastPage = () => {
       props.meta.current_page = props.meta.last_page;
       filterValues.page = props.meta.last_page;
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
 
@@ -668,7 +533,7 @@ export default defineComponent({
 
     const goToPage = () => {
       filterStore.setFilterValuesForGrid(route.name, filterValues);
-      router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+      router.replace({ query: filterStore.getFilterValuesForGrid(route.name) })
       ctx.emit('submit', filterValues)
     }
 
@@ -708,7 +573,7 @@ export default defineComponent({
       gridStore.init(props.meta);
     })
 
-    const {$toast} = useNuxtApp();
+    const { $toast } = useNuxtApp();
     const processGridAction = async () => {
       try {
         appStore.isLoading(true)
@@ -724,12 +589,12 @@ export default defineComponent({
     }
     const sortcol = ref();
     const sortasc = ref(true);
-    const sort = (prop: String) => {
+    const sort = (prop: string) => {
       sortasc.value = sortcol.value == prop ? !sortasc.value : true;
       sortcol.value = prop;
       submitFilter({
         parameter: "sort",
-        value: sortcol.value + (sortasc.value? "": ":desc"),
+        value: sortcol.value + (sortasc.value ? "" : ":desc"),
       });
     };
 
@@ -758,6 +623,8 @@ export default defineComponent({
           return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.WRITE);
         case 'DeleteButton':
           return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.DELETE);
+        case 'CreateButton':
+          return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.WRITE);
         default:
           return true
       }

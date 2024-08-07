@@ -125,7 +125,7 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import {Skeletor} from "vue-skeletor";
 import 'vue-skeletor/dist/vue-skeletor.css'
 import type NavigationItem from "@zrm/motor-nx-core/types/navigation-item";
-import useRolesAndPermissions from "~/packages/motor-nx-core/composables/auth/rolesAndPermissions";
+import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
 
 const runtimeConfig = useRuntimeConfig();
 const showProjectName = computed(() => runtimeConfig.public.showProjectName);

@@ -406,7 +406,7 @@ import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
-import {PERMISSIONS, ROLES} from "~/packages/motor-nx-core/types/roles_and_permissions";
+import {PERMISSIONS, ROLES} from "@zrm/motor-nx-core/types/roles_and_permissions";
 
 interface GridAction {
   label: string,

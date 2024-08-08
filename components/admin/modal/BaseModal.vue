@@ -56,37 +56,24 @@
   </Teleport>
 </template>
 
-<script lang="ts">
-import {defineComponent, reactive} from 'vue'
-
-export default defineComponent({
-  name: 'BaseModal',
-  props: {
-    acceptText: String,
-    dismissText: String,
-    active: Boolean,
-  },
-  emits: ['confirm', 'cancel'],
-  setup(props, ctx) {
-    const data = reactive({
-      showModal: false,
-    })
-    const cancel = () => {
-      data.showModal = false
-      ctx.emit('cancel')
-    }
-    const confirm = () => {
-      data.showModal = false
-      ctx.emit('confirm')
-    }
-
-    return {
-      ...data,
-      cancel,
-      confirm,
-    }
-  },
+<script setup lang="ts">
+const props = defineProps({
+  acceptText: String,
+  dismissText: String,
+  active: Boolean,
+});
+const emit = defineEmits(['confirm', 'cancel']);
+const data = reactive({
+  showModal: false,
 })
+const cancel = () => {
+  data.showModal = false
+  emit('cancel')
+};
+const confirm = () => {
+  data.showModal = false
+  emit('confirm')
+};
 </script>
 <style scoped>
 .modal {

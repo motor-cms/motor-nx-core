@@ -9,46 +9,31 @@
   </BaseModal>
 </template>
 
-<script lang="ts">
-// import { Modal } from 'bootstrap'
-import { computed, defineComponent, reactive } from 'vue'
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 
-export default defineComponent({
-  name: 'DeleteConfirmation',
-  components: {BaseModal},
-  props: {
-    record: Object,
-    active: Boolean,
-  },
-  emits: ['cancel', 'confirm'],
-  setup(props, ctx) {
+const props = defineProps({
+  record: Object,
+  active: Boolean,
+});
+const emit = defineEmits(['cancel', 'confirm']);
 
-    // Load i18n module
-    const { t } = useI18n()
+// Load i18n module
+const { t } = useI18n()
 
-    const data = reactive({
-      showModal: false,
-    })
-    const cancel = () => {
-      data.showModal = false
-      ctx.emit('cancel')
-    }
-    const confirm = () => {
-      data.showModal = false
-      ctx.emit('confirm')
-    }
-    const body = computed(() => {
-      return props.record.name
-    })
-
-    return {
-      ...data,
-      cancel,
-      confirm,
-      body,
-    }
-  },
+const data = reactive({
+  showModal: false,
+})
+const cancel = () => {
+  data.showModal = false
+  emit('cancel')
+}
+const confirm = () => {
+  data.showModal = false
+  emit('confirm')
+}
+const body = computed(() => {
+  return props.record.name
 })
 </script>

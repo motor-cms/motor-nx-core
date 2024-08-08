@@ -8,35 +8,22 @@
    </template>
  </BaseModal>
 </template>
-<script lang="ts">
-import {defineComponent, reactive} from 'vue'
+<script setup lang="ts">
 import BaseModal from "@zrm/motor-nx-core/components/admin/modal/BaseModal.vue";
 
-export default defineComponent({
-  name: 'Logout',
-  components: {BaseModal},
-  props: {
-    active: Boolean,
-  },
-  emits: ['confirm', 'cancel'],
-  setup(props, ctx) {
-    const data = reactive({
-      showModal: false,
-    })
-    const cancel = () => {
-      data.showModal = false
-      ctx.emit('cancel')
-    }
-    const confirm = () => {
-      data.showModal = false
-      ctx.emit('confirm')
-    }
-
-    return {
-      ...data,
-      cancel,
-      confirm,
-    }
-  },
+const props = defineProps({
+  active: Boolean,
+});
+const emit = defineEmits(['confirm', 'cancel']);
+const data = reactive({
+  showModal: false,
 })
+const cancel = () => {
+  data.showModal = false
+  emit('cancel')
+}
+const confirm = () => {
+  data.showModal = false
+  emit('confirm')
+}
 </script>

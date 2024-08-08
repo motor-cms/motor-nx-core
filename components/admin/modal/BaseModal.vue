@@ -10,7 +10,6 @@
         data-bs-backdrop="static"
         role="dialog"
         aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
       >
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -25,7 +24,7 @@
                 aria-label="Close"
                 v-on:click="cancel"
               >
-                <span aria-hidden="true">&times;</span>
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">

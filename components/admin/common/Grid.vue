@@ -43,13 +43,8 @@
                     {{ triggerTableActionButtonLabel }}
                   </a>
                 </NuxtLink>
-                <NuxtLink
-                  v-if="!withoutCreate && createRecordRoute"
-                  :to="createRecordRoute"
-                >
-                  <a
-                    class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1"
-                  >
+                <NuxtLink v-if="!withoutCreate && createRecordRoute && hasPermissionToRenderComponent('CreateButton')" :to="createRecordRoute">
+                  <a class="btn bg-gradient-primary border-radius-sm text-capitalize text-base mb-4 me-1">
                     {{ createLabel }}
                   </a>
                 </NuxtLink>
@@ -105,7 +100,6 @@
                       <fa icon="chevron-left" />
                     </a>
                   </li>
-
                   <li
                     v-if="meta.current_page > 1"
                     class="page-item"
@@ -151,7 +145,6 @@
                       <fa icon="chevron-right" />
                     </a>
                   </li>
-
                   <li
                     v-if="meta.current_page < meta.last_page"
                     class="page-item"
@@ -162,7 +155,6 @@
                       <fa icon="chevron-right" />
                     </a>
                   </li>
-
                   <li
                     v-if="meta.current_page === meta.last_page"
                     class="page-item disabled"
@@ -221,10 +213,7 @@
                       >
                         {{ selectedItemsLength }} {{ t("global.selected") }}
                       </p>
-                      <p
-                        v-else
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1"
-                      >
+                      <p v-else class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 m-0 mx-1">
                         {{ meta.total }} {{ t("global.selected") }}
                       </p>
                     </div>
@@ -308,8 +297,7 @@
                   </h3>
                 </td>
               </tr>
-              <template
-                v-if="
+              <template v-if="
                   (loading && rows.length === 0) ||
                     (updatingInBackground && rows.length === 0)
                 "
@@ -368,17 +356,21 @@
                     class="d-flex px-3 py-1"
                     :class="column.rowWrapperClass"
                   >
-                    <component
-                      :is="markRaw(components[component.name])"
+                    <template
                       v-for="component in column.components"
                       :key="component.name"
-                      :options="component.options"
-                      :record="row"
-                      :prop="column.prop"
-                      :resource="resource"
-                      :index="index"
-                      @submit="submitCell"
-                    />
+                    >
+                      <component
+                        :is="markRaw(components[component.name])"
+                        v-if="hasPermissionToRenderComponent(component.name)"
+                        :options="component.options"
+                        :record="row"
+                        :prop="column.prop"
+                        :resource="resource"
+                        :index="index"
+                        @submit="submitCell"
+                      />
+                    </template>
                     <template v-if="column.renderer">
                       <fa
                         v-if="
@@ -435,10 +427,10 @@ import {
 import SearchFilter from '../filters/SearchFilter.vue'
 import SelectFilter from '../filters/SelectFilter.vue'
 import moment from 'moment'
-import {Skeletor} from 'vue-skeletor'
+import { Skeletor } from 'vue-skeletor'
 import 'vue-skeletor/dist/vue-skeletor.css'
-import {useI18n} from 'vue-i18n'
-import {storeToRefs} from 'pinia';
+import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia';
 import Button from "@zrm/motor-nx-core/components/admin/cell/Button.vue";
 import StatusIcon from "@zrm/motor-nx-core/components/admin/cell/StatusIcon.vue";
 import EditButton from "@zrm/motor-nx-core/components/admin/cell/EditButton.vue";
@@ -450,7 +442,9 @@ import useRouteParser from "@zrm/motor-nx-core/composables/route/parse";
 import SpinnerSmall from "@zrm/motor-nx-core/components/admin/partials/SpinnerSmall.vue";
 import CheckboxField from "@zrm/motor-nx-core/components/forms/CheckboxField.vue";
 import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
-import {useFilterStore} from "@zrm/motor-nx-core/stores/filter";
+import { useFilterStore } from "@zrm/motor-nx-core/stores/filter";
+import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
+import {PERMISSIONS} from "~/packages/motor-nx-core/types/roles_and_permissions";
 
 interface GridAction {
   label: string,
@@ -534,11 +528,11 @@ const props = defineProps({
     type: Array<GridAction>,
     default: () => [],
   },
-  hasTriggerTableActionButton:{
+    hasTriggerTableActionButton: {
     type: Boolean,
     default: false
   },
-  triggerTableActionButtonLabel:{
+    triggerTableActionButtonLabel: {
     type: String,
     default: ''
   }
@@ -653,16 +647,14 @@ const renderer = (
         return value.map((object: Record<string, object>) => {
           return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
         }).join('')
-      } else
-      {
+          } else {
         // Return fontawesome icon
         return '-'
       }
     case 'linkLabelId':
       if (value.label) {
         return '<a href="' + renderer.route.replace('{id}', value.id) + '">' + value.label + '</a>'
-      } else
-      {
+          } else {
         return '-'
       }
     default:
@@ -774,14 +766,31 @@ const sort = (prop: string) => {
   sortcol.value = prop;
   submitFilter({
     parameter: "sort",
-    value: sortcol.value + (sortasc.value? "": ":desc"),
+        value: sortcol.value + (sortasc.value ? "" : ":desc"),
   });
 };
 
 onMounted(() => {
   gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
-})
+});
 
+const rolesAndPermissions = useRolesAndPermissions();
+const hasPermissionToRenderComponent = (componentName: string) => {
+  let permissionNeeded = route.fullPath.split('/').pop();
+  // Replace "-" with "_" in permissionNeeded to match the permission name from the backend
+  // e.g. "motor-nx-core.admin.grid" => "motor_nx_core.admin.grid"
+  permissionNeeded = permissionNeeded.replace(/-/g, '_');
+  switch (componentName) {
+    case 'EditButton':
+      return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.WRITE);
+    case 'DeleteButton':
+      return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.DELETE);
+    case 'CreateButton':
+      return rolesAndPermissions.hasPermissionTo(permissionNeeded + '.' + PERMISSIONS.WRITE);
+    default:
+      return true
+  }
+}
 </script>
 
 <style scoped lang="scss">

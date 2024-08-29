@@ -13,3 +13,8 @@
 <script setup lang="ts">
 import AdminHeader from './Header.vue'
 </script>
+<style scoped lang="scss">
+.main-content {
+  width: calc(100% - 550px);
+}
+</style>

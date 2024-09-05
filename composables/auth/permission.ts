@@ -1,16 +1,16 @@
-import { Role } from './role'
-import { ComputedRef } from 'vue'
+import { Role } from "./role";
+import { ComputedRef } from "vue";
 
 export interface Permission {
-  id: number
-  name: string
-  permission_group_id: string
-  translated_name: string
+  id: number;
+  name: string;
+  permission_group_id: string;
+  translated_name: string;
 }
 
 export default function usePermission(
   userPermissions: ComputedRef<Permission[]>,
-  userRoles: ComputedRef<Role[]>
+  userRoles: ComputedRef<Role[]>,
 ) {
 
   const isAdmin = () => userRoles.value.map((role) => role.name).includes("SuperAdmin");
@@ -20,8 +20,8 @@ export default function usePermission(
   }
 
   const can = (permission: string) => {
-    return hasPermissionTo(permission)
-  }
+    return hasPermissionTo(permission);
+  };
 
   const hasAnyPermission = (permissions: string[]) => {
     return permissions.some((permissionName) =>
@@ -56,5 +56,5 @@ export default function usePermission(
     // getDirectPermissions,
     // getPermissionsViaRoles,
     // getAllPermissions
-  }
+  };
 }

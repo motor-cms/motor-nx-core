@@ -109,8 +109,8 @@ export default defineComponent({
     }
 
     const confirm = async () => {
-      await navigateTo('/');
-      userStore.removeUser();
+      userStore.removeUser()
+      await navigateTo('/admin/login');
     }
 
     const cancel = () => {

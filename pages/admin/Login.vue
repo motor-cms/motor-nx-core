@@ -1,6 +1,9 @@
 <template>
-  <AdminPartialsSpinner v-if="loading"/>
-  <div class="login" v-if="!loading && !userStore.authenticated">
+  <AdminPartialsSpinner v-if="loading" />
+  <div
+    v-if="!loading && !userStore.authenticated"
+    class="login"
+  >
     <section>
       <div class="page-header section-height-75">
         <div class="container">
@@ -13,9 +16,12 @@
                       src="~/assets/images/logo.png"
                       class="navbar-brand-img"
                       :alt="$t('global.logo.alt')"
-                    />
+                    >
                   </div>
-                  <h3 v-if="showProjectName" class="font-weight-bolder text-info text-gradient">
+                  <h3
+                    v-if="showProjectName"
+                    class="font-weight-bolder text-info text-gradient"
+                  >
                     {{ $t('global.project') }}
                   </h3>
                 </div>
@@ -30,7 +36,7 @@
                         placeholder="Email"
                         aria-label="Email"
                         aria-describedby="email-addon"
-                      />
+                      >
                     </div>
                     <label>Password</label>
                     <div class="mb-3">
@@ -41,7 +47,7 @@
                         placeholder="Password"
                         aria-label="Password"
                         aria-describedby="password-addon"
-                      />
+                      >
                     </div>
                     <!--                    <div class="form-check form-switch">-->
                     <!--                      <input-->
@@ -57,9 +63,9 @@
                     <!--                    </div>-->
                     <div class="text-center">
                       <button
-                        @click="loginUser"
                         type="submit"
                         class="btn bg-gradient-primary text-capitalize w-100 mt-4 mb-0"
+                        @click="loginUser"
                       >
                         {{ $t('global.sign_in') }}
                       </button>
@@ -82,20 +88,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {storeToRefs} from 'pinia'
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
-
-const router = useRouter()
-const userStore = useUserStore()
+const userStore = useUserStore();
 const appStore = useAppStore();
-const {loading} = storeToRefs(appStore)
-const {signInError} = storeToRefs(userStore)
+const { loading } = storeToRefs(appStore);
+const { signInError } = storeToRefs(userStore);
 const { $toast } = useNuxtApp();
+const navigationStore = useNavigationStore();
 
 definePageMeta({
-  validate: async (route) => {
+  validate: async () => {
     const userStore = useUserStore()
     const cookie = useCookie('auth_token');
     return !userStore.authenticated && !cookie.value?.length
@@ -112,6 +116,7 @@ const loginUser = async () => {
   try {
     appStore.isLoading(true)
     await userStore.signIn(login.value)
+    await navigationStore.getNavigationItems();
     await navigateTo('/admin/dashboard')
   } catch (e) {
     $toast.error(e.message)

@@ -12,28 +12,38 @@ export default function usePermission(
   userPermissions: ComputedRef<Permission[]>,
   userRoles: ComputedRef<Role[]>,
 ) {
-
-  const isAdmin = () => userRoles.value.map((role) => role.name).includes("SuperAdmin");
+  const isAdmin = () =>
+    userRoles.value.map((role) => role.name).includes("SuperAdmin");
   // Permissions
   const hasPermissionTo = (permission: string) => {
-    return userPermissions.value.map((p) => p.name).includes(permission) || isAdmin();
-  }
+    return (
+      userPermissions.value.map((p) => p.name).includes(permission) || isAdmin()
+    );
+  };
 
   const can = (permission: string) => {
     return hasPermissionTo(permission);
   };
 
   const hasAnyPermission = (permissions: string[]) => {
-    return permissions.some((permissionName) =>
-      userPermissions.value.map((p) => p.name).includes(permissionName)
-    ) || isAdmin();
-  }
+    if (permissions.length === 0) {
+      return true;
+    }
+
+    return (
+      permissions.some((permissionName) =>
+        userPermissions.value.map((p) => p.name).includes(permissionName),
+      ) || isAdmin()
+    );
+  };
 
   const hasAllPermissions = (permissions: string[]) => {
-    return permissions.every((permissionName) =>
-      userPermissions.value.map((p) => p.name).includes(permissionName)
-    ) || isAdmin();
-  }
+    return (
+      permissions.every((permissionName) =>
+        userPermissions.value.map((p) => p.name).includes(permissionName),
+      ) || isAdmin()
+    );
+  };
 
   // Aktuell noch irrelevant, da permissions aus backend = permissions der rollen sind
   // const getDirectPermissions = () => {

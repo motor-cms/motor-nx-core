@@ -8,22 +8,16 @@
     </p>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'StaticField',
-
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    emptyValue: String,
+<script setup lang="ts">
+const props = defineProps({
+  value: {
+    type: String,
+    default: '',
   },
-})
+  label: {
+    type: String,
+    required: true,
+  },
+  emptyValue: String,
+});
 </script>

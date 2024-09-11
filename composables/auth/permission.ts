@@ -12,9 +12,11 @@ export default function usePermission(
   userPermissions: ComputedRef<Permission[]>,
   userRoles: ComputedRef<Role[]>
 ) {
+
+  const isAdmin = () => userRoles.value.map((role) => role.name).includes("SuperAdmin");
   // Permissions
   const hasPermissionTo = (permission: string) => {
-    return userPermissions.value.map((p) => p.name).includes(permission)
+    return userPermissions.value.map((p) => p.name).includes(permission) || isAdmin();
   }
 
   const can = (permission: string) => {
@@ -24,13 +26,13 @@ export default function usePermission(
   const hasAnyPermission = (permissions: string[]) => {
     return permissions.some((permissionName) =>
       userPermissions.value.map((p) => p.name).includes(permissionName)
-    )
+    ) || isAdmin();
   }
 
   const hasAllPermissions = (permissions: string[]) => {
     return permissions.every((permissionName) =>
       userPermissions.value.map((p) => p.name).includes(permissionName)
-    )
+    ) || isAdmin();
   }
 
   // Aktuell noch irrelevant, da permissions aus backend = permissions der rollen sind

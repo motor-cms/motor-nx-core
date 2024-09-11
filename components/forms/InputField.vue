@@ -23,91 +23,74 @@
     </p>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { useField } from 'vee-validate'
 
 import {storeToRefs} from "pinia";
 
-export default defineComponent({
-  name: 'InputField',
-  props: {
-    id: String,
-    type: {
-      type: String,
-      default: 'text',
-    },
-    modelValue: {
-      default: '',
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    cssClass: {
-      type: String,
-      default: '',
-    },
-    min: {
-      type: (Number || String),
-    },
-    max: {
-      type: (Number || String),
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    description: {
-      type: String,
-      default: '',
-    },
-    required: {
-      type: Boolean,
-      default: false
-    }
+const props = defineProps({
+  id: String,
+  type: {
+    type: String,
+    default: 'text',
   },
-  setup(props, { emit }) {
-    const {
-      value,
-      errorMessage,
-      handleBlur,
-      handleChange,
-      meta,
-    } = useField(<string>props.name, undefined, {
-      initialValue: <string>props.modelValue,
-      syncVModel: true,
-    })
-
-    const appStore = useAppStore();
-    const { loading, updatingInBackground, disableForms} = storeToRefs(appStore);
-    const changed = (e: Event) => {
-      emit('change', (<HTMLInputElement>e.target).value)
-    }
-
-    const blur = (e: Event) => {
-      handleBlur(e)
-      emit('blur', (<HTMLInputElement>e.target).value)
-    }
-
-    emit('initialized');
-
-    return {
-      handleChange,
-      handleBlur,
-      errorMessage,
-      meta,
-      changed,
-      blur,
-      loading,
-      value,
-      updatingInBackground,
-      disableForms
-    }
+  modelValue: {
+    default: '',
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    required: true,
+  },
+  cssClass: {
+    type: String,
+    default: '',
+  },
+  min: {
+    type: (Number || String),
+  },
+  max: {
+    type: (Number || String),
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  description: {
+    type: String,
+    default: '',
+  },
+  required: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const emit = defineEmits(['change', 'blur', 'initialized']);
+const {
+  value,
+  errorMessage,
+  handleBlur,
+  handleChange,
+  meta,
+} = useField(<string>props.name, undefined, {
+  initialValue: <string>props.modelValue,
+  syncVModel: true,
 })
+
+const appStore = useAppStore();
+const { loading, updatingInBackground, disableForms} = storeToRefs(appStore);
+const changed = (e: Event) => {
+  emit('change', (<HTMLInputElement>e.target).value)
+}
+
+const blur = (e: Event) => {
+  handleBlur(e)
+  emit('blur', (<HTMLInputElement>e.target).value)
+}
+
+emit('initialized');
 </script>

@@ -10,6 +10,7 @@
       :style="{ 'margin-left': '5px' }"
     ></AdminTooltip>
     <Multiselect
+      v-bind="$attrs"
       :disabled="loading || disabled"
       :id="id"
       :canClear="is_nullable"

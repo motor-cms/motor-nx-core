@@ -363,6 +363,7 @@
                       <component
                         :is="markRaw(components[component.name])"
                         v-if="hasPermissionToRenderComponent(component.name)"
+                        :class="{invisible: typeof component.visible == 'function' && !component.visible(row)}"
                         :options="component.options"
                         :record="row"
                         :prop="column.prop"

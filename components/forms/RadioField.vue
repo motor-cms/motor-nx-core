@@ -21,46 +21,29 @@
     </p>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { useField, Field } from 'vee-validate'
-import { defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'RadioField',
-  props: {
-    // Field's own value
-    id: String,
-    modelValue: {
-      type: Array,
-    },
-    label: String,
-    name: {
-      type: String,
-    },
-    options: {
-      type: Array,
-    },
+const model = defineModel();
+const props = defineProps({
+  // Field's own value
+  id: String,
+  label: String,
+  name: {
+    type: String,
   },
-  components: {
-    VField: Field,
+  options: {
+    type: Array,
   },
-  setup(props) {
-    const { checked, handleChange, errorMessage } = useField(
-      <string>props.name,
-      undefined,
-      {
-        type: 'checkbox',
-        valueProp: props.modelValue,
-        initialValue: props.modelValue,
-        syncVModel: true,
-      }
-    )
-
-    return {
-      checked, // readonly
-      handleChange,
-      errorMessage,
-    }
-  },
-})
+});
+const { checked, handleChange, errorMessage } = useField(
+  <string>props.name,
+  undefined,
+  {
+    type: 'checkbox',
+    valueProp: model.value,
+    initialValue: model.value,
+    syncVModel: true,
+  }
+)
 </script>

@@ -1,16 +1,15 @@
 // =========================================================
-// * Soft UI Dashboard - v1.0.7
+// * Soft UI Dashboard 3 - v1.1.0
 // =========================================================
 //
 // * Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
-// * Copyright 2022 Creative Tim (https://www.creative-tim.com)
+// * Copyright 2024 Creative Tim (https://www.creative-tim.com)
 //
 // Coded by www.creative-tim.com
 //
 // =========================================================
 //
 // * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
 
 @font-face {
   font-family: 'Open Sans';
@@ -20,6 +19,9 @@
 // Bootstrap Functions
 @import "soft-ui-dashboard/bootstrap/functions";
 
+// Custom Variables
+@import "soft-ui-dashboard/custom/variables";
+
 // Theme Variables
 @import "soft-ui-dashboard/variables";
 
@@ -28,3 +30,6 @@
 
 // Theme Core
 @import "soft-ui-dashboard/theme";
+
+// Custom Variables
+@import "soft-ui-dashboard/custom/styles";

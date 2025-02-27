@@ -98,6 +98,9 @@ const { signInError } = storeToRefs(userStore);
 const { $toast } = useNuxtApp();
 const navigationStore = useNavigationStore();
 
+// const runTimeConfig = useRuntimeConfig();
+// await useFetch(runTimeConfig.public.backendApiBaseUrl + 'sanctum/csrf-cookie');
+
 definePageMeta({
   validate: async () => {
     const userStore = useUserStore()

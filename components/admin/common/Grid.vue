@@ -48,6 +48,7 @@
                     {{ createLabel }}
                   </a>
                 </NuxtLink>
+                <div v-if="withoutCreate" style="height: 80px"></div>
               </div>
             </div>
             <div class="row align-items-center">

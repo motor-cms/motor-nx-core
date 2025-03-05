@@ -19,14 +19,13 @@
       @click="visible = true"
     />
     <a
-      :href="record[prop].url"
+      :href="backendUrl + 'download/' + record.id"
       target="_blank"
       v-if="record.exists"
       type="button"
       class="btn btn-sm btn-secondary d-block"
     >
       {{ $t('motor-media.global.download') }}
-
     </a>
 
     <input class="mt-2 download-url" disabled :value="backendUrl + 'download/' + record.id">

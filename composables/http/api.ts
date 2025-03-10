@@ -1,6 +1,6 @@
 
 import {UseFetchOptions} from "#app";
-import {sha256} from "ohash";
+import {digest} from "ohash";
 
 export default function useApi(useRpc: boolean = false) {
   const runtimeConfig = useRuntimeConfig();
@@ -19,7 +19,7 @@ export default function useApi(useRpc: boolean = false) {
     if (!withoutAuth) addBearerToken();
     // Check cache if data has already been fetched
     const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-    const key = sha256(path);
+    const key = digest(path);
     // We need to assign "params" to a new object because it is a reactive which cannot be processed by useFetch, cause useFetch expects a normal object
     const options: UseFetchOptions<Record<string, any>> = Object.assign({key, params: Object.assign({}, params)}, requestOptions, opts)
     return useFetch(path, options)

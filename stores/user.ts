@@ -1,9 +1,7 @@
 import {defineStore} from 'pinia'
 import { ref} from 'vue'
 import {useAppStore} from './app'
-import { CookieRef} from "#app";
 import useApi from "@zrm/motor-nx-core/composables/http/api";
-import {useSanctumFetch} from "#build/imports";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()

@@ -3,9 +3,19 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vueuse/nuxt',
+    "pinia-plugin-persistedstate/nuxt",
+    "@nuxtjs/i18n"
   ],
+  piniaPersistedstate: {
+    cookieOptions: {
+      sameSite: "strict",
+    },
+    storage: "localStorage",
+  },
+
   css: [
-    '@fortawesome/fontawesome-svg-core/styles.css'
+    '@fortawesome/fontawesome-svg-core/styles.css',
+    '@zrm/motor-nx-core/assets/scss/main.scss'
   ],
   build: {
     transpile: [

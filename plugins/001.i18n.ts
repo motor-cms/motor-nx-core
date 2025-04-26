@@ -1,7 +1,7 @@
 //import { createI18n } from 'vue-i18n'
 
 // @ts-nocheck
-import { createI18n, LocaleMessages, VueMessageType } from 'vue-i18n'
+import { createI18n } from 'vue-i18n'
 
 /**
  * Load locale messages
@@ -144,7 +144,7 @@ for (let index = 0; index < languageModules.length; index++) {
   let moduleMessages = await loadLocaleMessages(module, true)
 
   // Remove key 'motor-X' from messages object to fit the follwing merge algorithm with messages
-  if (Object.keys(moduleMessages)[0].includes('motor-')) {
+  if (Object.keys(moduleMessages)[0]?.includes('motor-')) {
     moduleMessages = moduleMessages[Object.keys(moduleMessages)]
   }
 

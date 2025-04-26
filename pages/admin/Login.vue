@@ -13,7 +13,7 @@
                 <div class="card-header pb-0 text-left bg-transparent">
                   <div class="d-flex justify-content-center align-items-center">
                     <img
-                      src="~/assets/images/logo.png"
+                      src="/images/logo.png"
                       class="navbar-brand-img"
                       :alt="$t('global.logo.alt')"
                     >
@@ -120,7 +120,6 @@ const loginUser = async () => {
   try {
     appStore.isLoading(true)
     await userStore.signIn(login.value)
-
 
     await navigationStore.getNavigationItems();
     await navigateTo('/admin/dashboard')

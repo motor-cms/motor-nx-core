@@ -1,10 +1,10 @@
 <template>
-    <AdminContainer>
-      <AdminPartialsSpinner v-if="loading"/>
-      <div class="builder-main-container">
-        <slot/>
-      </div>
-    </AdminContainer>
+  <AdminContainer>
+    <AdminPartialsSpinner v-if="loading"/>
+    <div class="builder-main-container">
+      <slot/>
+    </div>
+  </AdminContainer>
 </template>
 <script lang="ts" setup>
 

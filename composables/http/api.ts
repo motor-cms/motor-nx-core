@@ -1,7 +1,6 @@
-
-import {UseFetchOptions} from "#app";
 import {digest} from "ohash";
 import {useSanctumFetch} from "#imports";
+import type {UseFetchOptions} from "#app";
 
 export default function useApi(useRpc: boolean = false) {
   const runtimeConfig = useRuntimeConfig();

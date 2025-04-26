@@ -149,8 +149,6 @@ for (let index = 0; index < languageModules.length; index++) {
   }
 
   messages = deepMerge(messages, moduleMessages)
-
-  // console.log("Merged_Message" + index, JSON.parse(JSON.stringify(messages)));
 }
 
 /**
@@ -160,8 +158,6 @@ for (let index = 0; index < languageModules.length; index++) {
 const projectLanguageModule = import.meta.glob('../../../locales/**/*.json', { eager: true })
 const projectModuleMessages = await loadLocaleMessages(projectLanguageModule, true)
 messages = deepMerge(messages, projectModuleMessages)
-
-// console.log("Result", messages);
 
 export default defineNuxtPlugin(({ vueApp }) => {
   const i18n = createI18n({

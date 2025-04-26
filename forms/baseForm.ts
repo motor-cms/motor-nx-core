@@ -78,7 +78,6 @@ export default function baseForm(
 
   const onSubmit = form.value.handleSubmit(async (values, { resetForm }) => {
     try {
-      console.log("submitting form", values)
       appStore.isLoading(true);
       const oldModel = ref(JSON.parse(JSON.stringify(model.value)));
       const formData = reactive<any>(JSON.parse(JSON.stringify(model.value)))

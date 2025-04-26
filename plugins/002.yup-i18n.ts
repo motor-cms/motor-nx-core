@@ -12,8 +12,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     fr
   }
 
-  console.log("Defining validation rules...")
-
   const currentLocale = nuxtApp.vueApp.config.globalProperties.$i18n.locale;
   setLocale({
     // use constant translation keys for messages without values

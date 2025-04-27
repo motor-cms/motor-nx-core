@@ -39,7 +39,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
+import {useMimeType} from "@zrm/motor-nx-core/composables/useMimeType";
 
 const props = defineProps({
   id: String,

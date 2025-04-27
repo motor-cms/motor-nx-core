@@ -38,7 +38,7 @@
 import { defineComponent, ref } from 'vue'
 // Todo: check if is needed?
 import VueEasyLightbox from 'vue-easy-lightbox'
-import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
+import {useMimeType} from "@zrm/motor-nx-core/composables/useMimeType";
 
 const props = defineProps({
   options: Object,

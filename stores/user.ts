@@ -3,74 +3,85 @@ import { ref} from 'vue'
 import {useAppStore} from './app'
 import { CookieRef} from "#app";
 import useApi from "@zrm/motor-nx-core/composables/http/api";
+import {useSanctumFetch} from "#build/imports";
 
 export const useUserStore = defineStore('users', () => {
   const appStore = useAppStore()
   const api = useApi();
-  const authenticated = ref(false)
-  const user = ref<Record<string, any> | null>(null)
+  // const authenticated = ref(false)
+  // const user = ref<Record<string, any> | null>(null)
   const token = ref("")
   const signInError = ref('')
   const userHasClient = computed(() => user.value?.client_id);
+  const { login, logout, user, isAuthenticated: authenticated } = useSanctumAuth()
 
-  const setAuthenticationStatus = (value: boolean) => {
-    authenticated.value = value
-  }
+  // const setAuthenticationStatus = (value: boolean) => {
+  //   authenticated.value = value
+  // }
 
-  const setUser = (value: Record<string, any>) => {
+  const setUser = (value: Record<string, any>|null) => {
     user.value = value
-    setAuthenticationStatus(true)
+    // setAuthenticationStatus(true)
   }
 
-  const setToken = (value: string) => {
-    token.value = value
+  // const setToken = (value: string) => {
+  //   token.value = value
+  // }
+
+  const removeUser = async () => {
+    await logout()
+    setUser(null)
   }
 
-  const removeUser = () => {
-    authenticated.value = false
-    user.value = null
-    token.value = ""
-    const cookie = useCookie('auth_token');
-    cookie.value = "";
-  }
+  const doLogin = async (email: string, password: string): Promise<void> => {
 
-  const login = async (email: string, password: string): Promise<void> => {
-      const runTimeConfig = useRuntimeConfig();
-      await useFetch(runTimeConfig.public.backendApiBaseUrl + 'sanctum/csrf-cookie');
-      const {data} = await api.post('auth/login', {
-        email,
-        password
-      })
-      setToken(data.value.data.token)
-      const {data: meResponse} = await api.get('me')
-      setUser(meResponse.value.data)
-  }
-
-  const loginFromStorage = async (tkn: CookieRef<string|null|undefined>): Promise<boolean> => {
-    if (!tkn.value?.length) {
-      return false;
+    const credentials = {
+      email: email,
+      password: password,
+      remember: true,
     }
-    setToken(tkn.value);
-    const {data: meResponse, pending, error, refresh } = await api.get('me')
-    if (error.value) {
-      removeUser();
-      appStore.isLoading(false)
-      return false;
-    }
-    setUser(meResponse.value.data)
-    appStore.isLoading(false)
-    return true;
+
+    await login(credentials)
+    setUser(user.value.data)
+
+
+
+    // const runTimeConfig = useRuntimeConfig();
+      // await useFetch(runTimeConfig.public.backendApiBaseUrl + 'sanctum/csrf-cookie');
+      // const {data} = await api.post('/login', {
+      //   email,
+      //   password
+      // })
+      // setToken(data.value.data.token)
+      // const {data: meResponse} = await api.get('me')
+      // setUser(meResponse.value.data)
   }
 
-  const refreshUser = async () => {
-    const {data: meResponse} = await api.get('me')
-    if (meResponse) {
-      setUser(meResponse.value.data)
-    }
-  }
+  // const loginFromStorage = async (tkn: CookieRef<string|null|undefined>): Promise<boolean> => {
+  //   if (!tkn.value?.length) {
+  //     return false;
+  //   }
+  //   // setToken(tkn.value);
+  //   const {data: meResponse, pending, error, refresh } = await api.get('me')
+  //   if (error.value) {
+  //     removeUser();
+  //     appStore.isLoading(false)
+  //     return false;
+  //   }
+  //   setUser(meResponse.value.data)
+  //   appStore.isLoading(false)
+  //   return true;
+  // }
+  //
+  // const refreshUser = async () => {
+  //   const {data: meResponse} = await api.get('me')
+  //   if (meResponse) {
+  //     setUser(meResponse.value.data)
+  //   }
+  // }
 
   const signIn = async (values: { email: ''; password: '' }) => {
-    return login(values.email, values.password)
+    return doLogin(values.email, values.password)
   }
 
   return {
@@ -78,12 +89,12 @@ export const useUserStore = defineStore('users', () => {
     user,
     token,
     signInError,
-    setAuthenticationStatus,
+    // setAuthenticationStatus,
     setUser,
     signIn,
-    refreshUser,
+    // refreshUser,
     removeUser,
-    loginFromStorage,
+    // loginFromStorage,
     userHasClient
   }
-})
+}, { persist: true})

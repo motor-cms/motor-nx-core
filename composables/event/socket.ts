@@ -39,7 +39,6 @@ export default function useSocket() {
       disableStats: true,
       enabledTransports: ['ws', 'wss'],
     });
-    console.log("Initialized Pusher", client.value);
   }
 
   return {

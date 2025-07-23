@@ -68,7 +68,6 @@ const deleteTag = (tag) => {
 
 const pushTag = () => {
   if (data.addTag.length > 2) {
-    console.log("data", taggings)
     taggings.value.push(data.addTag);
     data.addTag = '';
     emit("update:modelValue", taggings.value);

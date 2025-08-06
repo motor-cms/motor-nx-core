@@ -57,7 +57,7 @@ export default function baseGrid<T>(
         appStore.isLoading(false)
         break
       default:
-        console.log('UNHANDLED EVENT', params.componentParams)
+        console.log('[baseGrid] UNHANDLED EVENT', params.componentParams)
     }
   }
 
@@ -73,7 +73,6 @@ export default function baseGrid<T>(
   }
 
   const removeRecordFromRows = (record: number) => {
-    console.log(`Removing record #${record}`);
     rows.value = rows.value.filter((row) => row.id !== record);
   }
 

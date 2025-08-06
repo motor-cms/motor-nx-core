@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import {useSanctumFetch} from "#imports";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -119,11 +120,12 @@ const loginUser = async () => {
   try {
     appStore.isLoading(true)
     await userStore.signIn(login.value)
+
+
     await navigationStore.getNavigationItems();
     await navigateTo('/admin/dashboard')
   } catch (e) {
     $toast.error(e.message)
-    console.log(e)
   } finally {
     appStore.isLoading(false)
   }

@@ -205,7 +205,6 @@ export default defineComponent({
     watch(fileCount, (value) => {
       if (props.multiple) {
         if (<number>value === files.value.length - 1) {
-          console.log('change approved (multi)')
           handleChange(files)
         }
       } else {
@@ -213,7 +212,6 @@ export default defineComponent({
           return
         }
         if (<number>value === files.value.length) {
-          console.log('change approved (single)')
           handleChange(files.value[0])
         }
       }
@@ -235,7 +233,6 @@ export default defineComponent({
     }
 
     const deleteImage = () => {
-      console.log('HIER')
       handleChange(false)
     }
 

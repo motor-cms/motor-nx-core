@@ -1,4 +1,5 @@
 <template>
+  DEBUG Login
   <AdminPartialsSpinner v-if="loading" />
   <div
     v-if="!loading && !userStore.authenticated"

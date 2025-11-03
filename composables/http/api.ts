@@ -1,5 +1,5 @@
 
-import {UseFetchOptions} from "#app";
+import type { UseFetchOptions } from '#app';
 import {digest} from "ohash";
 import {useSanctumFetch} from "#imports";
 

@@ -1,52 +1,70 @@
+import {useSanctumClient} from "#imports";
 
-import type { UseFetchOptions } from '#app';
-import {digest} from "ohash";
-import {useSanctumFetch} from "#imports";
-
-export default function useApi(useRpc: boolean = false) {
+export default function useApi() {
   const runtimeConfig = useRuntimeConfig();
   const baseUrl = String(runtimeConfig.public.backendApiBaseUrl) + String(runtimeConfig.public.backendApiSlug);
   const userStore = useUserStore();
+  const client = useSanctumClient();
 
+  interface RequestOptions {
+    baseURL: string;
+    headers: Record<string, string>;
+  }
 
-  const requestOptions: UseFetchOptions<Record<string, any>> = reactive({
+  const requestOptions: RequestOptions = reactive({
     baseURL: baseUrl,
     headers: {
       Accept: 'application/json'
     }
   })
 
-  const get = async (path: string, params: Record<string, any> = {}, opts?: UseFetchOptions<Record<string, any>>, withoutAuth: boolean = false) => {
+  const get = async (path: string, params: Record<string, unknown> = {}, opts?: Record<string, unknown>, withoutAuth: boolean = false) => {
     if (!withoutAuth) addBearerToken();
-    // Check cache if data has already been fetched
-    const queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-    const key = digest(path);
-    // We need to assign "params" to a new object because it is a reactive which cannot be processed by useFetch, cause useFetch expects a normal object
-    const options: UseFetchOptions<Record<string, any>> = Object.assign({key, params: Object.assign({}, params)}, requestOptions, opts)
-    return useSanctumFetch(path, options)
+    const options = Object.assign({query: Object.assign({}, params)}, requestOptions, opts)
+    try {
+      const data = await client(path, options)
+      return { data: { value: data }, error: { value: null }, pending: ref(false), refresh: async () => {} }
+    } catch (err) {
+      return { data: { value: null }, error: { value: err }, pending: ref(false), refresh: async () => {} }
+    }
   }
 
-  const post = async (path: string, body: Record<string, any>, opts? : UseFetchOptions<Record<string, any>>,withoutAuth: boolean = false) => {
+  const post = async (path: string, body: Record<string, unknown>, opts?: Record<string, unknown>, withoutAuth: boolean = false) => {
     if (!withoutAuth) addBearerToken();
-    const options: UseFetchOptions<Record<string, any>> = Object.assign({}, requestOptions, opts)
+    const options = Object.assign({}, requestOptions, opts)
     options.method = 'POST';
     options.body = body;
-    return useSanctumFetch(path, options)
+    try {
+      const data = await client(path, options)
+      return { data: { value: data }, error: { value: null } }
+    } catch (err) {
+      return { data: { value: null }, error: { value: err } }
+    }
   }
 
-  const put = async (path: string, body: Record<string, any>, opts? : UseFetchOptions<Record<string, any>>,withoutAuth: boolean = false) => {
+  const put = async (path: string, body: Record<string, unknown>, opts?: Record<string, unknown>, withoutAuth: boolean = false) => {
     if (!withoutAuth) addBearerToken();
-    const options: UseFetchOptions<Record<string, any>> = Object.assign({}, requestOptions, opts)
+    const options = Object.assign({}, requestOptions, opts)
     options.method = 'PUT';
     options.body = body;
-    return useSanctumFetch(path, options)
+    try {
+      const data = await client(path, options)
+      return { data: { value: data }, error: { value: null } }
+    } catch (err) {
+      return { data: { value: null }, error: { value: err } }
+    }
   }
 
-  const destroy = async (path: string, opts?: UseFetchOptions<Record<string, any>>, withoutAuth: boolean = false) => {
+  const destroy = async (path: string, opts?: Record<string, unknown>, withoutAuth: boolean = false) => {
     if (!withoutAuth) addBearerToken();
-    const options: UseFetchOptions<Record<string, any>> = Object.assign({}, requestOptions, opts)
+    const options = Object.assign({}, requestOptions, opts)
     options.method = 'DELETE';
-    return useSanctumFetch(path, options)
+    try {
+      const data = await client(path, options)
+      return { data: { value: data }, error: { value: null } }
+    } catch (err) {
+      return { data: { value: null }, error: { value: err } }
+    }
   }
 
   const addBearerToken = () => {

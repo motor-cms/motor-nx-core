@@ -95,3 +95,84 @@
 .tooltip-container:hover .tooltip-text {
   display: block;
 }
+
+/* Modern tooltip styling for data-tooltip attribute (Martin Henrichs - 11.Nov.2025) */
+[data-tooltip]:not([data-tooltip=""]) {
+  position: relative;
+  display: inline-block;
+  
+  &::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background: #2d3748;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+    border-color: #2d3748 transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+  }
+  
+  &:hover::before,
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  &:hover::before {
+    transform: translateX(-50%) translateY(-4px);
+  }
+  
+  &:hover::after {
+    transform: translateY(-4px);
+  }
+}
+
+/* Tooltip position variants */
+[data-tooltip][data-tooltip-position="bottom"]:not([data-tooltip=""]) {
+  &::before {
+    bottom: auto;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+  }
+  
+  &::after {
+    bottom: auto;
+    top: calc(100% + 2px);
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent #2d3748 transparent;
+  }
+  
+  &:hover::before {
+    transform: translateX(-50%) translateY(4px);
+  }
+  
+  &:hover::after {
+    transform: translateY(4px);
+  }
+}

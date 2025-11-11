@@ -1,5 +1,5 @@
 <template>
-  <div class="inline mb-0 ms-1">
+  <div class="inline mb-0 ms-1" :data-tooltip="tooltipText">
     <a @click="functionToCall()" class="btn btn-link text-dark px-3 mb-0" href="javascript:;">
       <fa :icon="options.icon ?? 'eye'"></fa>
     </a>
@@ -21,6 +21,12 @@ const appStore = useAppStore();
 const { $toast } = useNuxtApp();
 const {t} = useI18n()
 const api = useApi();
+
+// Translate the tooltip text reactively (Martin Henrichs - 07.Nov.2025)
+const tooltipText = computed(() => {
+  if (!props.options?.name) return ''
+  return t(props.options.name)
+});
 
 const functionToCall = async () => {
   if(props.options && props.options.onClick) {

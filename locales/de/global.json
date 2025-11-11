@@ -6,6 +6,7 @@
   "no_records_found": "Keine Einträge gefunden",
   "edit": "Bearbeiten",
   "create": "Erstellen",
+  "delete": "Löschen",
   "do_delete": "Löschen",
   "really_delete": "Wollen Sie diesen Eintrag wirklich löschen?",
   "record_not_found": "Eintrag nicht gefunden",

@@ -70,7 +70,7 @@
         </button>
         <p><strong>{{ $t('motor-media.global.file') }}:</strong> {{ file.name }} </p>
         <p><strong>{{ $t('motor-media.global.type') }}:</strong> {{ file.mime_type }} </p>
-        <p><strong>{{ $t('motor-media.global.size') }}:</strong> {{ filesize(file.size) }} </p>
+        <p v-if="file.size"><strong>{{ $t('motor-media.global.size') }}:</strong> {{ filesize(file.size) }} </p>
       </div>
       <div v-if="metadata.length > 1" class="col-4">
 
@@ -313,10 +313,12 @@ export default defineComponent({
 
     const deleteFile = (fileName: string) => {
       if (props.multiple) {
-        let index = parsedFiles.value.findIndex(file => file.name !== fileName);
-        parsedFiles.value.splice(index, 1);
-        metadata.value.splice(index, 1);
-        handleChange(parsedFiles.value, false);
+        let index = parsedFiles.value.findIndex(file => file.name === fileName);
+        if (index > -1) {
+          parsedFiles.value.splice(index, 1);
+          metadata.value.splice(index, 1);
+          handleChange(parsedFiles.value, false);
+        }
       } else {
         parsedFiles.value = [];
         metadata.value = [];
@@ -335,7 +337,15 @@ export default defineComponent({
           parsedFiles.value = [];
         }
       } else {
-        parsedFiles.value = inputValue.value;
+        // Handle multiple file mode - ensure parsedFiles is always an array
+        if (Array.isArray(inputValue.value)) {
+          parsedFiles.value = inputValue.value;
+        } else if (inputValue.value && Object.keys(inputValue.value).length) {
+          // If it's a single file object, convert to array
+          parsedFiles.value = [inputValue.value];
+        } else {
+          parsedFiles.value = [];
+        }
       }
     }, {immediate: true})
 

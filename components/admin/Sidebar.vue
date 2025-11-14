@@ -141,25 +141,39 @@ const sidebar = ref(null);
 // Filter navigation items to hide specific menu entries
 const filteredNavigationItems = computed(() => {
   const hiddenSlugs = ['custom-content-type']; // Add slugs to hide
-  const items = { ...navigationItems.value };
-  
-  // Remove items with hidden slugs
-  for (const key in items) {
-    if (hiddenSlugs.includes(items[key].slug)) {
-      delete items[key];
+  const items: Record<string, NavigationItem> = {};
+
+  // Build new filtered object without mutating original
+  for (const key in navigationItems.value) {
+    const item = navigationItems.value[key];
+
+    // Skip items with hidden slugs
+    if (hiddenSlugs.includes(item.slug)) {
+      continue;
     }
-    // Also filter children if they exist
-    if (items[key]?.items) {
-      const filteredChildren = Object.values(items[key].items).filter(
-        (child: any) => !hiddenSlugs.includes(child.slug)
-      );
-      // Convert array back to Record<string, NavigationItem>
-      items[key].items = Object.fromEntries(
-        filteredChildren.map((child: any, index: number) => [index.toString(), child])
-      ) as Record<string, NavigationItem>;
+
+    // Filter children if they exist
+    if (item.items) {
+      const filteredChildren: Record<string, NavigationItem> = {};
+
+      for (const childKey in item.items) {
+        const child = item.items[childKey];
+        if (!hiddenSlugs.includes(child.slug)) {
+          filteredChildren[childKey] = child;
+        }
+      }
+
+      // Create new item with filtered children
+      items[key] = {
+        ...item,
+        items: filteredChildren
+      };
+    } else {
+      // No children, just copy the item
+      items[key] = item;
     }
   }
-  
+
   return items;
 });
 

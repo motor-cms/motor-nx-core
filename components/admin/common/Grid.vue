@@ -680,6 +680,11 @@ const renderer = (
           } else {
         return '-'
       }
+    case 'text':
+      if (renderer.textTransform && typeof renderer.textTransform === 'function') {
+        return renderer.textTransform(value);
+      }
+      return value || '';
     default:
       return value
   }

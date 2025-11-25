@@ -43,17 +43,43 @@
     </div>
 
     <div v-if="file" class="row" style="padding-left: 0.75rem">
-      <div
-        class="col-md-4 drop-zone"
-        :style=" isImage(file.mime_type)
-            ? 'background-image:url(' + (file.url) + ');'
-            : ''
-        "
-      >
-        <span v-if="file.url === ''"> {{ $t('motor-media.global.drop_file_here') }} </span>
-        <span v-if="!isImage(file.mime_type)" style="overflow-wrap: anywhere">
-          {{ file.mime_type }}
-        </span>
+      <div class="col-md-4">
+        <!-- Lightbox for existing images -->
+        <vue-easy-lightbox
+          v-if="file.conversions && file.conversions.preview && isImage(file.mime_type)"
+          scrollDisabled
+          moveDisabled
+          :visible="lightboxVisible"
+          :imgs="[file.conversions.preview]"
+          :index="0"
+          @hide="lightboxVisible = false"
+        >
+        </vue-easy-lightbox>
+
+        <!-- Thumbnail image for existing files -->
+        <img
+          v-if="file.conversions && file.conversions.thumb && isImage(file.mime_type)"
+          :src="file.conversions.thumb"
+          class="img-fluid border-radius-lg"
+          alt="File preview"
+          @click="lightboxVisible = true"
+          style="cursor: pointer; margin-bottom: 8px; max-width: 100%;"
+        />
+
+        <!-- Preview for newly uploaded files (base64) -->
+        <div
+          v-else-if="file.url && isImage(file.mime_type)"
+          class="drop-zone"
+          :style="'background-image:url(' + file.url + ');'"
+        >
+        </div>
+
+        <!-- Non-image file display -->
+        <div v-else class="drop-zone">
+          <span style="overflow-wrap: anywhere">
+            {{ file.mime_type || 'File' }}
+          </span>
+        </div>
       </div>
       <div v-if="file.name !== ''" class="col-md-8">
         <button
@@ -76,6 +102,13 @@ import {defineComponent, ref, watch, onMounted, onBeforeUnmount} from 'vue'
 import {useField} from "vee-validate";
 import {useI18n} from 'vue-i18n';
 import {filesize} from "filesize";
+import VueEasyLightbox from 'vue-easy-lightbox'
+import {useMimeType} from "@zrm/base-components/composables/shared/useMimeType";
+
+interface FileConversions {
+  thumb?: string,
+  preview?: string
+}
 
 interface FileTemplate {
   name: string,
@@ -85,11 +118,15 @@ interface FileTemplate {
   mime_type: string,
   url: string,
   file?: string,
-  uuid?: string
+  uuid?: string,
+  conversions?: FileConversions
 }
 
 export default defineComponent({
   name: 'SingleFileUploadField',
+  components: {
+    VueEasyLightbox
+  },
   props: {
     id: String,
     name: {
@@ -113,8 +150,9 @@ export default defineComponent({
       default: false,
     }
   },
-  setup(props, ctx) {
+  setup(props) {
     const {t} = useI18n()
+    const { isImage: isImageMimeType } = useMimeType();
     const dropzone = ref<HTMLInputElement | null>(null);
 
     const {
@@ -127,6 +165,7 @@ export default defineComponent({
 
     const file = ref<FileTemplate | null>(null);
     const fileInput = ref<HTMLInputElement | null>(null);
+    const lightboxVisible = ref(false);
 
     const status = ref({
       over: false,
@@ -139,7 +178,19 @@ export default defineComponent({
     // Watch for external changes to modelValue
     watch(() => props.modelValue, (newValue) => {
       if (newValue && typeof newValue === 'object' && Object.keys(newValue).length > 0) {
-        file.value = {...newValue} as FileTemplate;
+        // Ensure all required properties exist
+        const fileData = {
+          name: (newValue as any).name || '',
+          size: (newValue as any).size || 0,
+          dataUrl: (newValue as any).dataUrl || '',
+          type: (newValue as any).type || '',
+          mime_type: (newValue as any).mime_type || (newValue as any).type || '',
+          url: (newValue as any).url || '',
+          file: (newValue as any).file,
+          uuid: (newValue as any).uuid,
+          conversions: (newValue as any).conversions
+        } as FileTemplate;
+        file.value = fileData;
       } else {
         file.value = null;
       }
@@ -218,17 +269,9 @@ export default defineComponent({
       window.addEventListener('dragenter', showDropZone);
     }
 
+    // Use the composable's isImage function
     const isImage = (type: string) => {
-      const mimeTypes = [
-        'image/apng',
-        'image/avif',
-        'image/gif',
-        'image/jpeg',
-        'image/png',
-        'image/svg+xml',
-        'image/webp',
-      ]
-      return mimeTypes.indexOf(type) > -1
+      return isImageMimeType(type);
     }
 
     const deleteFile = () => {
@@ -259,7 +302,8 @@ export default defineComponent({
       validationErrorMessage,
       inputValue,
       dropzone,
-      filesize
+      filesize,
+      lightboxVisible
     }
   },
 })

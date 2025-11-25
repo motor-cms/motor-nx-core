@@ -645,7 +645,7 @@ const renderer = (
     case 'currency':
       return value.toFixed(2) + ' ' + renderer.format
     case 'links':
-      if (value.length) {
+      if (value && value.length) {
         return value.map((object: Record<string, object>) => {
           return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
         }).join('')

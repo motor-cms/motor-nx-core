@@ -42,7 +42,7 @@
           </li>
         </template>
         <template v-else>
-          <template v-for="topLayerNavItem in navigationItems">
+          <template v-for="topLayerNavItem in filteredNavigationItems">
             <li class="nav-item" :key="topLayerNavItem.name" v-if="rolesAndPermissions.hasAnyPermission(topLayerNavItem.permissions) || rolesAndPermissions.hasRole('SuperAdmin')">
               <NuxtLink
                 @click="toggleMenu(topLayerNavItem.slug)"
@@ -138,6 +138,45 @@ const appStore = useAppStore();
 const {sidebarOpen} = storeToRefs(appStore);
 const sidebar = ref(null);
 
+// Filter navigation items to hide specific menu entries
+const filteredNavigationItems = computed(() => {
+  const hiddenSlugs = ['custom-content-type']; // Add slugs to hide
+  const items: Record<string, NavigationItem> = {};
+
+  // Build new filtered object without mutating original
+  for (const key in navigationItems.value) {
+    const item = navigationItems.value[key];
+
+    // Skip items with hidden slugs
+    if (hiddenSlugs.includes(item.slug)) {
+      continue;
+    }
+
+    // Filter children if they exist
+    if (item.items) {
+      const filteredChildren: Record<string, NavigationItem> = {};
+
+      for (const childKey in item.items) {
+        const child = item.items[childKey];
+        if (!hiddenSlugs.includes(child.slug)) {
+          filteredChildren[childKey] = child;
+        }
+      }
+
+      // Create new item with filtered children
+      items[key] = {
+        ...item,
+        items: filteredChildren
+      };
+    } else {
+      // No children, just copy the item
+      items[key] = item;
+    }
+  }
+
+  return items;
+});
+
 // onClickOutside(sidebar, (event) => {
 //   if (sidebarOpen.value) {
 //     appStore.toggleSidebar();
@@ -156,8 +195,8 @@ const setActiveParentChild = (parent: string = '', child: string = '' ) => {
 
 // Set initial navigation active state by route (28 Feb. 2023  Martin Henrichs)
 const initialNaviActionState = () => {
-  for (const topLayerNavigationRecord in navigationItems.value) {
-    const topLayerNavigationItem: NavigationItem = navigationItems.value[topLayerNavigationRecord];
+  for (const topLayerNavigationRecord in filteredNavigationItems.value) {
+    const topLayerNavigationItem: NavigationItem = filteredNavigationItems.value[topLayerNavigationRecord];
 
     //Case: The top most navigation items do have a route => they can be selected & will be marked as selected
     if (topLayerNavigationItem.route === currentRoute.value) {

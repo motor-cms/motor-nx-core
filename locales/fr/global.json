@@ -5,6 +5,7 @@
   "filter": "Filtrer",
   "no_records_found": "Aucun résultat trouvé",
   "edit": "Éditer",
+  "delete": "Supprimer",
   "do_delete": "Supprimer",
   "really_delete": "Voulez-vous vraiment supprimer cet élément ?",
   "record_not_found": "Élément introuvable",

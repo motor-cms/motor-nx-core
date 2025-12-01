@@ -391,6 +391,27 @@
                         :icon="column.renderer.falseIcon"
                       />
                       <div
+                        v-else-if="column.renderer.type === 'boolIconWithText'"
+                        class="d-flex align-items-center gap-2"
+                      >
+                        <fa
+                          v-if="getPropertyValue(row, column.prop) == true"
+                          class="text-success"
+                          :icon="column.renderer.trueIcon"
+                        />
+                        <fa
+                          v-else
+                          class="text-danger"
+                          :icon="column.renderer.falseIcon"
+                        />
+                        <span
+                          v-if="getPropertyValue(row, column.textProp)"
+                          class="text-xs text-secondary ms-2"
+                        >
+                          {{ renderTransformedText(column, row) }}
+                        </span>
+                      </div>
+                      <div
                         v-else-if="column.renderer.type === 'linkLabelId'"
                         v-html="
                           renderer(column.renderer, {
@@ -645,7 +666,7 @@ const renderer = (
     case 'currency':
       return value.toFixed(2) + ' ' + renderer.format
     case 'links':
-      if (value.length) {
+      if (value && value.length) {
         return value.map((object: Record<string, object>) => {
           return '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '">' + object.full_slug + '</a></br>'
         }).join('')
@@ -659,6 +680,11 @@ const renderer = (
           } else {
         return '-'
       }
+    case 'text':
+      if (renderer.textTransform && typeof renderer.textTransform === 'function') {
+        return renderer.textTransform(value);
+      }
+      return value || '';
     default:
       return value
   }
@@ -682,6 +708,32 @@ const getPropertyValue = (object: object, property: string): string => {
     }
   }
   return object
+}
+
+const renderTransformedText = (column: Record<string, object>, row: Record<string, object>): string => {
+  const textValue = getPropertyValue(row, column.textProp);
+
+  if (!textValue) {
+    return '';
+  }
+
+  // If a custom transform function is provided, use it
+  if (column.renderer.textTransform && typeof column.renderer.textTransform === 'function') {
+    return column.renderer.textTransform(textValue);
+  }
+
+  // If it's a date format transformation
+  if (column.renderer.textFormat) {
+    switch (column.renderer.textFormat.type) {
+      case 'date':
+        return moment(textValue).format(column.renderer.textFormat.format || 'DD.MM.YYYY HH:mm');
+      default:
+        return textValue;
+    }
+  }
+
+  // Return raw text if no transformation specified
+  return textValue;
 }
 
 // GridActions

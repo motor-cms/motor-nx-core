@@ -1,7 +1,7 @@
 {
   "name": "@zrm/motor-nx-core",
   "type": "module",
-  "version": "2.65.2-rc.3",
+  "version": "4.0.0-rc",
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxi prepare & nuxi dev .playground",

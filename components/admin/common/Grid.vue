@@ -588,6 +588,41 @@ const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRo
 const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
 Object.assign(filterValues, filterStore.getFilterValuesForGrid(route.name));
+router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+
+const sortcol = ref();
+const sortasc = ref(true);
+const sort = (prop: string) => {
+  // Reset sorting completely
+  if (sortcol.value !== null && sortasc.value === false) {
+    submitFilter( {
+      parameter: "sort",
+      value: ""
+    });
+    sortcol.value = null;
+    return;
+  }
+  // Handle sorting
+  sortasc.value = sortcol.value == prop ? !sortasc.value : true;
+  sortcol.value = prop;
+  submitFilter({
+    parameter: "sort",
+    value: sortcol.value + (sortasc.value ? "" : ":desc"),
+  });
+};
+
+// Handle sorting
+if (filterValues.sort) {
+  const tempSort = filterValues.sort.split(':');
+
+  if (tempSort[0]) {
+    sortcol.value = tempSort[0];
+  }
+
+  if (tempSort[1]) {
+    sortasc.value = false;
+  }
+}
 
 const submitFilter = (data: { parameter: string; value: string }) => {
 
@@ -829,16 +864,6 @@ const processGridAction = async () => {
     emit('gridActionProcessed')
   }
 }
-const sortcol = ref();
-const sortasc = ref(true);
-const sort = (prop: string) => {
-  sortasc.value = sortcol.value == prop ? !sortasc.value : true;
-  sortcol.value = prop;
-  submitFilter({
-    parameter: "sort",
-        value: sortcol.value + (sortasc.value ? "" : ":desc"),
-  });
-};
 
 onMounted(() => {
   gridAction.value = hasGridActions.value ? props.gridActions[0] : null;

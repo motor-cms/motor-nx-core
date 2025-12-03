@@ -38,9 +38,6 @@
           <li class="nav-item d-flex align-items-center mx-3 mx-xxl-5" ref="navbarSlot">
             <EventNotificationHub/>
           </li>
-          <li class="nav-item d-flex align-items-center mx-3 mx-xxl-5 w-25" v-if="hasRole('SuperAdmin')">
-            <ClientSwitch/>
-          </li>
           <li class="nav-item d-flex align-items-center" v-if="authenticated">
             <span class="nav-link text-body font-weight-bold px-0">
               <fa v-if="!user.avatar" icon="user" class="me-sm-1"/>
@@ -83,18 +80,16 @@ import {computed, defineComponent, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useI18n} from 'vue-i18n'
 import AdminModalLogout from './modal/Logout.vue'
-import ClientSwitch from '@zrm/motor-nx-admin/components/ClientSwitch.vue'
 import {useTeleport} from "@zrm/motor-nx-core/composables/ui/teleport";
 
 import {storeToRefs} from "pinia";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
-import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import EventNotificationHub from "@zrm/motor-nx-core/components/admin/partials/EventNotificationHub.vue";
 
 
 export default defineComponent({
   name: 'AdminHeader',
-  components: {EventNotificationHub, Popover, AdminModalLogout, ClientSwitch},
+  components: {EventNotificationHub, AdminModalLogout},
   setup() {
     const userStore = useUserStore()
     const {navbarSlot} = useTeleport();

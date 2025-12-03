@@ -1,5 +1,5 @@
-import { Role } from "./role";
-import { ComputedRef } from "vue";
+import type { Role } from "./role";
+import type { ComputedRef } from "vue";
 
 export interface Permission {
   id: number;

@@ -468,6 +468,8 @@ import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import { useFilterStore } from "@zrm/motor-nx-core/stores/filter";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
 import {PERMISSIONS} from "@zrm/motor-nx-core/types/roles_and_permissions";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { faSitemap } from "@fortawesome/free-solid-svg-icons";
 
 interface GridAction {
   label: string,
@@ -672,6 +674,20 @@ const renderer = (
         }).join('')
           } else {
         // Return fontawesome icon
+        return '-'
+      }
+    case 'linksWithTree':
+      if (value && value.length) {
+        const sitemapIconHtml = icon(faSitemap, { styles: { width: '10px', height: '10px' } }).html[0]
+        return value.map((object: Record<string, object>) => {
+          const link = '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '" class="text-decoration-none">' + object.full_slug + '</a>'
+          const treeName = object.root_node_name || ''
+          if (treeName) {
+            return '<div class="d-flex flex-column mb-2"><span class="badge bg-gradient-primary d-inline-flex align-items-center mb-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem; width: fit-content;"><span class="me-1 d-inline-flex align-items-center">' + sitemapIconHtml + '</span>' + treeName + '</span>' + link + '</div>'
+          }
+          return '<div class="mb-1">' + link + '</div>'
+        }).join('')
+      } else {
         return '-'
       }
     case 'linkLabelId':

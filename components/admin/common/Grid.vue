@@ -714,14 +714,14 @@ const renderer = (
     case 'linksWithTree':
       if (value && value.length) {
         const sitemapIconHtml = icon(faSitemap, { styles: { width: '10px', height: '10px' } }).html[0]
-        return value.map((object: Record<string, object>) => {
+        return '<div class="d-flex flex-column">' + value.map((object: Record<string, object>) => {
           const link = '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '" class="text-decoration-none">' + object.full_slug + '</a>'
           const treeName = object.root_node_name || ''
           if (treeName) {
-            return '<div class="d-flex flex-column mb-2"><span class="badge bg-gradient-primary d-inline-flex align-items-center mb-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem; width: fit-content;"><span class="me-1 d-inline-flex align-items-center">' + sitemapIconHtml + '</span>' + treeName + '</span>' + link + '</div>'
+            return '<div class="navigation-item-wrapper mb-1 position-relative"><span class="badge bg-gradient-primary d-inline-flex align-items-center navigation-tree-badge" style="font-size: 0.65rem; padding: 0.25rem 0.5rem; position: absolute; bottom: 100%; left: 0; margin-bottom: 0.25rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; white-space: nowrap;"><span class="me-1 d-inline-flex align-items-center">' + sitemapIconHtml + '</span>' + treeName + '</span>' + link + '</div>'
           }
           return '<div class="mb-1">' + link + '</div>'
-        }).join('')
+        }).join('') + '</div>'
       } else {
         return '-'
       }
@@ -896,5 +896,10 @@ const hasPermissionToRenderComponent = (componentName: string) => {
   .page-item span {
     margin: 0;
   }
+}
+</style>
+<style lang="scss">
+.navigation-item-wrapper:hover .navigation-tree-badge {
+  opacity: 1 !important;
 }
 </style>

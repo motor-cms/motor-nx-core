@@ -2,10 +2,10 @@
   <div class="col-md-3">
     <select
       v-model="selected"
-      @change="submitFilter"
       class="form-control"
+      @change="submitFilter"
     >
-      <option value="" v-if="options.emptyOption">
+      <option v-if="options.emptyOption" value="">
         {{ options.emptyOption }}
       </option>
       <option

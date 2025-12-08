@@ -3,8 +3,8 @@
     <Transition name="customfade">
       <div
         v-if="active"
-        class="modal"
         id="admin-modal-logout"
+        class="modal"
         tabindex="-1"
         data-bs-keyboard="false"
         data-bs-backdrop="static"
@@ -14,7 +14,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
+              <h5 id="exampleModalLabel" class="modal-title">
                 <slot name="header"/>
               </h5>
               <button
@@ -22,7 +22,7 @@
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-                v-on:click="cancel"
+                @click="cancel"
               >
                 <span>&times;</span>
               </button>
@@ -32,18 +32,18 @@
             </div>
             <div class="modal-footer">
               <button
-                v-on:click="cancel"
                 type="button"
                 class="btn bg-gradient-secondary"
                 data-bs-dismiss="modal"
+                @click="cancel"
               >
                 {{ dismissText }}
               </button>
               <button
-                v-on:click="confirm"
                 type="button"
                 class="btn bg-gradient-primary"
                 data-bs-dismiss="modal"
+                @click="confirm"
               >
                 {{ acceptText }}
               </button>

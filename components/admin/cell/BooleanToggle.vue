@@ -2,18 +2,18 @@
   <div class="inline mb-0 ms-1">
     <div class="btn-group" role="group" aria-label="Basic example">
       <button
-        @click="submit(true)"
         type="button"
         class="btn btn-sm"
         :class="{ 'btn-primary': record[options.prop] }"
+        @click="submit(true)"
       >
         {{ $t('global.yes') }}
       </button>
       <button
-        @click="submit(false)"
         type="button"
         class="btn btn-sm"
         :class="{ 'btn-primary': !record[options.prop] }"
+        @click="submit(false)"
       >
         {{ $t('global.no') }}
       </button>

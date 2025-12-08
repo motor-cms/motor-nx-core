@@ -8,13 +8,13 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="d-flex flex-row align-items-center">
-                    <h6 class="m-0" v-if="!loading">{{ title }}</h6>
+                    <h6 v-if="!loading" class="m-0">{{ title }}</h6>
                     <div v-if="updatingInBackground" class="mx-4 spinner-header"><div></div><div></div><div></div><div></div></div>
                   </div>
                 </div>
                 <div class="col-md-6 text-end">
-                  <NuxtLink :to="routeToGrid" v-if="routeToGrid.length">
-                    <button @click="checkDirty" class="btn btn-outline-primary">
+                  <NuxtLink v-if="routeToGrid.length" :to="routeToGrid">
+                    <button class="btn btn-outline-primary" @click="checkDirty">
                       {{ $t('global.back') }}
                     </button>
                   </NuxtLink>
@@ -32,7 +32,7 @@
       </div>
     </div>
   </form>
-  <BaseModal @confirm="confirmModal" @cancel="cancelModal" :active="showModal" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')">
+  <BaseModal :active="showModal" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')" @confirm="confirmModal" @cancel="cancelModal">
     <template #header>
       Ungespeichertes Formular
     </template>

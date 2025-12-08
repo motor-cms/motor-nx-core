@@ -4,7 +4,7 @@
   </label>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
     <div class="row" style="padding-left: 0.75rem">
-      <div class="col-4" v-for="option in options" :key="JSON.stringify(option)">
+      <div v-for="option in options" :key="JSON.stringify(option)" class="col-4">
         <label :for="'checkbox_' + option.value">{{ option.label }}</label>
         <v-field
           :id="'checkbox_' + option.value"
@@ -16,7 +16,7 @@
         />
       </div>
     </div>
-    <p class="text-danger" v-if="errorMessage">
+    <p v-if="errorMessage" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>
@@ -27,6 +27,9 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "CheckboxArrayField",
+  components: {
+    VField: Field,
+  },
   props: {
     // Field's own value
     id: String,
@@ -40,9 +43,6 @@ export default defineComponent({
     options: {
       type: Array,
     },
-  },
-  components: {
-    VField: Field,
   },
   setup(props) {
     const { checked, handleChange, errorMessage } = useField(

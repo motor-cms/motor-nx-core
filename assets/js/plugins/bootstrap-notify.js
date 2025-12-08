@@ -283,7 +283,7 @@
           break;
       }
       this.$ele.css(css).addClass(this.settings.animate.enter);
-      $.each(Array('webkit-', 'moz-', 'o-', 'ms-', ''), function(index, prefix) {
+      $.each(['webkit-', 'moz-', 'o-', 'ms-', ''], function(index, prefix) {
         self.$ele[0].style[prefix + 'AnimationIterationCount'] = 1;
       });
 

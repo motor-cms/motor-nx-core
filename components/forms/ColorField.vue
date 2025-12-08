@@ -4,16 +4,16 @@
       {{ label }}
     </label>
     <input
-      type="color"
       :id="id"
+      v-model="value"
+      type="color"
       class="form-control"
       :name="name"
-      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
       @input="handleChange"
       @blur="handleBlur"
     />
-    <p class="text-danger" v-if="errorMessage && meta.touched">
+    <p v-if="errorMessage && meta.touched" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>

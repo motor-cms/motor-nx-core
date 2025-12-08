@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="tree" :id="id">
+    <ul :id="id" class="tree">
       <tree-item
         class="item"
         :item="treeData"

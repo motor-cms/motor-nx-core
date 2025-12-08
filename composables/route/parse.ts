@@ -18,7 +18,7 @@ export default function useRouteParser() {
 
   const routeRemoveCRUD = (pathToParse: string) => {
     // Remove CRUD slugs from route. Current only for edit and create (01 März 2023  Martin Henrichs)
-    let newPath = pathToParse.replace(/\.(edit|create).*/, '');
+    const newPath = pathToParse.replace(/\.(edit|create).*/, '');
     return newPath;
   }
 

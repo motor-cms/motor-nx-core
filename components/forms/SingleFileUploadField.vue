@@ -1,11 +1,12 @@
 <template>
-  <div class="dropzone"
-       v-if="fullScreenDragAndDrop"
+  <div
+v-if="fullScreenDragAndDrop"
+       ref="dropzone"
+       class="dropzone"
        @dragenter.prevent="preventDefaultDropEvent"
        @dragover.prevent="preventDefaultDropEvent"
        @drop.prevent="handleDrop"
        @dragleave.prevent="hideDropZone"
-       ref="dropzone"
   >
     <div class="dropzone-text">
       {{ $t('motor-media.global.drop_file_here') }}
@@ -17,14 +18,15 @@
       {{ label }}
     </label>
     <div class="d-none">
-      <input :id="id" type="file" ref="fileInput" :name="name"/>
+      <input :id="id" ref="fileInput" type="file" :name="name"/>
     </div>
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
       {{ validationErrorMessage }}
     </div>
 
     <!-- Highlight small drop zone for Fullscreen drag and drop -->
-    <div v-if="fullScreenDragAndDrop && !file"
+    <div
+v-if="fullScreenDragAndDrop && !file"
          class="col-md-4 drop-zone"
          :class="{ over: status.over }"
     >
@@ -32,12 +34,13 @@
     </div>
 
     <!-- Display drop zone for non-fullscreen drag and drop -->
-    <div v-if="!fullScreenDragAndDrop && !file"
+    <div
+v-if="!fullScreenDragAndDrop && !file"
          class="col-md-4 drop-zone"
+         :class="{ over: status.over }"
          @dragover.prevent="handleDragOver"
          @drop.prevent="handleDrop"
          @dragleave.prevent="handleDragLeave"
-         :class="{ over: status.over }"
     >
       <span> {{ $t('motor-media.global.drop_file_here') }} </span>
     </div>
@@ -47,8 +50,8 @@
         <!-- Lightbox for existing images -->
         <vue-easy-lightbox
           v-if="file.conversions && file.conversions.preview && isImage(file.mime_type)"
-          scrollDisabled
-          moveDisabled
+          scroll-disabled
+          move-disabled
           :visible="lightboxVisible"
           :imgs="[file.conversions.preview]"
           :index="0"
@@ -62,8 +65,8 @@
           :src="file.conversions.thumb"
           class="img-fluid border-radius-lg"
           alt="File preview"
-          @click="lightboxVisible = true"
           style="cursor: pointer; margin-bottom: 8px; max-width: 100%;"
+          @click="lightboxVisible = true"
         />
 
         <!-- Preview for newly uploaded files (base64) -->
@@ -84,9 +87,9 @@
       <div v-if="file.name !== ''" class="col-md-8">
         <button
           v-if="allowDelete"
-          @click="deleteFile"
           class="btn btn-danger btn-sm align-content-end"
           type="button"
+          @click="deleteFile"
         >
           <fa icon="trash-alt"/>
         </button>

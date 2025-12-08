@@ -2,7 +2,7 @@
     <span class="tooltip-container" @mouseover="showTooltip" @mouseleave="hideTooltip">
     <span v-if="props.type == 'questionmark'" class="tooltip-icon"><b>?</b></span>
     <span v-else class="tooltip-icon"><b>i</b></span>
-    <div v-if="isTooltipVisible" class="tooltip-text" :class="tooltipPositionClass" ref="el">
+    <div v-if="isTooltipVisible" ref="el" class="tooltip-text" :class="tooltipPositionClass">
       {{ text }}
       <div class="tooltip-arrow"></div>
     </div>

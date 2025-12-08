@@ -1,9 +1,9 @@
 <template>
     <input
-      type="hidden"
       :id="id"
-      :name="name"
       v-model="value"
+      type="hidden"
+      :name="name"
     />
 </template>
 <script setup lang="ts">

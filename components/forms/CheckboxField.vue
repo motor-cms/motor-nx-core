@@ -10,9 +10,9 @@
       ></AdminTooltip>
       <label :for="id" class="atom-toggle__switch">
         <input
+          v-model="model"
           type="checkbox"
           :name="name"
-          v-model="model"
           :disabled="true"
         />
         <span
@@ -22,7 +22,7 @@
         ></span>
       </label>
     </div>
-    <p class="text-danger" v-if="errorMessage && meta.touched">
+    <p v-if="errorMessage && meta.touched" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>

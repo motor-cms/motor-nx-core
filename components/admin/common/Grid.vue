@@ -468,6 +468,8 @@ import Popover from "@zrm/motor-nx-core/components/admin/cell/Popover.vue";
 import { useFilterStore } from "@zrm/motor-nx-core/stores/filter";
 import useRolesAndPermissions from "@zrm/motor-nx-core/composables/auth/rolesAndPermissions";
 import {PERMISSIONS} from "@zrm/motor-nx-core/types/roles_and_permissions";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { faSitemap } from "@fortawesome/free-solid-svg-icons";
 
 interface GridAction {
   label: string,
@@ -586,6 +588,41 @@ const createRecordRoute = ref(useRouteParser().routeDottedToSlash(props.createRo
 const goBackRoute = ref(useRouteParser().routeDottedToSlash(props.backRoute))
 
 Object.assign(filterValues, filterStore.getFilterValuesForGrid(route.name));
+router.replace({query: filterStore.getFilterValuesForGrid(route.name)})
+
+const sortcol = ref();
+const sortasc = ref(true);
+const sort = (prop: string) => {
+  // Reset sorting completely
+  if (sortcol.value !== null && sortasc.value === false) {
+    submitFilter( {
+      parameter: "sort",
+      value: ""
+    });
+    sortcol.value = null;
+    return;
+  }
+  // Handle sorting
+  sortasc.value = sortcol.value == prop ? !sortasc.value : true;
+  sortcol.value = prop;
+  submitFilter({
+    parameter: "sort",
+    value: sortcol.value + (sortasc.value ? "" : ":desc"),
+  });
+};
+
+// Handle sorting
+if (filterValues.sort) {
+  const tempSort = filterValues.sort.split(':');
+
+  if (tempSort[0]) {
+    sortcol.value = tempSort[0];
+  }
+
+  if (tempSort[1]) {
+    sortasc.value = false;
+  }
+}
 
 const submitFilter = (data: { parameter: string; value: string }) => {
 
@@ -672,6 +709,20 @@ const renderer = (
         }).join('')
           } else {
         // Return fontawesome icon
+        return '-'
+      }
+    case 'linksWithTree':
+      if (value && value.length) {
+        const sitemapIconHtml = icon(faSitemap, { styles: { width: '10px', height: '10px' } }).html[0]
+        return '<div class="d-flex flex-column">' + value.map((object: Record<string, object>) => {
+          const link = '<a href="' + renderer.route.replace('{id}', object.id).replace('{root_node}', object.root_node) + '" class="text-decoration-none">' + object.full_slug + '</a>'
+          const treeName = object.root_node_name || ''
+          if (treeName) {
+            return '<div class="navigation-item-wrapper mb-1 position-relative"><span class="badge bg-gradient-primary d-inline-flex align-items-center navigation-tree-badge" style="font-size: 0.65rem; padding: 0.25rem 0.5rem; position: absolute; bottom: 100%; left: 0; margin-bottom: 0.25rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; white-space: nowrap;"><span class="me-1 d-inline-flex align-items-center">' + sitemapIconHtml + '</span>' + treeName + '</span>' + link + '</div>'
+          }
+          return '<div class="mb-1">' + link + '</div>'
+        }).join('') + '</div>'
+      } else {
         return '-'
       }
     case 'linkLabelId':
@@ -813,16 +864,6 @@ const processGridAction = async () => {
     emit('gridActionProcessed')
   }
 }
-const sortcol = ref();
-const sortasc = ref(true);
-const sort = (prop: string) => {
-  sortasc.value = sortcol.value == prop ? !sortasc.value : true;
-  sortcol.value = prop;
-  submitFilter({
-    parameter: "sort",
-        value: sortcol.value + (sortasc.value ? "" : ":desc"),
-  });
-};
 
 onMounted(() => {
   gridAction.value = hasGridActions.value ? props.gridActions[0] : null;
@@ -855,5 +896,10 @@ const hasPermissionToRenderComponent = (componentName: string) => {
   .page-item span {
     margin: 0;
   }
+}
+</style>
+<style lang="scss">
+.navigation-item-wrapper:hover .navigation-tree-badge {
+  opacity: 1 !important;
 }
 </style>

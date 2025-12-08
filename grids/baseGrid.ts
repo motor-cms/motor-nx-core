@@ -69,7 +69,9 @@ export default function baseGrid<T>(
     const filterParams = filterStore.getFilterValuesForGrid(route.name);
     Object.assign(params, filterParams);
 
+    appStore.updateInBackground(true);
     await getGridData(params, '');
+    appStore.updateInBackground(false);
   }
 
   const removeRecordFromRows = (record: number) => {

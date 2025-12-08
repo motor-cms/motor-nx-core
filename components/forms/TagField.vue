@@ -1,15 +1,15 @@
 <template>
   <div class="input-group mb-3">
-    <span v-if="data.error" id="tagError">{{ data.error }}</span>
+    <span v-if="formState.error" id="tagError">{{ formState.error }}</span>
     <input
-ref="tagsInput" v-model="data.addTag" :disabled="disableForms" class="form-control"
+ref="tagsInput" v-model="formState.addTag" :disabled="disableForms" class="form-control"
            :placeholder="$t('global.type_to_add_tags')">
     <button
 id="button-addon2" ref="addTagButton" :disabled="disableForms" class="btn btn-outline-primary mb-0"
             icon="plus" @click.prevent="pushTag">Tag hinzufügen
     </button>
   </div>
-  <div v-for="tag in taggings" id="tag">
+  <div v-for="tag in taggings" :key="tag" id="tag">
     {{ tag }} <span style="cursor:pointer;" @click="deleteTag(tag)">x</span>
   </div>
 </template>
@@ -28,7 +28,7 @@ const props = defineProps({
   }
 });
 
-const data = reactive({
+const formState = reactive({
   addTag: '',
   error: false
 });
@@ -69,13 +69,13 @@ const deleteTag = (tag) => {
 };
 
 const pushTag = () => {
-  if (data.addTag.length > 2) {
-    taggings.value.push(data.addTag);
-    data.addTag = '';
+  if (formState.addTag.length > 2) {
+    taggings.value.push(formState.addTag);
+    formState.addTag = '';
     emit("update:modelValue", taggings.value);
-    data.error = false;
+    formState.error = false;
   } else {
-    data.error = "Die Eingabe muss 3 zeichen lang sein";
+    formState.error = "Die Eingabe muss 3 zeichen lang sein";
   }
 };
 

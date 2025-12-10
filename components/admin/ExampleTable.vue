@@ -13,8 +13,8 @@
           <div class="col-lg-6 col-5 my-auto text-end">
             <div class="dropdown float-lg-end pe-4">
               <a
-                class="cursor-pointer"
                 id="dropdownTable"
+                class="cursor-pointer"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >

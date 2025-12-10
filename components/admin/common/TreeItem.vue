@@ -4,12 +4,12 @@
       {{ item.name }}
       <span v-if="isFolder">[{{ isOpen ? '-' : '+' }}]</span>
     </div>
-    <ul class="tree" v-show="isOpen" v-if="isFolder">
+    <ul v-show="isOpen" v-if="isFolder" class="tree">
       <tree-item
-        class="item"
-        :class="{ active: record === child.id }"
         v-for="(child, index) in item.children"
         :key="index"
+        class="item"
+        :class="{ active: record === child.id }"
         :item="child"
         @make-folder="$emit('make-folder', $event)"
         @add-item="$emit('add-item', $event)"

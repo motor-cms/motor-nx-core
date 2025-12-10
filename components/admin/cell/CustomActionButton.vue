@@ -1,6 +1,6 @@
 <template>
   <div class="inline mb-0 ms-1" :data-tooltip="tooltipText">
-    <a @click="functionToCall()" class="btn btn-link text-dark px-3 mb-0" href="javascript:;">
+    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;" @click="functionToCall()">
       <fa :icon="options.icon ?? 'eye'"></fa>
     </a>
   </div>

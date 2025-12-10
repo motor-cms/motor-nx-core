@@ -7,10 +7,10 @@
       <input :id="id" type="file" :name="name" />
     </div>
     <div
-      class="row"
-      style="padding-left: 0.75rem"
       v-for="(file, index) in files"
       :key="index"
+      class="row"
+      style="padding-left: 0.75rem"
     >
       <div
         v-if="index === 0"
@@ -22,12 +22,12 @@
               ');'
             : ''
         "
-        v-on:dragover.prevent="handleDragOver"
-        v-on:drop.prevent="handleDrop"
-        v-on:dragleave.prevent="handleDragLeave"
         :class="{
           over: status.over,
         }"
+        @dragover.prevent="handleDragOver"
+        @drop.prevent="handleDrop"
+        @dragleave.prevent="handleDragLeave"
       >
         <span v-if="file.dataUrl === '' && !inputValue?.conversions">
           <template v-if="multiple">
@@ -66,14 +66,14 @@
         </span>
       </div>
       <div
-        class="col-md-8"
         v-if="(status.dropped || inputValue?.conversions) && file.name !== ''"
+        class="col-md-8"
       >
         <button
           v-if="allowDelete"
-          @click="deleteImage"
           class="btn btn-danger btn-sm align-content-end"
           type="button"
+          @click="deleteImage"
         >
           <fa icon="trash-alt" />
         </button>

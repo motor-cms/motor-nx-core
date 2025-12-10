@@ -4,8 +4,8 @@
       class="btn btn-primary btn-sm me-2"
       type="button"
       :title="options?.name"
-      @click="functionToCall()"
       href="javascript:;"
+      @click="functionToCall()"
     >
       {{ options?.name }}
     </button>

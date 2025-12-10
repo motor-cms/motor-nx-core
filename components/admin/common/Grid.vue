@@ -298,7 +298,8 @@
                   </h3>
                 </td>
               </tr>
-              <template v-if="
+              <template
+v-if="
                   (loading && rows.length === 0) ||
                     (updatingInBackground && rows.length === 0)
                 "

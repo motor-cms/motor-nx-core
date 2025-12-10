@@ -10,19 +10,19 @@
       ></AdminTooltip
     ></label>
     <textarea
-      ref="textareaRef"
-      :required="required"
       :id="id"
+      ref="textareaRef"
+      v-model="value"
+      :required="required"
       class="form-control"
       :name="name"
-      v-model="value"
       :rows="rows"
       :class="{ 'is-invalid': errorMessage }"
       :style="textareaStyle"
       @blur="handleBlur"
       @input="adjustHeight"
     ></textarea>
-    <p class="text-danger" v-if="errorMessage && meta.touched">
+    <p v-if="errorMessage && meta.touched" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>

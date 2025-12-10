@@ -5,9 +5,9 @@
       <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-top': '-8px'}"></AdminTooltip>
       <label :for="id" class="atom-toggle__switch">
         <input
+          v-model="model"
           type="checkbox"
           :name="name"
-          v-model="model"
           @input="emitUpdate">
       </label>
     </div>

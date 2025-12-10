@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group" :id="id" :class="{ 'has-danger': errorMessage }">
+  <div :id="id" class="form-group" :class="{ 'has-danger': errorMessage }">
     <label :for="id">
       {{ label }}
     </label>
@@ -11,18 +11,18 @@
     ></AdminTooltip>
     <Multiselect
       v-bind="$attrs"
-      :disabled="loading || disabled"
       :id="id"
-      :canClear="is_nullable"
+      v-model="inputValue"
+      :disabled="loading || disabled"
+      :can-clear="is_nullable"
       :can-deselect="is_nullable"
       :object="object"
       :mode="mode"
-      v-model="inputValue"
       :value="inputValue"
       :options="parsedOptions"
       :searchable="searchable"
     />
-    <p class="text-danger" v-if="errorMessage">
+    <p v-if="errorMessage" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>
@@ -58,7 +58,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  options: Array<{label: String, value: String|Number}>,
+  options: Array<{label: string, value: string|number}>,
   mode: {
     type: String,
     default: 'single'

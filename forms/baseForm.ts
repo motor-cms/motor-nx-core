@@ -8,7 +8,7 @@ import { localize } from '@vee-validate/i18n';
 import de from '@vee-validate/i18n/dist/locale/de.json';
 import { setLocale } from '@vee-validate/i18n';
 import { storeToRefs } from "pinia";
-import type { Ref } from "@vue/reactivity";
+import type { Ref } from "vue";
 import type { MaybeRef } from "vue";
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";

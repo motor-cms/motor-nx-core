@@ -1,7 +1,7 @@
 <template>
-  <aside ref="sidebar" class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main" :class="{open: sidebarOpen}">
+  <aside id="sidenav-main" ref="sidebar" class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" :class="{open: sidebarOpen}">
     <div class="sidenav-header">
-      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <i id="iconSidenav" class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true"></i>
       <NuxtLink to="/admin/dashboard" class="d-flex navbar-brand m-0">
         <img
           src="~/assets/images/logo.png"
@@ -12,10 +12,10 @@
       </NuxtLink>
     </div>
     <hr class="horizontal dark mt-0" />
-    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+    <div id="sidenav-collapse-main" class="collapse navbar-collapse w-auto">
       <ul class="navbar-nav">
         <template v-if="loading && !navigationItems.length">
-          <li class="nav-item" v-for="index in 5" :key="index">
+          <li v-for="index in 5" :key="index" class="nav-item">
             <div
               class="nav-link"
             >
@@ -43,13 +43,13 @@
         </template>
         <template v-else>
           <template v-for="topLayerNavItem in filteredNavigationItems">
-            <li class="nav-item" :key="topLayerNavItem.name" v-if="rolesAndPermissions.hasAnyPermission(topLayerNavItem.permissions) || rolesAndPermissions.hasRole('SuperAdmin')">
+            <li v-if="rolesAndPermissions.hasAnyPermission(topLayerNavItem.permissions) || rolesAndPermissions.hasRole('SuperAdmin')" :key="topLayerNavItem.name" class="nav-item">
               <NuxtLink
-                @click="toggleMenu(topLayerNavItem.slug)"
                 v-if="topLayerNavItem.route"
                 class="nav-link"
                 :to="routeParser.routeDottedToSlash(topLayerNavItem.route)"
                 :class="{active: activeParent && activeParent ===topLayerNavItem.slug || !activeParent && topLayerNavItem.slug === 'dashboard' }"
+                @click="toggleMenu(topLayerNavItem.slug)"
               >
                 <div
                   class="
@@ -69,10 +69,10 @@
                 <span class="nav-link-text ms-1">{{ $t(topLayerNavItem.name) }}</span>
               </NuxtLink>
               <a
-                @click="toggleMenu(routeParser.routeDottedToSlash(topLayerNavItem.slug, false))"
                 v-else
                 class="nav-link menu-dropdown"
                 :class="[{active: activeParent === routeParser.routeDottedToSlash(topLayerNavItem.slug, false)}, 'menu-' + topLayerNavItem.slug]"
+                @click="toggleMenu(routeParser.routeDottedToSlash(topLayerNavItem.slug, false))"
               >
                 <div
                   class="

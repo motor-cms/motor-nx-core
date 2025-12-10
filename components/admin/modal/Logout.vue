@@ -1,5 +1,5 @@
 <template>
- <BaseModal @confirm="confirm" @cancel="cancel" :active="active" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')">
+ <BaseModal :active="active" :accept-text="$t('global.yes')" :dismiss-text="$t('global.no')" @confirm="confirm" @cancel="cancel">
    <template #header>
      {{ $t('global.logout') }}
    </template>

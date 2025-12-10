@@ -1,11 +1,12 @@
 <template>
-  <div class="dropzone"
-       v-if="fullScreenDragAndDrop"
-       v-on:dragenter.prevent="preventDefaultDropEvent"
-       v-on:dragover.prevent="preventDefaultDropEvent"
-       v-on:drop.prevent="handleDrop"
-       v-on:dragleave.prevent="hideDropZone"
+  <div
+v-if="fullScreenDragAndDrop"
        ref="dropzone"
+       class="dropzone"
+       @dragenter.prevent="preventDefaultDropEvent"
+       @dragover.prevent="preventDefaultDropEvent"
+       @drop.prevent="handleDrop"
+       @dragleave.prevent="hideDropZone"
   >
     <div class="dropzone-text">
       {{ dropzoneText }}
@@ -17,14 +18,15 @@
       {{ label }}
     </label>
     <div class="d-none">
-      <input :id="id" type="file" ref="fileInput" :name="name"/>
+      <input :id="id" ref="fileInput" type="file" :name="name"/>
     </div>
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
       {{ validationErrorMessage }}
     </div>
 
     <!-- Highlight small drop zone for Fullscreen drag and drop -->
-    <div v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+    <div
+v-if="fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
          class="col-md-4 drop-zone"
          :class="{ over: status.over }"
     >
@@ -32,17 +34,19 @@
     </div>
 
     <!-- Display drop zone for non-fullscreen drag and drop -->
-    <div v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
+    <div
+v-if="!fullScreenDragAndDrop && (multiple || (!multiple && !files.length))"
          class="col-md-4 drop-zone"
-         v-on:dragover.prevent="handleDragOver"
-         v-on:drop.prevent="handleDrop"
-         v-on:dragleave.prevent="handleDragLeave"
          :class="{ over: status.over }"
+         @dragover.prevent="handleDragOver"
+         @drop.prevent="handleDrop"
+         @dragleave.prevent="handleDragLeave"
     >
       <span> {{ dropzoneText }} </span>
     </div>
 
-    <div v-for="(file, index) in files"
+    <div
+v-for="(file, index) in files"
          :key="index"
          class="row"
          style="padding-left: 0.75rem"
@@ -62,9 +66,9 @@
       <div v-if="file.name !== ''" class="col-md-4">
         <button
           v-if="allowDelete"
-          @click="deleteFile(file.name)"
           class="btn btn-danger btn-sm align-content-end"
           type="button"
+          @click="deleteFile(file.name)"
         >
           <fa icon="trash-alt"/>
         </button>
@@ -79,11 +83,11 @@
             {{ $t('motor-media.files.description') }}
           </label>
           <input
+              :id="`description_${index}`"
+              v-model="metadata[index].description"
               type="text"
               class="form-control"
-              :id="`description_${index}`"
               :name="`metadata[${index}].description`"
-              v-model="metadata[index].description"
           />
         </div>
         <div class="form-group">
@@ -91,11 +95,11 @@
             {{ $t('motor-media.files.alt_text') }}
           </label>
           <input
+              :id="`alt_text_${index}`"
+              v-model="metadata[index].alt_text"
               type="text"
               class="form-control"
-              :id="`alt_text_${index}`"
               :name="`metadata[${index}].alt_text`"
-              v-model="metadata[index].alt_text"
           />
         </div>
       </div>
@@ -109,7 +113,6 @@ import {useI18n} from 'vue-i18n';
 import {filesize} from "filesize";
 
 export default defineComponent({
-  emits: ['updateMetadata'],
   name: 'FileUploadField',
   props: {
     id: String,
@@ -147,6 +150,7 @@ export default defineComponent({
       default: false,
     }
   },
+  emits: ['updateMetadata'],
   setup(props, ctx ) {
     const {t} = useI18n()
     const dropzone = ref<HTMLInputElement | null>(null);

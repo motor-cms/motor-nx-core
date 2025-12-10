@@ -3,9 +3,9 @@
     <label :for="id">
     </label>
     <div
+      v-if="file"
       class="row"
       style="padding-left: 0.75rem"
-      v-if="file"
     >
       <div
         class="col-md-4 drop-zone"
@@ -22,8 +22,8 @@
         </span>
       </div>
       <div
-        class="col-md-8"
         v-if="file.name !== ''"
+        class="col-md-8"
       >
         <p><strong>File:</strong> {{ file?.name }}</p>
         <p>

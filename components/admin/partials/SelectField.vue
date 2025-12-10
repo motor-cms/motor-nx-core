@@ -1,5 +1,5 @@
 <template>
-  <Multiselect :disabled="loading" :id="id" :object="object" :mode="mode" v-model="inputValue" :options="parsedOptions" :searchable="true" />
+  <Multiselect :id="id" v-model="inputValue" :disabled="loading" :object="object" :mode="mode" :options="parsedOptions" :searchable="true" />
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -24,7 +24,7 @@ export default defineComponent({
       type: String,
       default: ''
     },
-    options: Array<{label: String, value: String|Number}>,
+    options: Array<{label: string, value: string|number}>,
     mode: {
       type: String,
       default: 'single'

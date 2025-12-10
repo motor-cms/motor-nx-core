@@ -1,13 +1,15 @@
 <template>
   <div class="input-group mb-3">
-    <span id="tagError" v-if="data.error">{{ data.error }}</span>
-    <input ref="tagsInput" :disabled="disableForms" class="form-control" :placeholder="$t('global.type_to_add_tags')"
-           v-model="data.addTag">
-    <button ref="addTagButton" :disabled="disableForms" class="btn btn-outline-primary mb-0" id="button-addon2"
-            @click.prevent="pushTag" icon="plus">Tag hinzufügen
+    <span v-if="formState.error" id="tagError">{{ formState.error }}</span>
+    <input
+ref="tagsInput" v-model="formState.addTag" :disabled="disableForms" class="form-control"
+           :placeholder="$t('global.type_to_add_tags')">
+    <button
+id="button-addon2" ref="addTagButton" :disabled="disableForms" class="btn btn-outline-primary mb-0"
+            icon="plus" @click.prevent="pushTag">Tag hinzufügen
     </button>
   </div>
-  <div id="tag" v-for="tag in taggings">
+  <div v-for="tag in taggings" :key="tag" id="tag">
     {{ tag }} <span style="cursor:pointer;" @click="deleteTag(tag)">x</span>
   </div>
 </template>
@@ -19,14 +21,14 @@ import {storeToRefs} from "pinia";
 
 const props = defineProps({
   placeholder: String,
-  data: Array<String>,
+  data: Array<string>,
   modelValue: {
-    type: Array<String>,
+    type: Array<string>,
     default: []
   }
 });
 
-const data = reactive({
+const formState = reactive({
   addTag: '',
   error: false
 });
@@ -49,7 +51,7 @@ onMounted(() => {
   }
 })
 
-const taggings = ref<Array<String>>(props.modelValue);
+const taggings = ref<Array<string>>(props.modelValue);
 
 const appStore = useAppStore();
 const {disableForms} = storeToRefs(appStore);
@@ -67,13 +69,13 @@ const deleteTag = (tag) => {
 };
 
 const pushTag = () => {
-  if (data.addTag.length > 2) {
-    taggings.value.push(data.addTag);
-    data.addTag = '';
+  if (formState.addTag.length > 2) {
+    taggings.value.push(formState.addTag);
+    formState.addTag = '';
     emit("update:modelValue", taggings.value);
-    data.error = false;
+    formState.error = false;
   } else {
-    data.error = "Die Eingabe muss 3 zeichen lang sein";
+    formState.error = "Die Eingabe muss 3 zeichen lang sein";
   }
 };
 

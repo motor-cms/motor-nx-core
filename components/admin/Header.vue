@@ -1,7 +1,7 @@
 <template>
   <nav
-    class="navbar motor-navbar-top navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky"
-    id="navbarBlur" navbar-scroll="true">
+    id="navbarBlur"
+    class="navbar motor-navbar-top navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" navbar-scroll="true">
     <div class="container-fluid py-1 px-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -9,13 +9,13 @@
             <a class="opacity-5 text-dark" href="/">Backend</a>
           </li>
           <li
-            class="breadcrumb-item text-sm text-dark active"
             v-for="(breadcrumb, index) in breadcrumbs"
             :key="index"
+            class="breadcrumb-item text-sm text-dark active"
           >
             <NuxtLink
-              :to="{ name: breadcrumb.route }"
               v-if="index < breadcrumbs.length - 1 && breadcrumb.route"
+              :to="{ name: breadcrumb.route }"
             >{{ $t(breadcrumb.name) }}
             </NuxtLink
             >
@@ -33,12 +33,12 @@
           {{ breadcrumbs.length? $t(breadcrumbs[breadcrumbs.length - 1].name) : title }}
         </h6>
       </nav>
-      <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto" id="navbar">
+      <div id="navbar" class="mt-sm-0 mt-2 me-md-0 me-sm-4" style="flex: auto">
         <ul class="ms-md-auto pe-md-3 d-flex navbar-nav justify-content-end">
-          <li class="nav-item d-flex align-items-center mx-3 mx-xxl-5" ref="navbarSlot">
+          <li ref="navbarSlot" class="nav-item d-flex align-items-center mx-3 mx-xxl-5">
             <EventNotificationHub/>
           </li>
-          <li class="nav-item d-flex align-items-center" v-if="authenticated">
+          <li v-if="authenticated" class="nav-item d-flex align-items-center">
             <span class="nav-link text-body font-weight-bold px-0">
               <fa v-if="!user.avatar" icon="user" class="me-sm-1"/>
               <img
@@ -49,11 +49,11 @@
               <span class="d-sm-inline d-none">{{ user.name }}</span>
             </span>
           </li>
-          <li class="nav-item d-flex align-items-center" v-if="authenticated">
+          <li v-if="authenticated" class="nav-item d-flex align-items-center">
             <fa
-              @click="logout"
               icon="sign-out-alt"
               class="fixed-plugin-button-nav cursor-pointer ms-2"
+              @click="logout"
             />
             <AdminModalLogout
               :active="active"
@@ -63,11 +63,11 @@
           </li>
           <li class="nav-item d-xl-none p-3 d-flex align-items-center" @click="toggleNavbar">
             <a
-              class="nav-link text-body p-0"
               id="iconNavbarSidenav"
+              class="nav-link text-body p-0"
             >
-              <fa icon="bars" v-if="!sidebarOpen"/>
-              <fa icon="close" v-else />
+              <fa v-if="!sidebarOpen" icon="bars"/>
+              <fa v-else icon="close" />
             </a>
           </li>
         </ul>

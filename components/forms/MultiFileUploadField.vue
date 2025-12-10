@@ -1,11 +1,12 @@
 <template>
-  <div class="dropzone"
-       v-if="fullScreenDragAndDrop"
+  <div
+v-if="fullScreenDragAndDrop"
+       ref="dropzone"
+       class="dropzone"
        @dragenter.prevent="preventDefaultDropEvent"
        @dragover.prevent="preventDefaultDropEvent"
        @drop.prevent="handleDrop"
        @dragleave.prevent="hideDropZone"
-       ref="dropzone"
   >
     <div class="dropzone-text">
       {{ $t('motor-media.global.drop_files_here') }}
@@ -17,14 +18,15 @@
       {{ label }}
     </label>
     <div class="d-none">
-      <input :id="id" type="file" ref="fileInput" :name="name"/>
+      <input :id="id" ref="fileInput" type="file" :name="name"/>
     </div>
     <div v-if="validationError && validationErrorMessage.length" class="alert alert-danger" role="alert">
       {{ validationErrorMessage }}
     </div>
 
     <!-- Highlight small drop zone for Fullscreen drag and drop -->
-    <div v-if="fullScreenDragAndDrop && files.length === 0"
+    <div
+v-if="fullScreenDragAndDrop && files.length === 0"
          class="col-md-4 drop-zone"
          :class="{ over: status.over }"
     >
@@ -32,17 +34,19 @@
     </div>
 
     <!-- Display drop zone for non-fullscreen drag and drop -->
-    <div v-if="!fullScreenDragAndDrop && files.length === 0"
+    <div
+v-if="!fullScreenDragAndDrop && files.length === 0"
          class="col-md-4 drop-zone"
+         :class="{ over: status.over }"
          @dragover.prevent="handleDragOver"
          @drop.prevent="handleDrop"
          @dragleave.prevent="handleDragLeave"
-         :class="{ over: status.over }"
     >
       <span> {{ $t('motor-media.global.drop_files_here') }} </span>
     </div>
 
-    <div v-for="(file, index) in files"
+    <div
+v-for="(file, index) in files"
          :key="`file-${index}-${file.name}`"
          class="row"
          style="padding-left: 0.75rem; margin-bottom: 1rem;"
@@ -62,9 +66,9 @@
       <div v-if="file.name !== ''" class="col-md-4">
         <button
           v-if="allowDelete"
-          @click="deleteFile(index)"
           class="btn btn-danger btn-sm align-content-end"
           type="button"
+          @click="deleteFile(index)"
         >
           <fa icon="trash-alt"/>
         </button>
@@ -78,11 +82,11 @@
             {{ $t('motor-media.files.description') }}
           </label>
           <input
+              :id="`description_${index}`"
+              v-model="file.description"
               type="text"
               class="form-control"
-              :id="`description_${index}`"
               :name="`metadata[${index}].description`"
-              v-model="file.description"
               @input="syncToModel"
           />
         </div>
@@ -91,11 +95,11 @@
             {{ $t('motor-media.files.alt_text') }}
           </label>
           <input
+              :id="`alt_text_${index}`"
+              v-model="file.alt_text"
               type="text"
               class="form-control"
-              :id="`alt_text_${index}`"
               :name="`metadata[${index}].alt_text`"
-              v-model="file.alt_text"
               @input="syncToModel"
           />
         </div>

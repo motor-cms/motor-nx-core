@@ -4,11 +4,11 @@
       <input
         id="motor-grid-search"
         v-model="term"
-        @input="debouncedSearch"
-        @keyup.enter="debouncedSearch"
         :placeholder="$t('global.press_enter_to_serach')"
         class="form-control form-control-alternative"
         :style="{ paddingRight: term ? '35px' : '' }"
+        @input="debouncedSearch"
+        @keyup.enter="debouncedSearch"
       />
       <button
         v-if="term"

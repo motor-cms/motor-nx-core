@@ -4,7 +4,7 @@
   </label>
   <div class="form-check" :class="{ 'has-danger': errorMessage }">
     <div class="row" style="padding-left: 0.75rem">
-      <div class="col-4" v-for="(option, index) in options" :key="index">
+      <div v-for="(option, index) in options" :key="index" class="col-4">
         <label :for="'radio_' + option.value">{{ option.label }}</label>
         <v-field
           :id="'radio_' + option.value"
@@ -16,7 +16,7 @@
         />
       </div>
     </div>
-    <p class="text-danger" v-if="errorMessage">
+    <p v-if="errorMessage" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>

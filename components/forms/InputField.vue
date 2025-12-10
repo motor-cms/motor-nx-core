@@ -5,20 +5,20 @@
     </label>
     <AdminTooltip v-if="description.length" :text="description" type="info" :style="{'margin-left': '5px'}"></AdminTooltip>
     <input
+      :id="id"
+      v-model="value"
       :required="required"
       :type="type"
-      :id="id"
       class="form-control"
       :name="name"
-      v-model="value"
       :class="{ 'is-invalid': errorMessage }"
-      @blur="blur"
       :disabled="disableForms || disabled"
       :min="min ?? ''"
       :max="max ?? ''"
+      @blur="blur"
       @input="changed"
     />
-    <p class="text-danger" v-if="errorMessage && meta.touched">
+    <p v-if="errorMessage && meta.touched" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>

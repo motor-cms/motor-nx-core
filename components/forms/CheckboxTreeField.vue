@@ -1,8 +1,8 @@
 <template>
   <div
+    v-if="tree && tree.length"
     class="form-check checkbox-tree"
     :class="{ 'has-danger': errorMessage }"
-    v-if="tree && tree.length"
   >
     <label v-if="label" :for="id" class="d-block">
       {{ label }}
@@ -25,7 +25,7 @@
         />
       </li>
     </ul>
-    <p class="text-danger" v-if="errorMessage && level === 0">
+    <p v-if="errorMessage && level === 0" class="text-danger">
       {{ errorMessage }}
     </p>
   </div>
@@ -36,6 +36,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CheckboxTreeField',
+  components: {
+    VField: Field,
+  },
   props: {
     // Field's own value
     id: String,
@@ -53,9 +56,6 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
-  },
-  components: {
-    VField: Field,
   },
   setup(props) {
     const { checked, handleChange, errorMessage } = useField(

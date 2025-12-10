@@ -2,8 +2,8 @@
   <div class="flex-column">
     <vue-easy-lightbox
       v-if="record.exists && record[prop] && isImage(record[prop].mime_type)"
-      scrollDisabled
-      moveDisabled
+      scroll-disabled
+      move-disabled
       :visible="visible"
       :imgs="[record[prop].conversions.preview]"
       :index="0"
@@ -19,9 +19,9 @@
       @click="visible = true"
     />
     <a
+      v-if="record.exists"
       :href="backendUrl + 'download/' + record.id"
       target="_blank"
-      v-if="record.exists"
       type="button"
       class="btn btn-sm btn-secondary d-block"
     >

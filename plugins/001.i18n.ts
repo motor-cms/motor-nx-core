@@ -1,164 +1,133 @@
-//import { createI18n } from 'vue-i18n'
-
 // @ts-nocheck
 import { createI18n } from 'vue-i18n'
 import type { LocaleMessages, VueMessageType } from 'vue-i18n'
 
 /**
- * Load locale messages
- *
- * The loaded `JSON` locale messages is pre-compiled by `@intlify/vue-i18n-loader`, which is integrated into `vue-cli-plugin-i18n`.
- * See: https://github.com/intlify/vue-i18n-loader#rocket-i18n-resource-pre-compilation
+ * Deep merge utility to recursively combine locale objects
+ * Later sources override earlier sources (maintaining priority)
+ */
+function deepMerge(target: any, source: any): any {
+  if (typeof source === 'object' && source !== null && !Array.isArray(source)) {
+    if (typeof target !== 'object' || target === null) {
+      target = {}
+    }
+
+    for (const key of Object.keys(source)) {
+      if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        target[key] = deepMerge(target[key] || {}, source[key])
+      } else {
+        target[key] = source[key]
+      }
+    }
+    return target
+  }
+
+  return source
+}
+
+/**
+ * Load and structure locale messages from glob imports
+ * Builds nested structure based on folder/file paths (e.g., de/components.json)
  */
 async function loadLocaleMessages(
-  locales,
+  locales: Record<string, any>,
   isPackage = false
-): LocaleMessages<VueMessageType> {
+): Promise<LocaleMessages<VueMessageType>> {
   const messages: LocaleMessages<VueMessageType> = {}
-  for (const key of Object.keys(locales)) {
-    let variables = {}
-    // Recursively go through the languages folder and read all json files in the directories and build the messages object
-    // This allows us to split the language variables in separate files
-    await key.split('/').reduce(async (re, e) => {
-      const module = await locales[key]
-      const r = await re
 
-      // If we find a json file in the path, read the variables from it and assign it to the object
-      if (isPackage) {
-        variables = e.search(/\.json/i) > 0 ? module : {}
-      } else {
-        variables = e.search(/\.json/i) > 0 ? module.default : {}
+  for (const [key, moduleLoader] of Object.entries(locales)) {
+    const pathParts = key.split('/')
+
+    // Build nested structure based on path
+    await pathParts.reduce(async (promiseAcc, part) => {
+      const acc = await promiseAcc
+      const module = await moduleLoader
+
+      // Skip non-meaningful parts
+      if (['.', '..', 'node_modules', 'locales'].includes(part)) {
+        return acc
       }
-      // Strip the .json file ending from the path fragment
-      e = e.replace('.json', '')
-      if (
-        e !== '.' &&
-        e != '..' &&
-        e != 'node_modules' &&
-        e != 'locales'
-      ) {
-        return r[e] || (r[e] = variables);
+
+      // Extract JSON content when we hit a .json file
+      if (part.endsWith('.json')) {
+        const content = isPackage ? module : module.default
+        const cleanPart = part.replace('.json', '')
+        acc[cleanPart] = content
+        return acc
       }
-      return r
-    }, messages)
+
+      // Create nested object for directory parts
+      acc[part] = acc[part] || {}
+      return acc[part]
+    }, Promise.resolve(messages))
   }
+
   return messages
 }
 
 /**
- * Merge function to combine different locales from external packages
+ * Normalize package messages by removing wrapper keys (e.g., 'motor-nx-core')
  */
-const merge = (target, source) => {
-  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object && key in target)
-      Object.assign(source[key], merge(target[key], source[key]))
+function normalizePackageMessages(messages: LocaleMessages<VueMessageType>): LocaleMessages<VueMessageType> {
+  const firstKey = Object.keys(messages)[0]
+
+  // If the first key looks like a package name, unwrap it
+  if (firstKey?.includes('motor-') || firstKey?.includes('-components')) {
+    return messages[firstKey] || messages
   }
 
-  // Join `target` and modified `source`
-  Object.assign(target || {}, source)
-  return target
-}
-
-const deepMerge = (target, source) => {
-  // Check if the source is an object
-  if (typeof source === 'object' && !Array.isArray(source)) {
-    // If target is not an object, initialize it as an empty object
-    if (typeof target !== 'object' || target === null) {
-      target = {};
-    }
-    for (const key of Object.keys(source)) {
-      // Recursively merge objects
-      if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
-        target[key] = deepMerge(target[key], source[key]);
-      } else {
-        // Assign non-object values directly
-        target[key] = source[key];
-      }
-    }
-  } else {
-    // If source is not an object, assign it directly to target
-    target = source;
-  }
-  return target;
-};
-
-const baseLocales = import.meta.glob('./locales/**/*.json', { eager: true })
-
-let messages = await loadLocaleMessages(baseLocales, false)
-
-const languageModules = []
-
-/**
- * Motor-Media
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-media/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Admin
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-admin/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Core
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-core/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Builder
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-builder/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Scoring
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-scoring/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Assistant
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-assistant/locales/**/*.json', { eager: true })
-)
-
-/**
- * Motor-Assistant
- */
-languageModules.push(
-  import.meta.glob('../../motor-nx-content-type/locales/**/*.json', { eager: true })
-)
-
-//!forEach does not wait for asynchronous functions to finish. So the merge order would be unknown and may cause problems.
-//!To force the correct order and wait for asynchronous calls, a simple for loop was used here
-for (let index = 0; index < languageModules.length; index++) {
-  const module = languageModules[index];
-  let moduleMessages = await loadLocaleMessages(module, true)
-
-  // Remove key 'motor-X' from messages object to fit the follwing merge algorithm with messages
-  if (Object.keys(moduleMessages)[0].includes('motor-')) {
-    moduleMessages = moduleMessages[Object.keys(moduleMessages)]
-  }
-
-  messages = deepMerge(messages, moduleMessages)
+  return messages
 }
 
 /**
- * Project specific locales
- * ! Needs to be loaded & merged lastly, so that it may overwrite any values of the packages
+ * Helper to merge package locales into main messages object
  */
-const projectLanguageModule = import.meta.glob('../../../locales/**/*.json', { eager: true })
-const projectModuleMessages = await loadLocaleMessages(projectLanguageModule, true)
-messages = deepMerge(messages, projectModuleMessages)
+async function mergePackageLocales(
+  messages: LocaleMessages<VueMessageType>,
+  packageLocales: Record<string, any>
+): Promise<LocaleMessages<VueMessageType>> {
+  if (Object.keys(packageLocales).length === 0) return messages
+
+  let packageMessages = await loadLocaleMessages(packageLocales, true)
+  packageMessages = normalizePackageMessages(packageMessages)
+  return deepMerge(messages, packageMessages)
+}
+
+/**
+ * Load and merge all translations
+ * Priority: Base → Packages (in order) → Project (highest priority)
+ *
+ * Note: import.meta.glob requires literal strings (not variables) for Vite to
+ * statically analyze and bundle the correct files at build time
+ */
+async function loadAllTranslations(): Promise<LocaleMessages<VueMessageType>> {
+  let messages: LocaleMessages<VueMessageType> = {}
+
+  // 1. Load base motor-nx-core locales
+  const baseLocales = import.meta.glob('./locales/**/*.json', { eager: true })
+  messages = await loadLocaleMessages(baseLocales, false)
+
+  // 2. Load and merge package locales (in order of priority)
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-media/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-admin/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-core/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-builder/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-scoring/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-assistant/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../motor-nx-content-type/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../energis-components/locales/**/*.json', { eager: true }))
+  messages = await mergePackageLocales(messages, import.meta.glob('../../base-components/locales/**/*.json', { eager: true }))
+
+  // 3. Load project-specific locales (highest priority - overwrites all)
+  const projectLocales = import.meta.glob('../../../locales/**/*.json', { eager: true })
+  const projectMessages = await loadLocaleMessages(projectLocales, true)
+  messages = deepMerge(messages, projectMessages)
+
+  return messages
+}
+
+// Load all translations
+const messages = await loadAllTranslations()
 
 export default defineNuxtPlugin(({ vueApp }) => {
   const i18n = createI18n({
@@ -166,8 +135,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
     globalInjection: true,
     locale: 'de',
     fallbackLocale: 'en',
-    messages: messages,
-  });
+    messages,
+  })
 
   vueApp.use(i18n)
 })

@@ -695,6 +695,11 @@ const renderer = (
         return moment(value).format(renderer.format)
       }
       return moment(value).toString()
+    case 'datetime':
+      if (!value) {
+        return '-'
+      }
+      return moment(value).format('DD.MM.YYYY HH:mm')
     case 'count':
       return value.length ? value.length.toString() : 'ß'
     case 'list':

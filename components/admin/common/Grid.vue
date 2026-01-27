@@ -400,6 +400,15 @@ v-if="
                           class="text-success"
                           :icon="column.renderer.trueIcon"
                         />
+                        <span v-else-if="getPropertyValue(row, column.prop) == false && row.has_publish_times == true">
+                          <fa
+                            class="text-danger fa-regular"
+                            icon="clock"
+                          />
+                          <span class="text-xs text-secondary ms-2">
+                            {{ moment(row.next_publishing_time).format('DD.MM.YYYY HH:mm') }}
+                          </span>
+                        </span>
                         <fa
                           v-else
                           class="text-danger"

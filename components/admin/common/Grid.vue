@@ -400,6 +400,15 @@ v-if="
                           class="text-success"
                           :icon="column.renderer.trueIcon"
                         />
+                        <template v-else-if="column.renderer.falseRenderer && column.renderer.falseRenderer(row)">
+                          <fa
+                            :class="column.renderer.falseRenderer(row).iconClass || 'text-danger'"
+                            :icon="column.renderer.falseRenderer(row).icon || column.renderer.falseIcon"
+                          />
+                          <span v-if="column.renderer.falseRenderer(row).text" class="text-xs text-secondary ms-2">
+                            {{ column.renderer.falseRenderer(row).text }}
+                          </span>
+                        </template>
                         <fa
                           v-else
                           class="text-danger"
@@ -695,6 +704,11 @@ const renderer = (
         return moment(value).format(renderer.format)
       }
       return moment(value).toString()
+    case 'datetime':
+      if (!value) {
+        return '-'
+      }
+      return moment(value).format('DD.MM.YYYY HH:mm')
     case 'count':
       return value.length ? value.length.toString() : 'ß'
     case 'list':

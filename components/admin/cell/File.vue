@@ -52,7 +52,7 @@ const { isImage } = useMimeType();
 
 const runtimeConfig = useRuntimeConfig();
 
-const backendUrl = runtimeConfig.public.backendApiBaseUrl;
+const backendUrl = runtimeConfig.public.fileDownloadUrl;
 </script>
 <style lang="scss">
 .img-fluid {

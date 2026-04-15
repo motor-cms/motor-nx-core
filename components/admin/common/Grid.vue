@@ -395,8 +395,17 @@ v-if="
                         v-else-if="column.renderer.type === 'boolIconWithText'"
                         class="d-flex align-items-center gap-2"
                       >
+                        <template v-if="getPropertyValue(row, column.prop) == true && column.renderer.trueRenderer && column.renderer.trueRenderer(row)">
+                          <fa
+                            :class="column.renderer.trueRenderer(row).iconClass || 'text-success'"
+                            :icon="column.renderer.trueRenderer(row).icon || column.renderer.trueIcon"
+                          />
+                          <span v-if="column.renderer.trueRenderer(row).text" class="text-xs text-secondary ms-2">
+                            {{ column.renderer.trueRenderer(row).text }}
+                          </span>
+                        </template>
                         <fa
-                          v-if="getPropertyValue(row, column.prop) == true"
+                          v-else-if="getPropertyValue(row, column.prop) == true"
                           class="text-success"
                           :icon="column.renderer.trueIcon"
                         />
